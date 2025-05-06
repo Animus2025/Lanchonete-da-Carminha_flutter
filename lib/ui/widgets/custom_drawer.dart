@@ -12,6 +12,17 @@ class CustomDrawer extends StatelessWidget {
       child: ListView(
         padding: const EdgeInsets.symmetric(vertical: 32.0),
         children: [
+          // Cardápio
+          _buildMenuItemWithImage(
+            imagePath: 'lib/assets/icons/cardapio.png',
+            text: "Cardápio",
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/cardapio');
+            },
+          ),          
+          const Divider(color: Color(0xff333333)),
+
           // Minha Conta
           _buildMenuItem(
             icon: Icons.person,
@@ -20,8 +31,7 @@ class CustomDrawer extends StatelessWidget {
               LoginDialog.show(context);
             },
           ),
-          const Divider(color: Color(0xff333333)),
-
+          
           // Meus Pedidos
           _buildMenuItem(
             icon: Icons.list_alt,
@@ -31,17 +41,7 @@ class CustomDrawer extends StatelessWidget {
               Navigator.pushNamed(context, '/Meus-Pedidos');
             },
           ),
-          const Divider(color: Color(0xff333333)),
 
-          // Cardápio
-          _buildMenuItemWithImage(
-            imagePath: 'lib/assets/icons/cardapio.png',
-            text: "Cardápio",
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/cardapio');
-            },
-          ),
           const SizedBox(height: 330), // Espaçamento vertical
 
           // Termos de Uso
