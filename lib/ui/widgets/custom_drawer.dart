@@ -31,6 +31,7 @@ class CustomDrawer extends StatelessWidget {
               LoginDialog.show(context);
             },
           ),
+          const Divider(color: Color(0xff333333)),
           
           // Meus Pedidos
           _buildMenuItem(
