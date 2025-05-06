@@ -20,8 +20,11 @@ class CustomDrawer extends StatelessWidget {
               Navigator.pop(context);
               Navigator.pushNamed(context, '/cardapio');
             },
-          ),          
-          const Divider(color: Color(0xff333333)),
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: Divider(color: Color(0xff333333)),
+          ),
 
           // Minha Conta
           _buildMenuItem(
@@ -31,8 +34,11 @@ class CustomDrawer extends StatelessWidget {
               LoginDialog.show(context);
             },
           ),
-          const Divider(color: Color(0xff333333)),
-          
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: Divider(color: Color(0xff333333)),
+          ),
+
           // Meus Pedidos
           _buildMenuItem(
             icon: Icons.list_alt,
@@ -42,7 +48,6 @@ class CustomDrawer extends StatelessWidget {
               Navigator.pushNamed(context, '/Meus-Pedidos');
             },
           ),
-
           const SizedBox(height: 330), // Espaçamento vertical
 
           // Termos de Uso
@@ -54,7 +59,10 @@ class CustomDrawer extends StatelessWidget {
               Navigator.pushNamed(context, '/termos-de-uso');
             },
           ),
-          const Divider(color: Color(0xff333333)),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: Divider(color: Color(0xff333333)),
+          ),
 
           // Políticas de Privacidade
           _buildMenuItemWithImage(
@@ -65,7 +73,10 @@ class CustomDrawer extends StatelessWidget {
               Navigator.pushNamed(context, '/politicas-de-privacidade');
             },
           ),
-          const Divider(color: Color(0xff333333)),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: Divider(color: Color(0xff333333)),
+          ),
 
           // Sobre
           _buildMenuItemWithImage(
