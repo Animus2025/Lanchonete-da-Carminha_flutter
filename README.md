@@ -13,7 +13,7 @@
 - **Pacotes Flutter utilizados**:
   - `flutter_launcher_icons`
   - `google_fonts`
-  - (adicione outros pacotes que estiver usando)
+  - 
 
 ---
 
@@ -54,9 +54,9 @@ Estudantes, desenvolvedores iniciantes, professores ou qualquer pessoa interessa
 
 ## 📬 Contato  
 Caso tenha dúvidas, sugestões ou queira contribuir:  
-📧 carminha@exemplo.com  
-🔗 [LinkedIn](https://www.linkedin.com/in/seuusuario)  
-📷 [Instagram](https://www.instagram.com/sualanchonete)
+📧  
+🔗 [LinkedIn](https://www.linkedin.com/in/felipe-guimar%C3%A3es-122456183/)  
+📷 [Instagram](https://www.instagram.com/lanchonete_carminha?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==)
 
 ---
 
