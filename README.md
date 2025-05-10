@@ -1,7 +1,7 @@
 #  🥠Lanchonete da Carminha
 
 ## 📝 Nome do Projeto  
-**Lanchonete da Carminha** é um aplicativo mobile desenvolvido em Flutter que simula o sistema de uma lanchonete. O objetivo do app é permitir que o usuário visualize o cardápio, navegue de forma intuitiva entre seções, alterne entre temas claro e escuro, e tenha acesso às redes sociais da lanchonete por meio do rodapé.
+**Lanchonete da Carminha** é um aplicativo mobile desenvolvido em Flutter que simula o sistema de uma lanchonete. O objetivo do app é permitir que o usuário visualize o cardápio, navegue de forma intuitiva entre seções, alterne entre temas claro e escuro, e tenha acesso às redes sociais da lanchonete por meio do rodapé, e principalmente,Realizar pedidos. 
 
 ---
 
