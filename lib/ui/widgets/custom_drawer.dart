@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../screens/login_overlay.dart';
+import '../themes/app_theme.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({super.key});
@@ -8,7 +9,7 @@ class CustomDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
       width: MediaQuery.of(context).size.width * 0.7,
-      backgroundColor: const Color(0xff111111),
+      backgroundColor: AppColors.pretoClaro,
       child: ListView(
         padding: const EdgeInsets.symmetric(vertical: 32.0),
         children: [

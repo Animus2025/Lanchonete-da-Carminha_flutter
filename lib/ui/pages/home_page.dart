@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_drawer.dart';
 import '../widgets/footer.dart';
+import '../themes/app_theme.dart';
 
 class HomePage extends StatefulWidget {
   final VoidCallback toggleTheme;
@@ -21,13 +22,11 @@ class _HomePageState extends State<HomePage> {
       appBar: CustomAppBar(toggleTheme: widget.toggleTheme),
       drawer: const CustomDrawer(),
       body: Container(
-        color: isDarkMode ? const Color(0xFF1B1B1B) : const Color(0xFFF6F6F6),
+        color: isDarkMode ? AppColors.pretoClaro : AppColors.branco,
         child: Center(
           child: Text(
             "Produtos",
-            style: TextStyle(
-              color: isDarkMode ? const Color(0xffF6C484) : Colors.black,
-            ),
+            style: Theme.of(context).textTheme.bodyLarge, // Usa o estilo definido no tema
           ),
         ),
       ),

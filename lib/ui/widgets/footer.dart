@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../themes/app_theme.dart';
 
 class CustomFooter extends StatelessWidget {
   const CustomFooter({super.key});
@@ -7,7 +8,7 @@ class CustomFooter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.black, // Define a cor preta fixa para o rodapé
+      color: AppColors.preto, // Define a cor preta fixa para o rodapé
       padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 4.0), // Espaçamento geral
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -18,14 +19,14 @@ class CustomFooter extends StatelessWidget {
               // Ícone de localização
               const Icon(
                 Icons.location_on,
-                color: Color(0xffF6C484),
+                color: AppColors.laranja,
                 size: 28,
               ),
               const SizedBox(width: 8), // Espaçamento entre o ícone e o texto
               const Expanded(
                 child: Text(
                   'Rua Antônio Moreira Barros N°10 Centro, Teixeiras, MG',
-                  style: TextStyle(color: Color(0xffF6C484), fontSize: 12),
+                  style: TextStyle(color: AppColors.laranja, fontSize: 12),
                 ),
               ),
               const SizedBox(width: 25), // Espaçamento entre o texto e os ícones
@@ -42,7 +43,7 @@ class CustomFooter extends StatelessWidget {
                 },
                 child: Image.asset(
                   'lib/assets/icons/whatsapp.png',
-                  color: const Color(0xffF6C484),
+                  color: AppColors.laranja,
                   width: 28,
                   height: 28,
                 ),
@@ -62,7 +63,7 @@ class CustomFooter extends StatelessWidget {
                 },
                 child: Image.asset(
                   'lib/assets/icons/instagram.png',
-                  color: const Color(0xffF6C484),
+                  color: AppColors.laranja,
                   width: 28,
                   height: 28,
                 ),

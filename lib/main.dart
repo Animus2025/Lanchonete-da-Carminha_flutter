@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'ui/pages/home_page.dart';
+import 'ui/themes/app_theme.dart'; // NOVO
 
 void main() {
   runApp(const MyApp());
@@ -15,7 +16,6 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   bool isDarkMode = false;
 
-  // Alterna entre os temas claro e escuro
   void toggleTheme() {
     setState(() {
       isDarkMode = !isDarkMode;
@@ -27,14 +27,8 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Lanchonete da Carminha',
-      theme: ThemeData(
-        brightness: Brightness.light,
-        fontFamily: 'BebasNeue',
-      ),
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        fontFamily: 'BebasNeue',
-      ),
+      theme: AppTheme.lightTheme, 
+      darkTheme: AppTheme.darkTheme,
       themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
       home: HomePage(toggleTheme: toggleTheme),
     );
