@@ -25,7 +25,7 @@ class AppTheme {
     primaryColor: AppColors.laranja,
     scaffoldBackgroundColor: AppColors.branco,
     appBarTheme: const AppBarTheme(
-      backgroundColor: AppColors.laranja,
+      backgroundColor: AppColors.preto,
       foregroundColor: AppColors.white,
     ),
     textTheme: const TextTheme(
