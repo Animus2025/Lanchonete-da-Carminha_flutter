@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'ui/pages/home_page.dart';
-import 'ui/themes/app_theme.dart'; // NOVO
+import 'ui/pages/termos_uso.dart';
+import 'ui/themes/app_theme.dart';
 
 void main() {
   runApp(const MyApp());
@@ -27,10 +28,18 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Lanchonete da Carminha',
-      theme: AppTheme.lightTheme, 
+      theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
-      home: HomePage(toggleTheme: toggleTheme),
+
+      // 🔧 ROTAS REGISTRADAS AQUI
+      routes: {
+        '/': (context) => HomePage(toggleTheme: toggleTheme),
+        '/termos_uso': (context) => const TermosDeUsoPage(),
+        // você pode adicionar outras rotas aqui também:
+        // '/politicas-de-privacidade': (context) => const PoliticasPage(),
+        // '/sobre': (context) => const SobrePage(),
+      },
     );
   }
 }

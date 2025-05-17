@@ -50,7 +50,6 @@ class CustomDrawer extends StatelessWidget {
             },
           ),
           const SizedBox(height: 330), // Espaçamento vertical
-
           // Termos de Uso
           _buildMenuItemWithImage(
             imagePath: 'lib/assets/icons/termos.png',
