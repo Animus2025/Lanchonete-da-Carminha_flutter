@@ -4,6 +4,8 @@ import '../widgets/custom_drawer.dart';
 import '../widgets/footer.dart';
 import '../themes/app_theme.dart';
 
+//luana esteve aqui
+
 class HomePage extends StatefulWidget {
   final VoidCallback toggleTheme;
 
@@ -26,7 +28,10 @@ class _HomePageState extends State<HomePage> {
         child: Center(
           child: Text(
             "Produtos",
-            style: Theme.of(context).textTheme.bodyLarge, // Usa o estilo definido no tema
+            style:
+                Theme.of(
+                  context,
+                ).textTheme.bodyLarge, // Usa o estilo definido no tema
           ),
         ),
       ),
