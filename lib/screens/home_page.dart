@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../widgets/custom_app_bar.dart';
-import '../widgets/custom_drawer.dart';
-import '../widgets/footer.dart';
-import '../themes/app_theme.dart';
+import '../ui/widgets/custom_app_bar.dart';
+import '../ui/widgets/custom_drawer.dart';
+import '../ui/widgets/footer.dart';
+import '../ui/themes/app_theme.dart';
 
 //luana esteve aqui
 

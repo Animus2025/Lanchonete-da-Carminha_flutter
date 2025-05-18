@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'ui/pages/home_page.dart';
+import 'screens/home_page.dart';
 import 'ui/pages/termos_uso.dart';
 import 'ui/themes/app_theme.dart';
 
