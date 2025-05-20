@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import '../../models/salgado.dart';
 import 'produto_card_base.dart';
 import '../../controllers/salgado_card_controller.dart';
+import '../../providers/cart_provider.dart';
+import '../../models/cart_item.dart';
+import 'package:provider/provider.dart';
 
 // Widget de card para exibir um salgado com controles de quantidade e tipo de preparo
 class SalgadoCard extends StatefulWidget {
@@ -204,7 +207,19 @@ class _SalgadoCardState extends State<SalgadoCard> {
           quantidadeWidget: quantidadeWidget(),
           extraWidget: chipsPreparo(), // Chips de preparo aparecem abaixo do nome
           onAdicionar: () {
-            // ação ao adicionar ao carrinho (implemente aqui)
+            Provider.of<CartProvider>(context, listen: false).addItem(
+              CartItem(
+                nome: controller.salgado.nome,
+                preco: controller.precoUnitario,
+                imagem: controller.salgado.imagem,
+                tags: [controller.tipoSelecionado == TipoPreparo.frito ? 'Frito' : 'Congelado'],
+                quantidade: controller.quantidade,
+                isBebida: false, // Salgados não são bebidas
+              ),
+            );
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Produto adicionado ao carrinho!')),
+            );
           },
         );
       },

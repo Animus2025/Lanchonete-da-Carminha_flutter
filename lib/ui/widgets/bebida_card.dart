@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../models/bebida.dart';
 import 'produto_card_base.dart';
 import '../../controllers/bebida_card_controller.dart';
+import '../../providers/cart_provider.dart';
+import '../../models/cart_item.dart';
 
 class BebidaCard extends StatefulWidget {
   final Bebida bebida;
@@ -76,7 +79,19 @@ class _BebidaCardState extends State<BebidaCard> {
           quantidadeWidget: quantidadeWidget(fontSize, largura),
           extraWidget: null, // Bebida não tem chips de preparo
           onAdicionar: () {
-            // ação ao adicionar bebida ao carrinho
+            Provider.of<CartProvider>(context, listen: false).addItem(
+              CartItem(
+                nome: controller.bebida.nome,
+                preco: controller.bebida.preco,
+                imagem: controller.bebida.imagem,
+                quantidade: controller.quantidade,
+                tags: [], // Bebida não possui tags, então passa uma lista vazia
+                isBebida: true, // Indica que este item é uma bebida
+              ),
+            );
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Produto adicionado ao carrinho!')),
+            );
           },
         );
       },

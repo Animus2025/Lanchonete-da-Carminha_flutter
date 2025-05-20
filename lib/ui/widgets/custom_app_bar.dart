@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../screens/login_overlay.dart';
 import '../themes/app_theme.dart';
+import '/screens/Cart_Overlay.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback toggleTheme;
@@ -50,6 +51,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
             onPressed: () {
               LoginDialog.show(context);
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.shopping_cart),
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                isDismissible: true,
+                builder: (_) => CartOverlay(),
+              );
             },
           ),
         ],

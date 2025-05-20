@@ -2,9 +2,16 @@ import 'package:flutter/material.dart';
 import 'screens/home_page.dart';
 import 'ui/pages/termos_uso.dart';
 import 'ui/themes/app_theme.dart';
+import 'providers/cart_provider.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => CartProvider(),
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
