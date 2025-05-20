@@ -140,7 +140,7 @@ class _HomePageState extends State<HomePage> {
                     title: 'FESTA',
                     items: salgadosPorCategoria['festa'] ?? [],
                     isSalgado: true,
-                    titleColor: AppColors.pretoClaro,
+                    titleColor: isDarkMode ? AppColors.laranja : AppColors.pretoClaro,
                   ),
                   // Seção Assado
                   _buildSection(
@@ -148,7 +148,7 @@ class _HomePageState extends State<HomePage> {
                     title: 'ASSADO',
                     items: salgadosPorCategoria['assado'] ?? [],
                     isSalgado: true,
-                    titleColor: AppColors.pretoClaro,
+                    titleColor: isDarkMode ? AppColors.laranja : AppColors.pretoClaro,
                   ),
                   // Seção Mini
                   _buildSection(
@@ -156,7 +156,7 @@ class _HomePageState extends State<HomePage> {
                     title: 'MINI',
                     items: salgadosPorCategoria['mini'] ?? [],
                     isSalgado: true,
-                    titleColor: AppColors.pretoClaro,
+                    titleColor: isDarkMode ? AppColors.laranja : AppColors.pretoClaro,
                   ),
                   // Seção Bebidas
                   _buildSection(
@@ -164,7 +164,7 @@ class _HomePageState extends State<HomePage> {
                     title: 'BEBIDAS',
                     items: bebidas,
                     isSalgado: false,
-                    titleColor: AppColors.pretoClaro,
+                    titleColor: isDarkMode ? AppColors.laranja : AppColors.pretoClaro,
                   ),
                 ],
               ),
