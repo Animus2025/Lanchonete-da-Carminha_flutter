@@ -27,6 +27,20 @@ class CartOverlay extends StatelessWidget {
           ),
           child: Column(
             children: [
+              // Indicador de arraste
+              Padding(
+                padding: const EdgeInsets.only(top: 8, bottom: 8),
+                child: Center(
+                  child: Container(
+                    width: 40,
+                    height: 5,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[400],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+              ),
               // Cabeçalho
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -170,18 +184,18 @@ class CartOverlay extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(8),
                                     child: item.nome.toLowerCase().contains('coca') && item.nome.contains('2')
                                         ? Container(
-                                            width: 120,
-                                            height: 120,
+                                            width: 140,
+                                            height: 140,
                                             color: Colors.black,
                                             alignment: Alignment.center,
                                             child: Image.asset(
                                               item.imagem,
-                                              width: 60,
-                                              height: 120,
+                                              width: 70,
+                                              height: 140,
                                               fit: BoxFit.contain,
                                               errorBuilder: (context, error, stackTrace) => Container(
-                                                width: 60,
-                                                height: 120,
+                                                width: 70,
+                                                height: 140,
                                                 color: Colors.black,
                                                 child: const Icon(Icons.image_not_supported),
                                               ),
@@ -189,8 +203,8 @@ class CartOverlay extends StatelessWidget {
                                           )
                                         : Image.asset(
                                             item.imagem,
-                                            width: 120,
-                                            height: 120,
+                                            width: 140,
+                                            height: 140,
                                             fit: BoxFit.cover,
                                             errorBuilder: (context, error, stackTrace) => Container(
                                               width: 90,
@@ -212,14 +226,14 @@ class CartOverlay extends StatelessWidget {
                                           style: TextStyle(
                                             color: AppColors.laranja,
                                             fontWeight: FontWeight.bold,
-                                            fontSize: 15,
+                                            fontSize: 18,
                                           ),
                                         ),
                                         Text(
                                           "R\$ ${item.preco.toStringAsFixed(2)}",
                                           style: TextStyle(
                                             color: quantityAndPriceColor,
-                                            fontSize: 13,
+                                            fontSize: 18,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
@@ -239,7 +253,7 @@ class CartOverlay extends StatelessWidget {
                                               child: Text(
                                                 tag.toUpperCase(),
                                                 style: TextStyle(
-                                                  fontSize: 10,
+                                                  fontSize: 15,
                                                   fontWeight: FontWeight.bold,
                                                   color: AppColors.preto, // Sempre preto
                                                 ),
@@ -252,7 +266,13 @@ class CartOverlay extends StatelessWidget {
                                           style: TextButton.styleFrom(
                                             foregroundColor: AppColors.laranja, // Sempre laranja
                                           ),
-                                          child: const Text("REMOVER"),
+                                          child: const Text(
+                                            "REMOVER",
+                                            style: TextStyle(
+                                              fontSize: 18, // Aumente o valor conforme desejar
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -264,20 +284,20 @@ class CartOverlay extends StatelessWidget {
                                       mainAxisAlignment: MainAxisAlignment.center, // Centraliza verticalmente os botões
                                       children: [
                                         IconButton(
-                                          icon: Icon(Icons.remove, size: 18, color: iconColor),
-                                          onPressed: () => cartProvider.decreaseQuantity(index),
+                                          icon: Icon(Icons.add, size: 18, color: iconColor),
+                                          onPressed: () => cartProvider.increaseQuantity(index),
                                         ),
                                         Text(
                                           '${item.quantidade}',
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
-                                            fontSize: 15,
+                                            fontSize: 25,
                                             color: quantityAndPriceColor, // sempre branco
                                           ),
                                         ),
                                         IconButton(
-                                          icon: Icon(Icons.add, size: 18, color: iconColor),
-                                          onPressed: () => cartProvider.increaseQuantity(index),
+                                          icon: Icon(Icons.remove, size: 18, color: iconColor),
+                                          onPressed: () => cartProvider.decreaseQuantity(index),
                                         ),
                                       ],
                                     ),
@@ -297,6 +317,16 @@ class CartOverlay extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    // TOTAL primeiro
+                    Text(
+                      "TOTAL: R\$ ${cartProvider.total.toStringAsFixed(2)}",
+                      style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                        color: titleAndTotalColor, // Preto no claro, laranja no escuro
+                      ),
+                    ),
+                    // Botão depois
                     ElevatedButton(
                       onPressed: () {
                         // ação finalizar
@@ -311,14 +341,6 @@ class CartOverlay extends StatelessWidget {
                       child: Text(
                         "FINALIZAR PEDIDO",
                         style: TextStyle(fontSize: 20, color: AppColors.laranja),
-                      ),
-                    ),
-                    Text(
-                      "TOTAL: R\$ ${cartProvider.total.toStringAsFixed(2)}",
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                        color: titleAndTotalColor, // Preto no claro, laranja no escuro
                       ),
                     ),
                   ],
