@@ -118,14 +118,40 @@ class _HomePageState extends State<HomePage> {
           Container(
             height: 50,
             color: AppColors.pretoClaro,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: [
-                _buildSectionButton("Festa", 'festa'),
-                _buildSectionButton("Assado", 'assado'),
-                _buildSectionButton("Mini", 'mini'),
-                _buildSectionButton("Bebidas", 'bebidas'),
-              ],
+            child: Center(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _buildSectionButton("Festa", 'festa'),
+                    _buildSectionButton("Assado", 'assado'),
+                    _buildSectionButton("Mini", 'mini'),
+                    _buildSectionButton("Bebidas", 'bebidas'),
+                    // Botão separado com ícone de carrinho
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 2,
+                        vertical: 2,
+                      ),
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: IconButton(
+                          icon: const Icon(
+                            Icons.shopping_cart,
+                            size: 30,
+                            color: AppColors.laranja,
+                          ),
+                          onPressed: () {
+                            // Ação ao clicar no carrinho
+                          },
+                          tooltip: 'Ver carrinho',
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
           // Conteúdo principal com SingleChildScrollView
@@ -140,7 +166,8 @@ class _HomePageState extends State<HomePage> {
                     title: 'FESTA',
                     items: salgadosPorCategoria['festa'] ?? [],
                     isSalgado: true,
-                    titleColor: isDarkMode ? AppColors.laranja : AppColors.pretoClaro,
+                    titleColor:
+                        isDarkMode ? AppColors.laranja : AppColors.pretoClaro,
                   ),
                   // Seção Assado
                   _buildSection(
@@ -148,7 +175,8 @@ class _HomePageState extends State<HomePage> {
                     title: 'ASSADO',
                     items: salgadosPorCategoria['assado'] ?? [],
                     isSalgado: true,
-                    titleColor: isDarkMode ? AppColors.laranja : AppColors.pretoClaro,
+                    titleColor:
+                        isDarkMode ? AppColors.laranja : AppColors.pretoClaro,
                   ),
                   // Seção Mini
                   _buildSection(
@@ -156,7 +184,8 @@ class _HomePageState extends State<HomePage> {
                     title: 'MINI',
                     items: salgadosPorCategoria['mini'] ?? [],
                     isSalgado: true,
-                    titleColor: isDarkMode ? AppColors.laranja : AppColors.pretoClaro,
+                    titleColor:
+                        isDarkMode ? AppColors.laranja : AppColors.pretoClaro,
                   ),
                   // Seção Bebidas
                   _buildSection(
@@ -164,7 +193,8 @@ class _HomePageState extends State<HomePage> {
                     title: 'BEBIDAS',
                     items: bebidas,
                     isSalgado: false,
-                    titleColor: isDarkMode ? AppColors.laranja : AppColors.pretoClaro,
+                    titleColor:
+                        isDarkMode ? AppColors.laranja : AppColors.pretoClaro,
                   ),
                 ],
               ),
@@ -179,27 +209,30 @@ class _HomePageState extends State<HomePage> {
   Widget _buildSectionButton(String label, String section) {
     final bool isSelected = _currentSection == section;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 10,
+        vertical: 4,
+      ), // Menos espaço horizontal e vertical
       child: Container(
-        alignment: Alignment.center, // Centraliza o conteúdo
+        alignment: Alignment.center,
         decoration:
             isSelected
                 ? BoxDecoration(
                   border: Border.all(color: AppColors.laranja, width: 2),
                   borderRadius: BorderRadius.circular(8),
-                  color: AppColors.laranja, // Fundo laranja quando ativo
+                  color: AppColors.laranja,
                 )
                 : null,
         child: SizedBox(
-          height: 40, // Altura fixa para garantir centralização vertical
+          height: 36, // Altura um pouco menor
           child: TextButton(
             onPressed: () => _scrollTo(section),
             style: TextButton.styleFrom(
               foregroundColor:
                   isSelected ? Colors.black : AppColors.textSecondary,
               backgroundColor: Colors.transparent,
-              padding: EdgeInsets.zero, // Remove padding extra
-              minimumSize: const Size(80, 40), // Largura e altura mínimas
+              padding: EdgeInsets.zero,
+              minimumSize: const Size(60, 36), // Menor largura e altura mínimas
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -208,7 +241,7 @@ class _HomePageState extends State<HomePage> {
               child: Text(
                 label,
                 style: TextStyle(
-                  fontSize: 19,
+                  fontSize: 20, // Fonte um pouco menor
                   fontWeight: FontWeight.bold,
                   color: isSelected ? Colors.black : AppColors.textSecondary,
                 ),
