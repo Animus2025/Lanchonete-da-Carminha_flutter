@@ -85,16 +85,26 @@ class ProdutoCardBase extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 16), // Espaço entre o texto e a imagem
-              // Imagem do produto à direita
-              ClipRRect(
-                borderRadius: BorderRadius.circular(
-                  8,
-                ), // Arredondamento da imagem
-                child: Image.asset(
-                  imagem, // Caminho da imagem
-                  height: 150,
-                  width: 150,
-                  fit: BoxFit.contain, // Corta a imagem pra preencher o espaço
+              // Imagem do produto à direita, agora flexível
+              Flexible(
+                flex: 0,
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    // Calcula o tamanho máximo possível para a imagem
+                    double maxImgSize = constraints.maxWidth;
+                    // Garante que nunca fique menor que 48 e nem maior que 150
+                    maxImgSize = maxImgSize.clamp(48.0, 140.0);
+
+                    return ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.asset(
+                        imagem,
+                        height: maxImgSize,
+                        width: maxImgSize,
+                        fit: BoxFit.contain,
+                      ),
+                    );
+                  },
                 ),
               ),
             ],

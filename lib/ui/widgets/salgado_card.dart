@@ -69,10 +69,10 @@ class _SalgadoCardState extends State<SalgadoCard> {
         // Widget para escolher o tipo de preparo (frito ou congelado)
         Widget chipsPreparo() => Row(
           children: [
-            // Chip para "FRITO"
+            // Chip para "FRITO" ou "ASSADO"
             ChoiceChip(
               label: Text(
-                "FRITO",
+                controller.salgado.categoria == 'assado' ? "ASSADO" : "FRITO", // Troca o texto dinamicamente
                 style: TextStyle(
                   color: controller.tipoSelecionado == TipoPreparo.frito
                       ? Colors.black // Cor preta se selecionado
