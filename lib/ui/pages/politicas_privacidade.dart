@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../themes/app_theme.dart';
 
 class PoliticaPrivacidadePage extends StatelessWidget {
   const PoliticaPrivacidadePage({Key? key}) : super(key: key);
@@ -8,19 +9,36 @@ class PoliticaPrivacidadePage extends StatelessWidget {
     final textStyle = Theme.of(context).textTheme.bodyMedium;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Política de Privacidade')),
+      appBar: AppBar(
+        title: const Text(
+          'Políticas de Privacidade',
+          style: TextStyle(
+            color: AppColors.laranja, // Altere para a cor desejada
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: AppColors.preto, // Altere para a cor desejada
+        iconTheme: const IconThemeData(
+          color: AppColors.laranja,
+        ), // Ícone do menu também
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Última atualização: 21/05/2025\n', style: textStyle),
+            Text(
+              'Última atualização: 21/05/2025\n',
+              style: TextStyle(color: AppColors.preto),
+            ),
             _titulo('1. Coleta de Informações'),
             _paragrafo(
               'Coletamos informações fornecidas por você ao utilizar o app, como:\n'
               '- Nome\n'
+              '- CPF\n'
               '- Endereço de e-mail\n'
-              '- Endereço de entrega (se houver pedidos no app)\n'
+              '- Número de telefone\n'
+              '- Endereço residencial\n'
               '- Informações de navegação (cookies ou logs de uso)\n',
               textStyle,
             ),
@@ -36,8 +54,7 @@ class PoliticaPrivacidadePage extends StatelessWidget {
             _paragrafo(
               'Não compartilhamos seus dados com terceiros, exceto quando necessário para:\n'
               '- Cumprir exigências legais\n'
-              '- Processar pagamentos (se aplicável)\n'
-              '- Serviços de entrega (se houver)\n',
+              '- Processar pagamentos (se aplicável)\n',
               textStyle,
             ),
             _titulo('4. Segurança'),
@@ -57,8 +74,8 @@ class PoliticaPrivacidadePage extends StatelessWidget {
             _titulo('6. Contato'),
             _paragrafo(
               'Se tiver dúvidas, entre em contato conosco:\n'
-              '📧 carminha@salgadosdeluxo.com\n'
-              '📞 (99) 99999-9999\n',
+              '📧 lanchonetecarminha@gmail.com\n'
+              '📞 (31) 97152-0049\n',
               textStyle,
             ),
           ],
@@ -69,15 +86,36 @@ class PoliticaPrivacidadePage extends StatelessWidget {
 
   Widget _titulo(String texto) {
     return Padding(
-      padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
+      padding: const EdgeInsets.only(top: 2.0, bottom: 2.0),
       child: Text(
         texto,
-        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        style: const TextStyle(
+          fontSize: 22, // Fonte maior para o título
+          fontWeight: FontWeight.bold,
+          color: AppColors.preto, // Exemplo de cor
+          fontFamily: 'Arial', // Escolha sua fonte aqui
+        ),
       ),
     );
   }
 
   Widget _paragrafo(String texto, TextStyle? estilo) {
-    return Text(texto, style: estilo);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12.0),
+      child: Text(
+        texto,
+        style:
+            estilo?.copyWith(
+              color: AppColors.preto,
+              fontSize: 18, // Fonte maior para o texto
+              fontFamily: 'Arial', // Escolha sua fonte aqui
+            ) ??
+            const TextStyle(
+              color: AppColors.preto,
+              fontSize: 18,
+              fontFamily: 'Arial', // Escolha sua fonte aqui
+            ),
+      ),
+    );
   }
 }
