@@ -65,6 +65,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     isScrollControlled: true,
                     backgroundColor: Colors.transparent,
                     isDismissible: true,
+                    enableDrag: true,
                     builder: (_) => CartOverlay(),
                   );
                 },

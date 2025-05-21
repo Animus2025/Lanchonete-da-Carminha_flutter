@@ -66,7 +66,7 @@ class ProdutoCardBase extends StatelessWidget {
                     Text(
                       nome,
                       style: const TextStyle(
-                        color: AppColors.white, // Cor do texto
+                        color: AppColors.branco, // Cor do texto
                         fontSize: 19,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Bebas Neue',

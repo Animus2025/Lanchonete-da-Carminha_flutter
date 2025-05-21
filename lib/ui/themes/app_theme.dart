@@ -12,7 +12,7 @@ class AppColors {
   static const Color darkTextPrimary = laranja;         // Laranja (Texto primário no modo escuro)
   static const Color textSecondary = laranja;           // Laranja (Texto secundário no modo claro)
   static const Color darkTextSecondary = preto;     // Preto (Texto secundário no modo escuro)
-  static const Color white = Colors.white;
+  static const Color cinza = Colors.grey;
 
   // Outros
   static const Color vermelho = Colors.redAccent;
@@ -26,7 +26,7 @@ class AppTheme {
     scaffoldBackgroundColor: AppColors.branco,
     appBarTheme: const AppBarTheme(
       backgroundColor: AppColors.laranja,
-      foregroundColor: AppColors.white,
+      foregroundColor: AppColors.branco,
     ),
     textTheme: const TextTheme(
       bodyLarge: TextStyle(color: AppColors.textPrimary), // Texto primário no modo claro
@@ -44,7 +44,7 @@ class AppTheme {
     scaffoldBackgroundColor: AppColors.pretoClaro,
     appBarTheme: const AppBarTheme(
       backgroundColor: AppColors.preto,
-      foregroundColor: AppColors.white,
+      foregroundColor: AppColors.branco,
     ),
     textTheme: const TextTheme(
       bodyLarge: TextStyle(color: AppColors.darkTextPrimary), // Texto primário no modo escuro
