@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../providers/cart_provider.dart';
 import '../../screens/login_overlay.dart';
 import '../themes/app_theme.dart';
 import '/screens/Cart_Overlay.dart';
@@ -53,17 +55,46 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               LoginDialog.show(context);
             },
           ),
-          IconButton(
-            icon: const Icon(Icons.shopping_cart),
-            onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                backgroundColor: Colors.transparent,
-                isDismissible: true,
-                builder: (_) => CartOverlay(),
-              );
-            },
+          Stack(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.shopping_cart),
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                    isDismissible: true,
+                    builder: (_) => CartOverlay(),
+                  );
+                },
+              ),
+              Positioned(
+                right: 6,
+                top: 6,
+                child: Consumer<CartProvider>(
+                  builder: (context, cart, child) {
+                    return cart.itemCount > 0
+                        ? Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Text(
+                              '${cart.itemCount}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          )
+                        : const SizedBox.shrink();
+                  },
+                ),
+              ),
+            ],
           ),
         ],
       ),
