@@ -1,5 +1,6 @@
 // Importa os pacotes necessários do Flutter e widgets personalizados criados no projeto
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../ui/widgets/custom_app_bar.dart'; // AppBar customizado (provavelmente com o botão de tema e logo)
 import '../ui/widgets/custom_drawer.dart'; // Menu lateral personalizado
 import '../ui/widgets/footer.dart'; // Rodapé personalizado
@@ -9,6 +10,8 @@ import '../ui/widgets/salgado_card.dart'; // Importa o card de salgado
 import '../models/salgado.dart'; // Importa o modelo de salgado
 import '../data/bebida_data.dart'; // Importe a lista de bebidas
 import '../ui/widgets/bebida_card.dart'; // Importe o card de bebida
+import '../providers/cart_provider.dart';
+import '../screens/cart_overlay.dart';
 
 // Componente principal da tela Home
 class HomePage extends StatefulWidget {
@@ -136,16 +139,51 @@ class _HomePageState extends State<HomePage> {
                       ),
                       child: Container(
                         alignment: Alignment.center,
-                        child: IconButton(
-                          icon: const Icon(
-                            Icons.shopping_cart,
-                            size: 30,
-                            color: AppColors.laranja,
-                          ),
-                          onPressed: () {
-                            // Ação ao clicar no carrinho
-                          },
-                          tooltip: 'Ver carrinho',
+                        child: Stack(
+                          children: [
+                            IconButton(
+                              icon: const Icon(
+                                  Icons.shopping_cart,
+                                  size: 30,
+                                  color: AppColors.laranja),
+                              onPressed: () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  backgroundColor: Colors.transparent,
+                                  isDismissible: true,
+                                  enableDrag: true,
+                                  builder: (_) => CartOverlay(),
+                                );
+                              },
+                              tooltip: 'Ver carrinho',
+                            ),
+                            Positioned(
+                              right: 6,
+                              top: 6,
+                              child: Consumer<CartProvider>(
+                                builder: (context, cart, child) {
+                                  return cart.itemCount > 0
+                                      ? Container(
+                                    padding: const EdgeInsets.all(4),
+                                    decoration: const BoxDecoration(
+                                      color: Colors.red,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Text(
+                                      '${cart.itemCount}',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  )
+                                      : const SizedBox.shrink();
+                                },
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -167,7 +205,7 @@ class _HomePageState extends State<HomePage> {
                     items: salgadosPorCategoria['festa'] ?? [],
                     isSalgado: true,
                     titleColor:
-                        isDarkMode ? AppColors.laranja : AppColors.pretoClaro,
+                    isDarkMode ? AppColors.laranja : AppColors.pretoClaro,
                   ),
                   // Seção Assado
                   _buildSection(
@@ -176,7 +214,7 @@ class _HomePageState extends State<HomePage> {
                     items: salgadosPorCategoria['assado'] ?? [],
                     isSalgado: true,
                     titleColor:
-                        isDarkMode ? AppColors.laranja : AppColors.pretoClaro,
+                    isDarkMode ? AppColors.laranja : AppColors.pretoClaro,
                   ),
                   // Seção Mini
                   _buildSection(
@@ -185,7 +223,7 @@ class _HomePageState extends State<HomePage> {
                     items: salgadosPorCategoria['mini'] ?? [],
                     isSalgado: true,
                     titleColor:
-                        isDarkMode ? AppColors.laranja : AppColors.pretoClaro,
+                    isDarkMode ? AppColors.laranja : AppColors.pretoClaro,
                   ),
                   // Seção Bebidas
                   _buildSection(
@@ -194,7 +232,7 @@ class _HomePageState extends State<HomePage> {
                     items: bebidas,
                     isSalgado: false,
                     titleColor:
-                        isDarkMode ? AppColors.laranja : AppColors.pretoClaro,
+                    isDarkMode ? AppColors.laranja : AppColors.pretoClaro,
                   ),
                 ],
               ),
@@ -216,20 +254,20 @@ class _HomePageState extends State<HomePage> {
       child: Container(
         alignment: Alignment.center,
         decoration:
-            isSelected
-                ? BoxDecoration(
-                  border: Border.all(color: AppColors.laranja, width: 2),
-                  borderRadius: BorderRadius.circular(8),
-                  color: AppColors.laranja,
-                )
-                : null,
+        isSelected
+            ? BoxDecoration(
+          border: Border.all(color: AppColors.laranja, width: 2),
+          borderRadius: BorderRadius.circular(8),
+          color: AppColors.laranja,
+        )
+            : null,
         child: SizedBox(
           height: 36, // Altura um pouco menor
           child: TextButton(
             onPressed: () => _scrollTo(section),
             style: TextButton.styleFrom(
               foregroundColor:
-                  isSelected ? Colors.black : AppColors.textSecondary,
+              isSelected ? Colors.black : AppColors.textSecondary,
               backgroundColor: Colors.transparent,
               padding: EdgeInsets.zero,
               minimumSize: const Size(60, 36), // Menor largura e altura mínimas
@@ -280,7 +318,7 @@ class _HomePageState extends State<HomePage> {
           ),
           const SizedBox(height: 8), // Espaço logo abaixo do título
           ...items.map(
-            (item) =>
+                (item) =>
                 isSalgado
                     ? SalgadoCard(salgado: item)
                     : BebidaCard(bebida: item),

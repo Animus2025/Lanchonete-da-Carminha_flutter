@@ -1,29 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../../providers/cart_provider.dart';
 import '../../screens/login_overlay.dart';
 import '../themes/app_theme.dart';
-import '/screens/Cart_Overlay.dart';
 
+// AppBar personalizada para o aplicativo
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final VoidCallback toggleTheme;
+  final VoidCallback toggleTheme; // Função para alternar o tema (claro/escuro)
 
   const CustomAppBar({super.key, required this.toggleTheme});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context); // Obtém o tema atual
-    final isDarkTheme = theme.brightness == Brightness.dark;
+    final isDarkTheme = theme.brightness == Brightness.dark; // Verifica se está no modo escuro
 
     return PreferredSize(
-      preferredSize: const Size.fromHeight(50.0),
+      preferredSize: const Size.fromHeight(50.0), // Altura fixa da AppBar
       child: AppBar(
-        backgroundColor: AppColors.preto,
-        iconTheme: IconThemeData(color: AppColors.laranja), // Ícones com a cor primária
+        backgroundColor: AppColors.preto, // Cor de fundo da AppBar
+        iconTheme: IconThemeData(color: AppColors.laranja), // Cor dos ícones padrão
         leading: IconButton(
-          icon: const Icon(Icons.menu, size: 28),
+          icon: const Icon(Icons.menu, size: 28), // Ícone do menu lateral (Drawer)
           onPressed: () {
-            Scaffold.of(context).openDrawer();
+            Scaffold.of(context).openDrawer(); // Abre o Drawer ao clicar
           },
         ),
         title: SizedBox(
@@ -31,71 +29,31 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           height: 50,
           child: Center(
             child: Image.asset(
-              'lib/assets/icons/logo.png',
+              'lib/assets/icons/logo.png', // Logo centralizada
               fit: BoxFit.contain,
             ),
           ),
         ),
         actions: [
+          // Botão para alternar o tema (claro/escuro)
           IconButton(
             icon: Icon(
-              isDarkTheme ? Icons.light_mode : Icons.dark_mode,
+              isDarkTheme ? Icons.light_mode : Icons.dark_mode, // Ícone muda conforme o tema
               size: 28,
-              color: AppColors.laranja, // Ícone de alternância de tema com cor primária
+              color: AppColors.laranja, // Cor do ícone
             ),
-            onPressed: toggleTheme,
+            onPressed: toggleTheme, // Chama a função para alternar o tema
           ),
+          // Botão de perfil/login
           IconButton(
             icon: const Icon(
               Icons.person,
               size: 28,
-              color: AppColors.laranja, // Ícone de perfil com cor primária
+              color: AppColors.laranja, // Cor do ícone de perfil
             ),
             onPressed: () {
-              LoginDialog.show(context);
+              LoginDialog.show(context); // Abre o diálogo de login ao clicar
             },
-          ),
-          Stack(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.shopping_cart),
-                onPressed: () {
-                  showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    backgroundColor: Colors.transparent,
-                    isDismissible: true,
-                    enableDrag: true,
-                    builder: (_) => CartOverlay(),
-                  );
-                },
-              ),
-              Positioned(
-                right: 6,
-                top: 6,
-                child: Consumer<CartProvider>(
-                  builder: (context, cart, child) {
-                    return cart.itemCount > 0
-                        ? Container(
-                            padding: const EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                              color: Colors.red,
-                              shape: BoxShape.circle,
-                            ),
-                            child: Text(
-                              '${cart.itemCount}',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          )
-                        : const SizedBox.shrink();
-                  },
-                ),
-              ),
-            ],
           ),
         ],
       ),
@@ -103,5 +61,5 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(50.0);
+  Size get preferredSize => const Size.fromHeight(50.0); // Define a altura da AppBar
 }
