@@ -48,9 +48,8 @@ class CartOverlay extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "SUA SACOLA",
+                      "SEU CARRINHO",
                       style: TextStyle(
-                        fontWeight: FontWeight.bold,
                         fontSize: 25,
                         color: titleAndTotalColor, // Preto no claro, laranja no escuro
                       ),
@@ -230,7 +229,7 @@ class CartOverlay extends StatelessWidget {
                                           ),
                                         ),
                                         Text(
-                                          "R\$ ${item.preco.toStringAsFixed(2)}",
+                                          "R\$ ${(item.preco * item.quantidade).toStringAsFixed(2)}",
                                           style: TextStyle(
                                             color: quantityAndPriceColor,
                                             fontSize: 18,
