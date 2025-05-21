@@ -2,37 +2,38 @@ import 'package:flutter/material.dart';
 import '../../screens/login_overlay.dart';
 import '../themes/app_theme.dart';
 
+// Drawer personalizado para navegação lateral
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      width: MediaQuery.of(context).size.width * 0.7,
-      backgroundColor: AppColors.pretoClaro,
+      width: MediaQuery.of(context).size.width * 0.7, // Define a largura do Drawer
+      backgroundColor: AppColors.pretoClaro, // Cor de fundo do Drawer
       child: ListView(
         padding: const EdgeInsets.symmetric(vertical: 32.0),
         children: [
-          // Cardápio
+          // Item do menu: Cardápio (com imagem personalizada)
           _buildMenuItemWithImage(
             imagePath: 'lib/assets/icons/cardapio.png',
             text: "Cardápio",
             onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/cardapio');
+              Navigator.pop(context); // Fecha o Drawer
+              Navigator.pushNamed(context, '/cardapio'); // Navega para a tela de cardápio
             },
           ),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: Divider(color: Color(0xff333333)),
+            child: Divider(color: Color(0xff333333)), // Linha divisória
           ),
 
-          // Minha Conta
+          // Item do menu: Minha Conta (com ícone padrão)
           _buildMenuItem(
             icon: Icons.person,
             text: "Minha Conta",
             onTap: () {
-              LoginDialog.show(context);
+              LoginDialog.show(context); // Abre o diálogo de login
             },
           ),
           const Padding(
@@ -40,17 +41,18 @@ class CustomDrawer extends StatelessWidget {
             child: Divider(color: Color(0xff333333)),
           ),
 
-          // Meus Pedidos
+          // Item do menu: Meus Pedidos (com ícone padrão)
           _buildMenuItem(
             icon: Icons.list_alt,
             text: "Meus Pedidos",
             onTap: () {
               Navigator.pop(context);
-              Navigator.pushNamed(context, '/Meus-Pedidos');
+              Navigator.pushNamed(context, '/Meus-Pedidos'); // Navega para a tela de pedidos
             },
           ),
-          const SizedBox(height: 330), // Espaçamento vertical
-          // Termos de Uso
+          const SizedBox(height: 330), // Espaçamento vertical para separar os itens inferiores
+
+          // Item do menu: Termos de Uso (com imagem personalizada)
           _buildMenuItemWithImage(
             imagePath: 'lib/assets/icons/termos.png',
             text: "Termos de Uso",
@@ -64,7 +66,7 @@ class CustomDrawer extends StatelessWidget {
             child: Divider(color: Color(0xff333333)),
           ),
 
-          // Políticas de Privacidade
+          // Item do menu: Políticas de Privacidade (com imagem personalizada)
           _buildMenuItemWithImage(
             imagePath: 'lib/assets/icons/privacidade.png',
             text: "Políticas de Privacidade",
@@ -78,7 +80,7 @@ class CustomDrawer extends StatelessWidget {
             child: Divider(color: Color(0xff333333)),
           ),
 
-          // Sobre
+          // Item do menu: Sobre (com imagem personalizada)
           _buildMenuItemWithImage(
             imagePath: 'lib/assets/icons/info.png',
             text: "Sobre",
@@ -99,9 +101,9 @@ class CustomDrawer extends StatelessWidget {
     required VoidCallback onTap,
   }) {
     return ListTile(
-      leading: Icon(icon, color: const Color(0xffF6C484)),
-      title: Text(text, style: const TextStyle(color: Color(0xffF6C484))),
-      onTap: onTap,
+      leading: Icon(icon, color: const Color(0xffF6C484)), // Ícone do item
+      title: Text(text, style: const TextStyle(color: Color(0xffF6C484))), // Texto do item
+      onTap: onTap, // Ação ao clicar
     );
   }
 
@@ -114,7 +116,7 @@ class CustomDrawer extends StatelessWidget {
     return ListTile(
       leading: Image.asset(
         imagePath,
-        color: const Color(0xffF6C484),
+        color: const Color(0xffF6C484), // Cor da imagem
         width: 24,
         height: 24,
       ),

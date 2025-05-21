@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../themes/app_theme.dart';
 
+// Widget de rodapé personalizado
 class CustomFooter extends StatelessWidget {
   const CustomFooter({super.key});
 
@@ -34,6 +35,7 @@ class CustomFooter extends StatelessWidget {
               // Ícone do WhatsApp
               GestureDetector(
                 onTap: () async {
+                  // Ao clicar, tenta abrir o WhatsApp no número especificado
                   final Uri whatsappUrl = Uri.parse("https://wa.me/5531971520049");
                   if (await canLaunchUrl(whatsappUrl)) {
                     await launchUrl(whatsappUrl, mode: LaunchMode.externalApplication);
@@ -53,6 +55,7 @@ class CustomFooter extends StatelessWidget {
               // Ícone do Instagram
               GestureDetector(
                 onTap: () async {
+                  // Ao clicar, tenta abrir o Instagram no perfil especificado
                   final Uri instagramUrl =
                       Uri.parse("https://www.instagram.com/lanchonete_carminha");
                   if (await canLaunchUrl(instagramUrl)) {

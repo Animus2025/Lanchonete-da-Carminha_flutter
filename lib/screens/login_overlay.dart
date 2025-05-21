@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 
+// Classe responsável por exibir o diálogo de login/cadastro
 class LoginDialog {
+  // Método estático para mostrar o pop-up de login
   static void show(BuildContext context) {
+    // Controlador para o campo de texto do email/telefone
     final TextEditingController emailController = TextEditingController();
 
+    // Exibe o diálogo
     showDialog(
       context: context,
       barrierDismissible: true, // Permite fechar o pop-up ao clicar fora
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+          backgroundColor: const Color.fromARGB(255, 255, 255, 255), // Cor de fundo do pop-up
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
+            borderRadius: BorderRadius.circular(10.0), // Borda arredondada
           ), 
           title: const Text(
             "Cadastre-se/Entrar",
@@ -21,6 +25,7 @@ class LoginDialog {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              // Campo de texto para email ou telefone
               TextField(
                 controller: emailController,
                 style: const TextStyle(color: Colors.black),
@@ -38,15 +43,16 @@ class LoginDialog {
             ],
           ),
           actions: [
+            // Botão "Continuar" centralizado
             Center(
               child: TextButton(
                 onPressed: () {
-                  Navigator.pop(context); // Fecha o pop-up
+                  Navigator.pop(context); // Fecha o pop-up ao clicar
                 },
                 style: TextButton.styleFrom(
-                  backgroundColor: const Color(0xffF6C484),
+                  backgroundColor: const Color(0xffF6C484), // Cor de fundo do botão
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
+                    borderRadius: BorderRadius.circular(10.0), // Borda arredondada do botão
                   ),
                 ),
                 child: const Text(
