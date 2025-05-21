@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'screens/home_page.dart';
 import 'ui/pages/termos_uso.dart';
+import 'ui/pages/politicas_privacidade.dart';
+import 'ui/pages/sobre.dart';
 import 'ui/themes/app_theme.dart';
 
 void main() {
@@ -35,7 +37,11 @@ class _MyAppState extends State<MyApp> {
       // 🔧 ROTAS REGISTRADAS AQUI
       routes: {
         '/': (context) => HomePage(toggleTheme: toggleTheme),
-        '/termos_uso': (context) => const TermosDeUsoPage(),
+        '/cardapio': (context) => HomePage(toggleTheme: toggleTheme),
+        '/termos-de-uso': (context) => const TermosDeUsoPage(),
+        '/politicas-de-privacidade':
+            (context) => const PoliticaPrivacidadePage(),
+        '/sobre': (context) => const Sobre(),
         // você pode adicionar outras rotas aqui também:
         // '/politicas-de-privacidade': (context) => const PoliticasPage(),
         // '/sobre': (context) => const SobrePage(),
