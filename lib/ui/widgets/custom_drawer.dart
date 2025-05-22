@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../screens/login_overlay.dart';
 import '../themes/app_theme.dart';
+import 'package:provider/provider.dart';
+import '../../providers/auth_provider.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({super.key});
@@ -45,8 +47,14 @@ class CustomDrawer extends StatelessWidget {
             icon: Icons.list_alt,
             text: "Meus Pedidos",
             onTap: () {
+              final auth = Provider.of<AuthProvider>(context, listen: false);
               Navigator.pop(context);
-              Navigator.pushNamed(context, '/Meus-Pedidos');
+
+              if (auth.isLoggedIn) {
+                Navigator.pushNamed(context, '/Meus-Pedidos');
+              } else {
+                LoginDialog.show(context); // Abre o pop-up para login
+              }
             },
           ),
           const SizedBox(height: 330), // Espaçamento vertical

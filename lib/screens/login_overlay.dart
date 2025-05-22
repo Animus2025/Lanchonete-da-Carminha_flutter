@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:providers/provider.dart';
 
 class LoginDialog {
   static void show(BuildContext context) {
@@ -61,10 +62,8 @@ class LoginDialog {
             Center(
               child: TextButton(
                 onPressed: () {
-                  // Marca como logado usando o Provider
-                  Provider.of<AuthProvider>(context, listen: false).login();
-                  // Fecha o pop-up
-                  Navigator.pop(context);
+                  // Aqui futuramente você pode verificar os dados
+                  Navigator.pop(context); // Fecha o pop-up
                 },
                 style: TextButton.styleFrom(
                   backgroundColor: const Color(0xffF6C484),
