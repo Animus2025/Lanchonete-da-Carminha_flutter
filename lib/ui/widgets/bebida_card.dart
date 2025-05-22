@@ -114,9 +114,40 @@ class _BebidaCardState extends State<BebidaCard> {
                 isBebida: true, // Indica que este item é uma bebida
               ),
             );
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Produto adicionado ao carrinho!')),
+            // Mostra um pop-up rápido no centro
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (context) => Dialog(
+                backgroundColor: Colors.black87,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 24.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: const [
+                      Icon(Icons.check_circle, color: Colors.green, size: 32),
+                      SizedBox(width: 12),
+                      Flexible(
+                        child: Text(
+                          'Produto adicionado ao carrinho!',
+                          style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             );
+            // Fecha o pop-up automaticamente após 1 segundo
+            Future.delayed(const Duration(seconds: 1), () {
+              if (Navigator.of(context).canPop()) {
+                Navigator.of(context).pop();
+              }
+            });
           },
         );
       },
