@@ -9,85 +9,129 @@ class CustomDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      width: MediaQuery.of(context).size.width * 0.7, // Define a largura do Drawer
+      width: MediaQuery.of(context).size.width > 400 ? 400 : MediaQuery.of(context).size.width * 0.7, // Limita a largura máxima
       backgroundColor: AppColors.pretoClaro, // Cor de fundo do Drawer
-      child: ListView(
-        padding: const EdgeInsets.symmetric(vertical: 32.0),
+      child: Column(
         children: [
-          // Item do menu: Cardápio (com imagem personalizada)
-          _buildMenuItemWithImage(
-            imagePath: 'lib/assets/icons/cardapio.png',
-            text: "Cardápio",
-            onTap: () {
-              Navigator.pop(context); // Fecha o Drawer
-              Navigator.pushNamed(context, '/cardapio'); // Navega para a tela de cardápio
-            },
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: Divider(color: Color(0xff333333)), // Linha divisória
-          ),
+          // Parte de cima do menu (rolável se necessário)
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.symmetric(vertical: 32.0),
+              children: [
+                // Item do menu: Cardápio (com imagem personalizada)
+                _buildMenuItemWithImage(
+                  imagePath: 'lib/assets/icons/cardapio.png',
+                  text: "Cardápio",
+                  onTap: () {
+                    Navigator.pop(context); // Fecha o Drawer
+                    Navigator.pushNamed(context, '/cardapio'); // Navega para a tela de cardápio
+                  },
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Divider(color: Color(0xff333333)), // Linha divisória
+                ),
 
-          // Item do menu: Minha Conta (com ícone padrão)
-          _buildMenuItem(
-            icon: Icons.person,
-            text: "Minha Conta",
-            onTap: () {
-              LoginDialog.show(context); // Abre o diálogo de login
-            },
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: Divider(color: Color(0xff333333)),
-          ),
+                // Item do menu: Minha Conta (com ícone padrão)
+                _buildMenuItem(
+                  icon: Icons.person,
+                  text: "Minha Conta",
+                  onTap: () {
+                    LoginDialog.show(context); // Abre o diálogo de login
+                  },
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Divider(color: Color(0xff333333)),
+                ),
 
-          // Item do menu: Meus Pedidos (com ícone padrão)
-          _buildMenuItem(
-            icon: Icons.list_alt,
-            text: "Meus Pedidos",
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/Meus-Pedidos'); // Navega para a tela de pedidos
-            },
+                // Item do menu: Meus Pedidos (com ícone padrão)
+                _buildMenuItem(
+                  icon: Icons.list_alt,
+                  text: "Meus Pedidos",
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, '/Meus-Pedidos'); // Navega para a tela de pedidos
+                  },
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 330), // Espaçamento vertical para separar os itens inferiores
+          // Parte fixa embaixo do menu
+          Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0), // Espaço nas laterais
+                child: SizedBox(
+                  width: 260, // Largura máxima para centralizar o conteúdo
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'lib/assets/icons/logo_animus.png',
+                        width: 80,
+                        height: 80,
+                      ),
+                      const SizedBox(width: 2),
+                      const Flexible(
+                        child: Text(
+                          "CRÉDITO À EMPRESA ÂNIMUS, CRIADORA DO SISTEMA",
+                          style: TextStyle(
+                            color: AppColors.branco,
+                            fontSize: 16,
+                          ),
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
 
-          // Item do menu: Termos de Uso (com imagem personalizada)
-          _buildMenuItemWithImage(
-            imagePath: 'lib/assets/icons/termos.png',
-            text: "Termos de Uso",
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/termos-de-uso');
-            },
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: Divider(color: Color(0xff333333)),
-          ),
+              // Item do menu: Termos de Uso (com imagem personalizada)
+              _buildMenuItemWithImage(
+                imagePath: 'lib/assets/icons/termos.png',
+                text: "Termos de Uso",
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, '/termos-de-uso');
+                },
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                child: Divider(color: Color(0xff333333)),
+              ),
 
-          // Item do menu: Políticas de Privacidade (com imagem personalizada)
-          _buildMenuItemWithImage(
-            imagePath: 'lib/assets/icons/privacidade.png',
-            text: "Políticas de Privacidade",
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/politicas-de-privacidade');
-            },
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: Divider(color: Color(0xff333333)),
-          ),
+              // Item do menu: Políticas de Privacidade (com imagem personalizada)
+              _buildMenuItemWithImage(
+                imagePath: 'lib/assets/icons/privacidade.png',
+                text: "Políticas de Privacidade",
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, '/politicas-de-privacidade');
+                },
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                child: Divider(color: Color(0xff333333)),
+              ),
 
-          // Item do menu: Sobre (com imagem personalizada)
-          _buildMenuItemWithImage(
-            imagePath: 'lib/assets/icons/info.png',
-            text: "Sobre",
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/sobre');
-            },
+              // Item do menu: Sobre (com imagem personalizada)
+              _buildMenuItemWithImage(
+                imagePath: 'lib/assets/icons/info.png',
+                text: "Sobre",
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, '/sobre');
+                },
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 12.0),
+              ),
+            ],
           ),
         ],
       ),
