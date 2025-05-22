@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'pages/home_page.dart';
+import 'package:provider/provider.dart';
+
+import 'ui/pages/home_page.dart';
 import 'ui/pages/termos_uso.dart';
 import 'ui/themes/app_theme.dart';
 import 'providers/cart_provider.dart';
-import 'package:provider/provider.dart';
 import 'providers/auth_provider.dart';
 
 void main() {

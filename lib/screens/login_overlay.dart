@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:providers/provider.dart';
+import 'package:provider/provider.dart';
 
 class LoginDialog {
   static void show(BuildContext context) {
