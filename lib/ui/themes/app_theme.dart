@@ -16,7 +16,8 @@ class AppColors {
 
   // Outros
   static const Color vermelho = Colors.redAccent;
-  static const Color azulClaro = Color(0xFFAAEFEF);     // Azul claro
+  static const Color azulClaro = Color(0xFFAAEFEF);
+  static const Color verde = Colors.green;     // Azul claro
 }
 
 class AppTheme {

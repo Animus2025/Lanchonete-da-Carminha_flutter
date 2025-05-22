@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lanchonetedacarminha/ui/themes/app_theme.dart';
 import 'package:provider/provider.dart';
 import '../../models/bebida.dart';
 import 'produto_card_base.dart';
@@ -50,7 +51,7 @@ class _BebidaCardState extends State<BebidaCard> {
         children: [
           // Botão de diminuir quantidade
           IconButton(
-            icon: const Icon(Icons.remove, color: Colors.white, size: 18),
+            icon: const Icon(Icons.remove, color: AppColors.branco, size: 18),
             onPressed:
                 controller.quantidade > 1
                     ? () => setState(
@@ -66,12 +67,12 @@ class _BebidaCardState extends State<BebidaCard> {
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: Text(
               '${controller.quantidade}',
-              style: TextStyle(color: Colors.white, fontSize: fontSize),
+              style: TextStyle(color: AppColors.branco, fontSize: fontSize),
             ),
           ),
           // Botão de aumentar quantidade
           IconButton(
-            icon: const Icon(Icons.add, color: Colors.white, size: 18),
+            icon: const Icon(Icons.add, color: AppColors.branco, size: 18),
             onPressed:
                 controller.quantidade < 20
                     ? () => setState(
@@ -119,19 +120,19 @@ class _BebidaCardState extends State<BebidaCard> {
               context: context,
               barrierDismissible: false,
               builder: (context) => Dialog(
-                backgroundColor: Colors.black87,
+                backgroundColor: AppColors.pretoClaro,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 24.0),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: const [
-                      Icon(Icons.check_circle, color: Colors.green, size: 32),
+                      Icon(Icons.check_circle, color: AppColors.verde, size: 32),
                       SizedBox(width: 12),
                       Flexible(
                         child: Text(
                           'Produto adicionado ao carrinho!',
-                          style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                          style: TextStyle(color: AppColors.branco, fontSize: 18, fontWeight: FontWeight.bold),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
@@ -142,8 +143,8 @@ class _BebidaCardState extends State<BebidaCard> {
                 ),
               ),
             );
-            // Fecha o pop-up automaticamente após 1 segundo
-            Future.delayed(const Duration(seconds: 1), () {
+            // Fecha o pop-up automaticamente após 500 ms
+            Future.delayed(const Duration(milliseconds: 500), () {
               if (Navigator.of(context).canPop()) {
                 Navigator.of(context).pop();
               }

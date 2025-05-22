@@ -5,6 +5,7 @@ import '../../controllers/salgado_card_controller.dart';
 import '../../providers/cart_provider.dart';
 import '../../models/cart_item.dart';
 import 'package:provider/provider.dart';
+import 'package:lanchonetedacarminha/ui/themes/app_theme.dart';
 
 // Widget de card para exibir um salgado com controles de quantidade e tipo de preparo
 class SalgadoCard extends StatefulWidget {
@@ -81,8 +82,8 @@ class _SalgadoCardState extends State<SalgadoCard> {
                 ),
               ),
               selected: controller.tipoSelecionado == TipoPreparo.frito,
-              selectedColor: Colors.orange, // Cor de fundo quando selecionado
-              backgroundColor: Colors.grey[900], // Cor de fundo padrão
+              selectedColor: AppColors.laranja , // Cor de fundo quando selecionado
+              backgroundColor: AppColors.cinza, // Cor de fundo padrão
               onSelected: (selected) {
                 atualizarEstado(() {
                   controller.trocarTipo(TipoPreparo.frito); // Troca o tipo no controller
@@ -109,7 +110,7 @@ class _SalgadoCardState extends State<SalgadoCard> {
                 ),
               ),
               selected: controller.tipoSelecionado == TipoPreparo.congelado,
-              selectedColor: Colors.orange,
+              selectedColor: AppColors.laranja,
               backgroundColor: Colors.grey[900],
               onSelected: (selected) {
                 atualizarEstado(() {
@@ -142,7 +143,7 @@ class _SalgadoCardState extends State<SalgadoCard> {
             children: [
               // Botão de diminuir quantidade
               IconButton(
-                icon: Icon(Icons.remove, size: iconSize, color: Colors.white),
+                icon: Icon(Icons.remove, size: iconSize, color: AppColors.branco),
                 constraints: BoxConstraints(
                   minWidth: buttonMin * 0.8,
                   minHeight: buttonMin * 0.8,
@@ -161,12 +162,12 @@ class _SalgadoCardState extends State<SalgadoCard> {
                 padding: EdgeInsets.symmetric(horizontal: largura * 0.005),
                 child: Text(
                   '${controller.quantidade}',
-                  style: TextStyle(color: Colors.white, fontSize: fontSize),
+                  style: TextStyle(color: AppColors.branco, fontSize: fontSize),
                 ),
               ),
               // Botão de aumentar quantidade
               IconButton(
-                icon: Icon(Icons.add, size: iconSize, color: Colors.white),
+                icon: Icon(Icons.add, size: iconSize, color: AppColors.branco),
                 constraints: BoxConstraints(
                   minWidth: buttonMin * 0.8,
                   minHeight: buttonMin * 0.8,
@@ -184,7 +185,7 @@ class _SalgadoCardState extends State<SalgadoCard> {
               IconButton(
                 icon: Icon(
                   Icons.arrow_drop_down,
-                  color: Colors.white,
+                  color: AppColors.branco,
                   size: iconSize + 2,
                 ),
                 constraints: BoxConstraints(
@@ -229,12 +230,12 @@ class _SalgadoCardState extends State<SalgadoCard> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: const [
-          Icon(Icons.check_circle, color: Colors.green, size: 32),
+          Icon(Icons.check_circle, color: AppColors.verde, size: 32),
           SizedBox(width: 12),
           Flexible(
             child: Text(
               'Produto adicionado ao carrinho!',
-              style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(color: AppColors.branco, fontSize: 18, fontWeight: FontWeight.bold),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
@@ -245,8 +246,8 @@ class _SalgadoCardState extends State<SalgadoCard> {
     ),
   ),
 );
-            // Fecha o pop-up automaticamente após 1 segundo
-            Future.delayed(const Duration(seconds: 1), () {
+            // Fecha o pop-up automaticamente após 500 ms
+            Future.delayed(const Duration(milliseconds: 500), () {
               if (Navigator.of(context).canPop()) {
                 Navigator.of(context).pop();
               }
