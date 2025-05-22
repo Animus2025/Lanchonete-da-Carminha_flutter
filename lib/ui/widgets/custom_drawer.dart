@@ -56,7 +56,7 @@ class CustomDrawer extends StatelessWidget {
             text: "Termos de Uso",
             onTap: () {
               Navigator.pop(context);
-              Navigator.pushNamed(context, '/termos-de-uso');
+              Navigator.pushNamed(context, '/termos_uso');
             },
           ),
           const Padding(
