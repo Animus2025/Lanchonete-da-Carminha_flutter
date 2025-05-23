@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class LoginDialog {
   static void show(BuildContext context) {
     final TextEditingController emailController = TextEditingController();
-    final TextEditingController senhaController =
-        TextEditingController(); // novo campo
+    final TextEditingController senhaController = TextEditingController();
 
     showDialog(
       context: context,
-      barrierDismissible: true, // Pode fechar tocando fora
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Colors.white,
@@ -17,67 +15,80 @@ class LoginDialog {
             borderRadius: BorderRadius.circular(10.0),
           ),
           title: const Text(
-            "Cadastre-se/Entrar",
+            "Entrar",
             textAlign: TextAlign.center,
             style: TextStyle(color: Colors.black, fontSize: 20),
           ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Campo de email
-              TextField(
-                controller: emailController,
-                style: const TextStyle(color: Colors.black),
-                decoration: const InputDecoration(
-                  labelText: "Email ou número de telefone",
-                  labelStyle: TextStyle(color: Colors.black54),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16), // espaço entre campos
-              // Campo de senha
-              TextField(
-                controller: senhaController,
-                obscureText: true, // esconde a senha
-                style: const TextStyle(color: Colors.black),
-                decoration: const InputDecoration(
-                  labelText: "Senha",
-                  labelStyle: TextStyle(color: Colors.black54),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: emailController,
+                  style: const TextStyle(color: Colors.black),
+                  decoration: const InputDecoration(
+                    labelText: "Email ou número de telefone",
+                    labelStyle: TextStyle(color: Colors.black54),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          actions: [
-            Center(
-              child: TextButton(
-                onPressed: () {
-                  // Aqui futuramente você pode verificar os dados
-                  Navigator.pop(context); // Fecha o pop-up
-                },
-                style: TextButton.styleFrom(
-                  backgroundColor: const Color(0xffF6C484),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: senhaController,
+                  obscureText: true,
+                  style: const TextStyle(color: Colors.black),
+                  decoration: const InputDecoration(
+                    labelText: "Senha",
+                    labelStyle: TextStyle(color: Colors.black54),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
                   ),
                 ),
-                child: const Text(
-                  "Continuar",
-                  style: TextStyle(color: Colors.black),
+                const SizedBox(height: 24),
+                SizedBox(
+                  width: double.infinity,
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    style: TextButton.styleFrom(
+                      backgroundColor: const Color(0xffF6C484),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                    child: const Text(
+                      "Continuar",
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
                 ),
-              ),
+                const SizedBox(height: 8),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, '/cadastro');
+                  },
+                  child: const Text(
+                    "Cadastrar-se",
+                    style: TextStyle(
+                      color: Colors.black,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         );
       },
     );

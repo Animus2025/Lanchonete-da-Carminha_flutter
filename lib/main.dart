@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:lanchonetedacarminha/ui/pages/cadastro_page.dart';
 
 import 'ui/pages/home_page.dart';
 import 'ui/pages/termos_uso.dart';
 import 'ui/themes/app_theme.dart';
 import 'providers/cart_provider.dart';
 import 'providers/auth_provider.dart';
+import 'ui/pages/cadastro_page.dart';
 
 void main() {
   runApp(
@@ -48,6 +50,8 @@ class _MyAppState extends State<MyApp> {
       routes: {
         '/': (context) => HomePage(toggleTheme: toggleTheme),
         '/termos_uso': (context) => const TermosDeUsoPage(),
+        '/cadastro_page': (context) => const CadastroPage(),
+
         // você pode adicionar outras rotas aqui também:
         // '/politicas-de-privacidade': (context) => const PoliticasPage(),
         // '/sobre': (context) => const SobrePage(),
