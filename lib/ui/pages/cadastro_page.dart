@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lanchonetedacarminha/ui/widgets/password_rules_widget.dart';
 
 class CadastroPage extends StatefulWidget {
   const CadastroPage({super.key});
@@ -19,6 +20,9 @@ class _CadastroPageState extends State<CadastroPage> {
   final TextEditingController _senhaController = TextEditingController();
 
   bool _obscureSenha = true;
+  String _senhaAtual = '';
+
+  final Color _laranjaPadrao = const Color(0xFFF6C484); // Laranja padrão
 
   @override
   void dispose() {
@@ -84,6 +88,10 @@ class _CadastroPageState extends State<CadastroPage> {
     return null;
   }
 
+  bool _verificarRegra(String senha, String regra, bool Function(String) condicao) {
+    return condicao(senha);
+  }
+
   void _enviarFormulario() {
     if (_formKey.currentState!.validate()) {
       // Se tudo OK, avisa e navega
@@ -97,7 +105,14 @@ class _CadastroPageState extends State<CadastroPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Cadastro')),
+      appBar: AppBar(
+        backgroundColor: Colors.black, // Fundo preto
+        title: Text(
+          'Cadastro',
+          style: Theme.of(context).appBarTheme.titleTextStyle, // Fonte padrão do tema
+        ),
+        iconTheme: IconThemeData(color: _laranjaPadrao), // Ícones na cor laranja padrão
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -166,17 +181,55 @@ class _CadastroPageState extends State<CadastroPage> {
                   ),
                 ),
                 obscureText: _obscureSenha,
+                onChanged: (value) {
+                  setState(() {
+                    _senhaAtual = value;
+                  });
+                },
+                style: const TextStyle(
+                  fontFamily: 'Oswald', // Fonte Oswald
+                  fontSize: 16,
+                ),
                 validator: validarSenha,
               ),
+              if (_senhaAtual.isNotEmpty) ...[
+                const SizedBox(height: 10),
+                PasswordRulesWidget(senhaAtual: _senhaAtual),
+              ],
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _enviarFormulario,
-                child: const Text('Continuar'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: _laranjaPadrao, // Fundo laranja padrão
+                ),
+                child: Text(
+                  'Continuar',
+                  style: Theme.of(context).elevatedButtonTheme.style?.textStyle?.resolve({}), // Fonte padrão do tema
+                ),
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildRegraItem(String regra, bool atendida) {
+    return Row(
+      children: [
+        Icon(
+          atendida ? Icons.check_circle : Icons.cancel,
+          color: atendida ? Colors.green : Colors.red,
+          size: 20,
+        ),
+        const SizedBox(width: 8),
+        Text(
+          regra,
+          style: TextStyle(
+            color: atendida ? Colors.green : Colors.red,
+          ),
+        ),
+      ],
     );
   }
 }
