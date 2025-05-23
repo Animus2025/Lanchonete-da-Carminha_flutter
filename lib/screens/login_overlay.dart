@@ -75,8 +75,11 @@ class LoginDialog {
                 const SizedBox(height: 8),
                 TextButton(
                   onPressed: () {
-                    Navigator.pop(context);
-                    Navigator.pushNamed(context, '/cadastro');
+                    Navigator.pop(context); // fecha o diálogo
+                    // Navega após fechar o diálogo com um delay zero pra garantir
+                    Future.delayed(Duration.zero, () {
+                      Navigator.pushNamed(context, '/cadastro_page');
+                    });
                   },
                   child: const Text(
                     "Cadastrar-se",
