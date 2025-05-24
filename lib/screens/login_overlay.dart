@@ -6,62 +6,96 @@ class LoginDialog {
   static void show(BuildContext context) {
     // Controlador para o campo de texto do email/telefone
     final TextEditingController emailController = TextEditingController();
+    final TextEditingController senhaController = TextEditingController();
 
     // Exibe o diálogo
     showDialog(
       context: context,
-      barrierDismissible: true, // Permite fechar o pop-up ao clicar fora
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: const Color.fromARGB(255, 255, 255, 255), // Cor de fundo do pop-up
+          backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0), // Borda arredondada
-          ), 
+            borderRadius: BorderRadius.circular(10.0),
+          ),
           title: const Text(
-            "Cadastre-se/Entrar",
+            "Entrar",
             textAlign: TextAlign.center,
-            style: TextStyle(color: Color.fromARGB(255, 0, 0, 0), fontSize: 20),
+            style: TextStyle(color: Colors.black, fontSize: 20),
           ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Campo de texto para email ou telefone
-              TextField(
-                controller: emailController,
-                style: const TextStyle(color: Colors.black),
-                decoration: const InputDecoration(
-                  labelText: "Email ou número de telefone",
-                  labelStyle: TextStyle(color: Color.fromARGB(170, 0, 0, 0)),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color.fromARGB(255, 0, 0, 0)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color.fromARGB(255, 0, 0, 0)),
-                  ),
-                ),
-              ), 
-            ],
-          ),
-          actions: [
-            // Botão "Continuar" centralizado
-            Center(
-              child: TextButton(
-                onPressed: () {
-                  Navigator.pop(context); // Fecha o pop-up ao clicar
-                },
-                style: TextButton.styleFrom(
-                  backgroundColor: const Color(0xffF6C484), // Cor de fundo do botão
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0), // Borda arredondada do botão
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: emailController,
+                  style: const TextStyle(color: Colors.black),
+                  decoration: const InputDecoration(
+                    labelText: "Email ou número de telefone",
+                    labelStyle: TextStyle(color: Colors.black54),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
                   ),
                 ),
-                child: const Text(
-                  "Continuar",
-                  style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: senhaController,
+                  obscureText: true,
+                  style: const TextStyle(color: Colors.black),
+                  decoration: const InputDecoration(
+                    labelText: "Senha",
+                    labelStyle: TextStyle(color: Colors.black54),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
+                  ),
                 ),
-              ),
+                const SizedBox(height: 24),
+                SizedBox(
+                  width: double.infinity,
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    style: TextButton.styleFrom(
+                      backgroundColor: const Color(0xffF6C484),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                    child: const Text(
+                      "Continuar",
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context); // fecha o diálogo
+                    // Navega após fechar o diálogo com um delay zero pra garantir
+                    Future.delayed(Duration.zero, () {
+                      Navigator.pushNamed(context, '/cadastro_page');
+                    });
+                  },
+                  child: const Text(
+                    "Cadastrar-se",
+                    style: TextStyle(
+                      color: Colors.black,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         );
       },
     );

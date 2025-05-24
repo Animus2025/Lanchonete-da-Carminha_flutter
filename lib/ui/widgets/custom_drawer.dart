@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../screens/login_overlay.dart';
 import '../themes/app_theme.dart';
+import 'package:provider/provider.dart';
+import '../../providers/auth_provider.dart';
 
 // Drawer personalizado para navegação lateral
 class CustomDrawer extends StatelessWidget {
@@ -45,65 +47,35 @@ class CustomDrawer extends StatelessWidget {
                   child: Divider(color: Color(0xff333333)),
                 ),
 
-                // Item do menu: Meus Pedidos (com ícone padrão)
-                _buildMenuItem(
-                  icon: Icons.list_alt,
-                  text: "Meus Pedidos",
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.pushNamed(context, '/Meus-Pedidos'); // Navega para a tela de pedidos
-                  },
-                ),
-              ],
-            ),
-          ),
-          // Parte fixa embaixo do menu
-          Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0), // Espaço nas laterais
-                child: SizedBox(
-                  width: 260, // Largura máxima para centralizar o conteúdo
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        'lib/assets/icons/logo_animus.png',
-                        width: 80,
-                        height: 80,
-                      ),
-                      const SizedBox(width: 2),
-                      const Flexible(
-                        child: Text(
-                          "CRÉDITO À EMPRESA ÂNIMUS, CRIADORA DO SISTEMA",
-                          style: TextStyle(
-                            color: AppColors.branco,
-                            fontSize: 16,
-                          ),
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+          // Meus Pedidos
+          _buildMenuItem(
+            icon: Icons.list_alt,
+            text: "Meus Pedidos",
+            onTap: () {
+              final auth = Provider.of<AuthProvider>(context, listen: false);
+              Navigator.pop(context);
 
-              // Item do menu: Termos de Uso (com imagem personalizada)
-              _buildMenuItemWithImage(
-                imagePath: 'lib/assets/icons/termos.png',
-                text: "Termos de Uso",
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushNamed(context, '/termos-de-uso');
-                },
-              ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
-                child: Divider(color: Color(0xff333333)),
-              ),
+              if (auth.isLoggedIn) {
+                Navigator.pushNamed(context, '/Meus-Pedidos');
+              } else {
+                LoginDialog.show(context); // Abre o pop-up para login
+              }
+            },
+          ),
+          const SizedBox(height: 330), // Espaçamento vertical
+          // Termos de Uso
+          _buildMenuItemWithImage(
+            imagePath: 'lib/assets/icons/termos.png',
+            text: "Termos de Uso",
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/termos_uso');
+            },
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: Divider(color: Color(0xff333333)),
+          ),
 
               // Item do menu: Políticas de Privacidade (com imagem personalizada)
               _buildMenuItemWithImage(
@@ -132,6 +104,7 @@ class CustomDrawer extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: 12.0),
               ),
             ],
+            ),
           ),
         ],
       ),

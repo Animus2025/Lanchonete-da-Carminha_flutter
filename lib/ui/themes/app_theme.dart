@@ -26,17 +26,43 @@ class AppTheme {
     primaryColor: AppColors.laranja,
     scaffoldBackgroundColor: AppColors.branco,
     appBarTheme: const AppBarTheme(
-      backgroundColor: AppColors.laranja,
-      foregroundColor: AppColors.branco,
+      backgroundColor: AppColors.preto, // Fundo preto
+      foregroundColor: AppColors.laranja, // Texto e ícones na cor laranja
+      titleTextStyle: TextStyle(
+        color: AppColors.laranja,
+        fontWeight: FontWeight.bold,
+        fontSize: 20,
+        fontFamily: 'BebasNeue', // Fonte BebasNeue para o AppBar
+      ),
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColors.laranja, // Fundo laranja
+        foregroundColor: AppColors.preto, // Texto preto
+        textStyle: const TextStyle(
+          fontWeight: FontWeight.bold,
+          fontFamily: 'BebasNeue', // Fonte BebasNeue para botões
+        ),
+      ),
     ),
     textTheme: const TextTheme(
-      bodyLarge: TextStyle(color: AppColors.textPrimary), // Texto primário no modo claro
-      bodyMedium: TextStyle(color: AppColors.textSecondary), // Texto secundário no modo claro
+      bodyLarge: TextStyle(
+        color: AppColors.textPrimary,
+        fontFamily: 'BebasNeue', // Fonte BebasNeue para textos grandes
+      ), // Texto primário no modo claro
+      bodyMedium: TextStyle(
+        color: AppColors.textSecondary,
+        fontFamily: 'BebasNeue', // Fonte BebasNeue para textos médios
+      ), // Texto secundário no modo claro
+      bodySmall: TextStyle(
+        color: AppColors.textPrimary,
+        fontFamily: 'BebasNeue', // Fonte BebasNeue para textos pequenos
+      ),
     ),
     colorScheme: ColorScheme.fromSwatch().copyWith(
       secondary: AppColors.preto,
     ),
-    fontFamily: 'BebasNeue',
+    fontFamily: 'BebasNeue', // Fonte padrão para todo o aplicativo
   );
 
   static ThemeData darkTheme = ThemeData(
@@ -45,15 +71,41 @@ class AppTheme {
     scaffoldBackgroundColor: AppColors.pretoClaro,
     appBarTheme: const AppBarTheme(
       backgroundColor: AppColors.preto,
-      foregroundColor: AppColors.branco,
+      foregroundColor: AppColors.laranja,
+      titleTextStyle: TextStyle(
+        color: AppColors.laranja,
+        fontWeight: FontWeight.bold,
+        fontSize: 20,
+        fontFamily: 'BebasNeue', // Fonte BebasNeue para o AppBar
+      ),
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColors.laranja,
+        foregroundColor: AppColors.preto,
+        textStyle: const TextStyle(
+          fontWeight: FontWeight.bold,
+          fontFamily: 'BebasNeue', // Fonte BebasNeue para botões
+        ),
+      ),
     ),
     textTheme: const TextTheme(
-      bodyLarge: TextStyle(color: AppColors.darkTextPrimary), // Texto primário no modo escuro
-      bodyMedium: TextStyle(color: AppColors.darkTextSecondary), // Texto secundário no modo escuro
+      bodyLarge: TextStyle(
+        color: AppColors.darkTextPrimary,
+        fontFamily: 'BebasNeue', // Fonte BebasNeue para textos grandes
+      ), // Texto primário no modo escuro
+      bodyMedium: TextStyle(
+        color: AppColors.darkTextSecondary,
+        fontFamily: 'BebasNeue', // Fonte BebasNeue para textos médios
+      ), // Texto secundário no modo escuro
+      bodySmall: TextStyle(
+        color: AppColors.darkTextPrimary,
+        fontFamily: 'BebasNeue', // Fonte BebasNeue para textos pequenos
+      ),
     ),
     colorScheme: ColorScheme.dark().copyWith(
       secondary: AppColors.preto,
     ),
-    fontFamily: 'BebasNeue',
+    fontFamily: 'BebasNeue', // Fonte padrão para todo o aplicativo
   );
 }
