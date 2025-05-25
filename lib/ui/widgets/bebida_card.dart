@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:lanchonetedacarminha/ui/themes/app_theme.dart';
+import 'package:provider/provider.dart';
 import '../../models/bebida.dart';
 import 'produto_card_base.dart';
 import '../../controllers/bebida_card_controller.dart';
+import '../../providers/cart_provider.dart';
+import '../../models/cart_item.dart';
 
 // Widget de card para exibir uma bebida com controles de quantidade
 class BebidaCard extends StatefulWidget {
@@ -47,7 +51,7 @@ class _BebidaCardState extends State<BebidaCard> {
         children: [
           // Botão de diminuir quantidade
           IconButton(
-            icon: const Icon(Icons.remove, color: Colors.white, size: 18),
+            icon: const Icon(Icons.remove, color: AppColors.branco, size: 18),
             onPressed:
                 controller.quantidade > 1
                     ? () => setState(
@@ -63,12 +67,12 @@ class _BebidaCardState extends State<BebidaCard> {
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: Text(
               '${controller.quantidade}',
-              style: TextStyle(color: Colors.white, fontSize: fontSize),
+              style: TextStyle(color: AppColors.branco, fontSize: fontSize),
             ),
           ),
           // Botão de aumentar quantidade
           IconButton(
-            icon: const Icon(Icons.add, color: Colors.white, size: 18),
+            icon: const Icon(Icons.add, color: AppColors.branco, size: 18),
             onPressed:
                 controller.quantidade < 20
                     ? () => setState(
@@ -101,7 +105,50 @@ class _BebidaCardState extends State<BebidaCard> {
           ), // Widget de quantidade
           extraWidget: null, // Bebida não tem chips de preparo
           onAdicionar: () {
-            // ação ao adicionar bebida ao carrinho (implemente aqui)
+            Provider.of<CartProvider>(context, listen: false).addItem(
+              CartItem(
+                nome: controller.bebida.nome,
+                preco: controller.bebida.preco,
+                imagem: controller.bebida.imagem,
+                quantidade: controller.quantidade,
+                tags: [], // Bebida não possui tags, então passa uma lista vazia
+                isBebida: true, // Indica que este item é uma bebida
+              ),
+            );
+            // Mostra um pop-up rápido no centro
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (context) => Dialog(
+                backgroundColor: AppColors.pretoClaro,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 24.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: const [
+                      Icon(Icons.check_circle, color: AppColors.verde, size: 32),
+                      SizedBox(width: 12),
+                      Flexible(
+                        child: Text(
+                          'Produto adicionado ao carrinho!',
+                          style: TextStyle(color: AppColors.branco, fontSize: 18, fontWeight: FontWeight.bold),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+            // Fecha o pop-up automaticamente após 500 ms
+            Future.delayed(const Duration(milliseconds: 500), () {
+              if (Navigator.of(context).canPop()) {
+                Navigator.of(context).pop();
+              }
+            });
           },
         );
       },

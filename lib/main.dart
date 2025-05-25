@@ -1,12 +1,25 @@
 import 'package:flutter/material.dart';
-import 'screens/home_page.dart';
+import 'package:provider/provider.dart';
+import 'package:lanchonetedacarminha/ui/pages/cadastro_page.dart';
+
+import 'ui/pages/home_page.dart';
 import 'ui/pages/termos_uso.dart';
 import 'ui/pages/politicas_privacidade.dart';
 import 'ui/pages/sobre.dart';
 import 'ui/themes/app_theme.dart';
+import 'providers/cart_provider.dart';
+import 'providers/auth_provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => CartProvider()),
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -37,13 +50,15 @@ class _MyAppState extends State<MyApp> {
       // 🔧 ROTAS REGISTRADAS AQUI
       routes: {
         '/': (context) => HomePage(toggleTheme: toggleTheme),
+        '/termos_uso': (context) => TermosDeUsoPage(toggleTheme: toggleTheme),
+        '/cadastro_page': (context) => const CadastroPage(),
+
         '/cardapio': (context) => HomePage(toggleTheme: toggleTheme),
-        '/termos-de-uso': (context) => const TermosDeUsoPage(),
         '/politicas-de-privacidade':
             (context) => const PoliticaPrivacidadePage(),
         '/sobre': (context) => const Sobre(),
         // você pode adicionar outras rotas aqui também:
-        // '/politicas-de-privacidade': (context) => const PoliticasPage(),
+        // '/politicas-de-prisvacidade': (context) => const PoliticasPage(),
         // '/sobre': (context) => const SobrePage(),
       },
     );

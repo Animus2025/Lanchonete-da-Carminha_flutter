@@ -1,17 +1,17 @@
 // Importa os pacotes necessários do Flutter e widgets personalizados criados no projeto
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../ui/widgets/custom_app_bar.dart'; // AppBar customizado (provavelmente com o botão de tema e logo)
-import '../ui/widgets/custom_drawer.dart'; // Menu lateral personalizado
-import '../ui/widgets/footer.dart'; // Rodapé personalizado
-import '../ui/themes/app_theme.dart'; // Tema com as cores da aplicação
-import '../data/salgado_data.dart'; // Dados dos salgados
-import '../ui/widgets/salgado_card.dart'; // Importa o card de salgado
-import '../models/salgado.dart'; // Importa o modelo de salgado
-import '../data/bebida_data.dart'; // Importe a lista de bebidas
-import '../ui/widgets/bebida_card.dart'; // Importe o card de bebida
-import '../providers/cart_provider.dart';
-import '../screens/cart_overlay.dart';
+import '/ui/widgets/custom_app_bar.dart'; // AppBar customizado (provavelmente com o botão de tema e logo)
+import '/ui/widgets/custom_drawer.dart'; // Menu lateral personalizado
+import '/ui/widgets/footer.dart'; // Rodapé personalizado
+import '/ui/themes/app_theme.dart'; // Tema com as cores da aplicação
+import '/data/salgado_data.dart'; // Dados dos salgados
+import '/ui/widgets/salgado_card.dart'; // Importa o card de salgado
+import '/models/salgado.dart'; // Importa o modelo de salgado
+import '/data/bebida_data.dart'; // Importe a lista de bebidas
+import '/ui/widgets/bebida_card.dart'; // Importe o card de bebida
+import '/providers/cart_provider.dart';
+import '/screens/cart_overlay.dart';
 
 // Componente principal da tela Home
 class HomePage extends StatefulWidget {
