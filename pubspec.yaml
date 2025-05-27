@@ -75,6 +75,14 @@ flutter:
     - lib/assets/icons/termos.png
     - lib/assets/icons/privacidade.png
     - lib/assets/icons/logo_animus.png
+    - lib/assets/icons/band-elo.png
+    - lib/assets/icons/band-visa.png
+    - lib/assets/icons/band-mastercard.png
+    - lib/assets/icons/band-hipercard.png
+    - lib/assets/icons/logo_whats.png
+    - lib/assets/icons/logo_facebook.png
+    - lib/assets/icons/logo_insta.png
+    - lib/assets/icons/band-pix.png
     - lib/assets/produtos/bolinhadequeijo.jpg
     - lib/assets/produtos/bolinhadequeijomini.jpg
     - lib/assets/produtos/bolinhodemandioca.jpg
