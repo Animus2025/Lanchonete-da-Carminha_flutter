@@ -1,10 +1,13 @@
 import '../models/salgado.dart';
 
+/// Lista de salgados disponíveis no aplicativo.
+/// Cada salgado é representado por uma instância da classe Salgado,
+/// contendo nome, caminho da imagem e categoria (festa, assado ou mini).
 final List<Salgado> salgados = [
   Salgado(
-    nome: "Coxinha de Frango com Catupiry",
-    imagem: "lib/assets/produtos/coxinhafrango.jpg",
-    categoria: "festa",
+    nome: "Coxinha de Frango com Catupiry", // Nome do salgado
+    imagem: "lib/assets/produtos/coxinhafrango.jpg", // Caminho da imagem
+    categoria: "festa", // Categoria do salgado
   ),
   Salgado(
     nome: "Kibe",

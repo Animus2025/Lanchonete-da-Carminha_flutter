@@ -1,11 +1,14 @@
 import '../models/bebida.dart';
 
+/// Lista de bebidas disponíveis no aplicativo.
+/// Cada bebida é representada por uma instância da classe Bebida,
+/// contendo nome, caminho da imagem, preço e volume em ml.
 final List<Bebida> bebidas = [
   Bebida(
-    nome: 'Coca-Cola 2 litros',
-    imagem: 'lib/assets/produtos/coca2l.png',
-    preco: 14.00,
-    volume: 2000,
+    nome: 'Coca-Cola 2 litros', // Nome da bebida
+    imagem: 'lib/assets/produtos/coca2l.png', // Caminho da imagem da bebida
+    preco: 14.00, // Preço em reais
+    volume: 2000, // Volume em ml
   ),
   Bebida(
     nome: 'Guaraná 2 litros',

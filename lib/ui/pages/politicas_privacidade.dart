@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
 import '../themes/app_theme.dart';
 
+/// Página que exibe as Políticas de Privacidade do aplicativo.
+/// Permite alternar entre modo claro e escuro usando o botão na AppBar.
 class PoliticaPrivacidadePage extends StatelessWidget {
+  /// Função para alternar o tema do app (claro/escuro).
   final VoidCallback? toggleTheme;
+
+  /// Construtor da página, recebe a função de alternância de tema.
   const PoliticaPrivacidadePage({Key? key, this.toggleTheme}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // Detecta se o app está no modo escuro.
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    // Define a cor do texto conforme o tema.
     final textColor = isDarkMode ? AppColors.laranja : AppColors.preto;
 
     return Scaffold(
+      // AppBar personalizada com título, cor e botão de alternância de tema.
       appBar: AppBar(
         title: const Text(
           'Políticas de Privacidade',
@@ -29,11 +37,11 @@ class PoliticaPrivacidadePage extends StatelessWidget {
               color: AppColors.laranja,
             ),
             onPressed: () {
-              // Busca o método toggleTheme do main.dart via ModalRoute
+              // Chama a função de alternância de tema, se fornecida.
               if (toggleTheme != null) {
                 toggleTheme!();
               } else {
-                // fallback para navegação por rota sem parâmetro
+                // Alternativa para navegação por rota sem parâmetro.
                 final parent = ModalRoute.of(context)?.settings.arguments;
                 if (parent is VoidCallback) parent();
               }
@@ -42,11 +50,13 @@ class PoliticaPrivacidadePage extends StatelessWidget {
           ),
         ],
       ),
+      // Corpo da página com rolagem e padding.
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Título centralizado e destacado.
             Center(
               child: Text(
                 'Políticas de Privacidade - Lanchonete da Carminha',
@@ -60,6 +70,7 @@ class PoliticaPrivacidadePage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
+            // Data da última atualização.
             Text(
               'Última atualização: 28/05/2025\n',
               style: TextStyle(
@@ -68,6 +79,7 @@ class PoliticaPrivacidadePage extends StatelessWidget {
                 fontFamily: 'BebasNeue',
               ),
             ),
+            // Seções da política de privacidade, cada uma com título e parágrafo.
             _titulo('1. Coleta de Informações', textColor),
             _paragrafo(
               'Coletamos informações fornecidas por você ao utilizar o app, como:\n'
@@ -108,7 +120,6 @@ class PoliticaPrivacidadePage extends StatelessWidget {
               '- Cancelamento do uso das informações\n',
               textColor,
             ),
-
             _titulo('6. Retenção de Dados', textColor),
             _paragrafo(
               'Seus dados serão mantidos enquanto sua conta estiver ativa ou conforme necessário para cumprir obrigações legais.\n',
@@ -137,6 +148,7 @@ class PoliticaPrivacidadePage extends StatelessWidget {
     );
   }
 
+  /// Widget auxiliar para exibir títulos das seções, com cor e fonte padronizadas.
   Widget _titulo(String texto, Color textColor) {
     return Padding(
       padding: const EdgeInsets.only(top: 2.0, bottom: 2.0),
@@ -152,6 +164,7 @@ class PoliticaPrivacidadePage extends StatelessWidget {
     );
   }
 
+  /// Widget auxiliar para exibir parágrafos das seções, com cor e fonte padronizadas.
   Widget _paragrafo(String texto, Color textColor) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12.0),

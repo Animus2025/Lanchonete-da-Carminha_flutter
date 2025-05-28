@@ -1,21 +1,22 @@
-// Importa os pacotes necessários do Flutter e widgets personalizados criados no projeto
+// Importação dos pacotes e widgets necessários para a tela principal (Home)
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../ui/widgets/custom_app_bar.dart'; // AppBar customizado (provavelmente com o botão de tema e logo)
+import '../ui/widgets/custom_app_bar.dart'; // AppBar customizada com botão de tema
 import '../ui/widgets/custom_drawer.dart'; // Menu lateral personalizado
 import '../ui/widgets/footer.dart'; // Rodapé personalizado
-import '../ui/themes/app_theme.dart'; // Tema com as cores da aplicação
+import '../ui/themes/app_theme.dart'; // Tema de cores do app
 import '../data/salgado_data.dart'; // Dados dos salgados
-import '../ui/widgets/salgado_card.dart'; // Importa o card de salgado
-import '../models/salgado.dart'; // Importa o modelo de salgado
-import '../data/bebida_data.dart'; // Importe a lista de bebidas
-import '../ui/widgets/bebida_card.dart'; // Importe o card de bebida
-import '../providers/cart_provider.dart';
-import '../screens/cart_overlay.dart';
+import '../ui/widgets/salgado_card.dart'; // Card de salgado
+import '../models/salgado.dart'; // Modelo de salgado
+import '../data/bebida_data.dart'; // Dados das bebidas
+import '../ui/widgets/bebida_card.dart'; // Card de bebida
+import '../providers/cart_provider.dart'; // Provider do carrinho
+import '../screens/cart_overlay.dart'; // Overlay do carrinho
 
-// Componente principal da tela Home
+/// Tela principal do aplicativo, exibindo as categorias de produtos e bebidas.
+/// Possui navegação horizontal entre seções, AppBar customizada, Drawer e rodapé.
 class HomePage extends StatefulWidget {
-  final VoidCallback toggleTheme;
+  final VoidCallback toggleTheme; // Função para alternar o tema do app
 
   const HomePage({super.key, required this.toggleTheme});
 
@@ -26,7 +27,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final ScrollController _scrollController = ScrollController();
 
-  // Mapeamento robusto das seções
+  // Mapeamento das seções para navegação e scroll automático
   final Map<String, GlobalKey> sectionKeys = {
     'festa': GlobalKey(),
     'assado': GlobalKey(),
@@ -34,12 +35,14 @@ class _HomePageState extends State<HomePage> {
     'bebidas': GlobalKey(),
   };
 
-  String _currentSection = 'festa'; // Variável de estado para destacar a seção
+  String _currentSection = 'festa'; // Seção atualmente destacada
 
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(_onScroll);
+    _scrollController.addListener(
+      _onScroll,
+    ); // Adiciona listener para detectar rolagem
   }
 
   @override
@@ -49,30 +52,28 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
+  /// Faz o scroll animado até a seção desejada ao clicar no menu horizontal
   void _scrollTo(String section) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final context = sectionKeys[section]?.currentContext;
       if (context != null) {
-        // Animação do scroll
         Scrollable.ensureVisible(
           context,
           duration: const Duration(milliseconds: 700),
           curve: Curves.easeInOut,
-          alignment: 0, // Leva o título para o topo
+          alignment: 0,
         );
-
-        // Efeito visual (opcional)
         if (mounted) {
           setState(() {
-            _currentSection = section; // Destaca a seção atual
+            _currentSection = section; // Atualiza o destaque do menu
           });
         }
       }
     });
   }
 
+  /// Detecta qual seção está visível no momento para destacar no menu
   void _onScroll() {
-    // Lista das seções na ordem em que aparecem
     final sections = ['festa', 'assado', 'mini', 'bebidas'];
     String? newSection;
 
@@ -85,14 +86,13 @@ class _HomePageState extends State<HomePage> {
       if (box == null) continue;
       final position = box.localToGlobal(Offset.zero, ancestor: null).dy;
 
-      // Se o topo do título está acima ou alinhado ao topo da tela, marca como possível seção ativa
+      // Marca a seção ativa se o topo está acima ou alinhado ao topo da tela
       if (position <= 300) {
-        // 56 é o tamanho padrão da AppBar, ajuste se necessário
         newSection = section;
       }
     }
 
-    // Só atualiza se mudou
+    // Atualiza o menu apenas se mudou de seção
     if (newSection != null && _currentSection != newSection) {
       setState(() {
         _currentSection = newSection!;
@@ -104,7 +104,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
-    // Agrupa os salgados por categoria
+    // Agrupa os salgados por categoria para exibição nas seções
     final Map<String, List<Salgado>> salgadosPorCategoria = {};
     for (var salgado in salgados) {
       salgadosPorCategoria
@@ -113,11 +113,13 @@ class _HomePageState extends State<HomePage> {
     }
 
     return Scaffold(
-      appBar: CustomAppBar(toggleTheme: widget.toggleTheme),
-      drawer: const CustomDrawer(),
+      appBar: CustomAppBar(
+        toggleTheme: widget.toggleTheme,
+      ), // AppBar customizada com botão de tema
+      drawer: const CustomDrawer(), // Drawer lateral
       body: Column(
         children: [
-          // Menu de navegação horizontal
+          // Menu de navegação horizontal entre as seções
           Container(
             height: 50,
             color: AppColors.pretoClaro,
@@ -131,7 +133,7 @@ class _HomePageState extends State<HomePage> {
                     _buildSectionButton("Assado", 'assado'),
                     _buildSectionButton("Mini", 'mini'),
                     _buildSectionButton("Bebidas", 'bebidas'),
-                    // Botão separado com ícone de carrinho
+                    // Botão do carrinho de compras
                     Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 2,
@@ -143,9 +145,10 @@ class _HomePageState extends State<HomePage> {
                           children: [
                             IconButton(
                               icon: const Icon(
-                                  Icons.shopping_cart,
-                                  size: 30,
-                                  color: AppColors.laranja),
+                                Icons.shopping_cart,
+                                size: 30,
+                                color: AppColors.laranja,
+                              ),
                               onPressed: () {
                                 showModalBottomSheet(
                                   context: context,
@@ -158,6 +161,7 @@ class _HomePageState extends State<HomePage> {
                               },
                               tooltip: 'Ver carrinho',
                             ),
+                            // Badge com a quantidade de itens no carrinho
                             Positioned(
                               right: 6,
                               top: 6,
@@ -165,20 +169,20 @@ class _HomePageState extends State<HomePage> {
                                 builder: (context, cart, child) {
                                   return cart.itemCount > 0
                                       ? Container(
-                                    padding: const EdgeInsets.all(4),
-                                    decoration: const BoxDecoration(
-                                      color: Colors.red,
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Text(
-                                      '${cart.itemCount}',
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  )
+                                        padding: const EdgeInsets.all(4),
+                                        decoration: const BoxDecoration(
+                                          color: Colors.red,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Text(
+                                          '${cart.itemCount}',
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      )
                                       : const SizedBox.shrink();
                                 },
                               ),
@@ -192,7 +196,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          // Conteúdo principal com SingleChildScrollView
+          // Conteúdo principal com as seções de produtos
           Expanded(
             child: SingleChildScrollView(
               controller: _scrollController,
@@ -205,7 +209,7 @@ class _HomePageState extends State<HomePage> {
                     items: salgadosPorCategoria['festa'] ?? [],
                     isSalgado: true,
                     titleColor:
-                    isDarkMode ? AppColors.laranja : AppColors.pretoClaro,
+                        isDarkMode ? AppColors.laranja : AppColors.pretoClaro,
                   ),
                   // Seção Assado
                   _buildSection(
@@ -214,7 +218,7 @@ class _HomePageState extends State<HomePage> {
                     items: salgadosPorCategoria['assado'] ?? [],
                     isSalgado: true,
                     titleColor:
-                    isDarkMode ? AppColors.laranja : AppColors.pretoClaro,
+                        isDarkMode ? AppColors.laranja : AppColors.pretoClaro,
                   ),
                   // Seção Mini
                   _buildSection(
@@ -223,7 +227,7 @@ class _HomePageState extends State<HomePage> {
                     items: salgadosPorCategoria['mini'] ?? [],
                     isSalgado: true,
                     titleColor:
-                    isDarkMode ? AppColors.laranja : AppColors.pretoClaro,
+                        isDarkMode ? AppColors.laranja : AppColors.pretoClaro,
                   ),
                   // Seção Bebidas
                   _buildSection(
@@ -232,7 +236,7 @@ class _HomePageState extends State<HomePage> {
                     items: bebidas,
                     isSalgado: false,
                     titleColor:
-                    isDarkMode ? AppColors.laranja : AppColors.pretoClaro,
+                        isDarkMode ? AppColors.laranja : AppColors.pretoClaro,
                   ),
                 ],
               ),
@@ -240,37 +244,36 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      bottomNavigationBar: const CustomFooter(),
+      bottomNavigationBar: const CustomFooter(), // Rodapé fixo
     );
   }
 
+  /// Cria o botão do menu horizontal para cada seção.
+  /// Destaca o botão se a seção estiver ativa.
   Widget _buildSectionButton(String label, String section) {
     final bool isSelected = _currentSection == section;
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 10,
-        vertical: 4,
-      ), // Menos espaço horizontal e vertical
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       child: Container(
         alignment: Alignment.center,
         decoration:
-        isSelected
-            ? BoxDecoration(
-          border: Border.all(color: AppColors.laranja, width: 2),
-          borderRadius: BorderRadius.circular(8),
-          color: AppColors.laranja,
-        )
-            : null,
+            isSelected
+                ? BoxDecoration(
+                  border: Border.all(color: AppColors.laranja, width: 2),
+                  borderRadius: BorderRadius.circular(8),
+                  color: AppColors.laranja,
+                )
+                : null,
         child: SizedBox(
-          height: 36, // Altura um pouco menor
+          height: 36,
           child: TextButton(
             onPressed: () => _scrollTo(section),
             style: TextButton.styleFrom(
               foregroundColor:
-              isSelected ? Colors.black : AppColors.textSecondary,
+                  isSelected ? Colors.black : AppColors.textSecondary,
               backgroundColor: Colors.transparent,
               padding: EdgeInsets.zero,
-              minimumSize: const Size(60, 36), // Menor largura e altura mínimas
+              minimumSize: const Size(60, 36),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -279,7 +282,7 @@ class _HomePageState extends State<HomePage> {
               child: Text(
                 label,
                 style: TextStyle(
-                  fontSize: 20, // Fonte um pouco menor
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: isSelected ? Colors.black : AppColors.textSecondary,
                 ),
@@ -292,6 +295,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  /// Monta cada seção de produtos (salgados ou bebidas) com título e cards.
   Widget _buildSection({
     required GlobalKey key,
     required String title,
@@ -316,9 +320,9 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          const SizedBox(height: 8), // Espaço logo abaixo do título
+          const SizedBox(height: 8),
           ...items.map(
-                (item) =>
+            (item) =>
                 isSalgado
                     ? SalgadoCard(salgado: item)
                     : BebidaCard(bebida: item),
