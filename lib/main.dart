@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:lanchonetedacarminha/ui/pages/cadastro_page.dart';
-
-import 'ui/pages/home_page.dart';
 import 'ui/pages/termos_uso.dart';
 import 'ui/pages/politicas_privacidade.dart';
 import 'ui/pages/sobre.dart';
 import 'ui/themes/app_theme.dart';
 import 'providers/cart_provider.dart';
 import 'providers/auth_provider.dart';
+import 'screens/home_page.dart';
 
 void main() {
   runApp(
