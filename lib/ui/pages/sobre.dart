@@ -22,7 +22,7 @@ class Sobre extends StatelessWidget {
           style: TextStyle(
             color: AppColors.laranja,
             fontWeight: FontWeight.bold,
-            fontFamily: 'Arial',
+            fontFamily: 'BebasNeue', // Fonte padronizada
           ),
         ),
         backgroundColor: AppColors.preto,
@@ -31,7 +31,7 @@ class Sobre extends StatelessWidget {
           IconButton(
             icon: Icon(
               isDarkMode ? Icons.light_mode : Icons.dark_mode,
-              color: AppColors.laranja, // <-- Ícone do botão em laranja
+              color: AppColors.laranja,
             ),
             onPressed: toggleTheme,
           ),

@@ -55,7 +55,7 @@ class _MyAppState extends State<MyApp> {
 
         '/cardapio': (context) => HomePage(toggleTheme: toggleTheme),
         '/politicas-de-privacidade':
-            (context) => const PoliticaPrivacidadePage(),
+            (context) => PoliticaPrivacidadePage(toggleTheme: toggleTheme),
         '/sobre': (context) => Sobre(toggleTheme: toggleTheme),
         // você pode adicionar outras rotas aqui também:
         // '/politicas-de-prisvacidade': (context) => const PoliticasPage(),
