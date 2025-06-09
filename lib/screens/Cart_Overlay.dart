@@ -3,6 +3,7 @@ import 'package:lanchonetedacarminha/ui/themes/app_theme.dart';
 import 'package:provider/provider.dart';
 import '/providers/cart_provider.dart';
 
+
 // Widget que exibe o overlay do carrinho
 class CartOverlay extends StatelessWidget {
   @override
@@ -313,8 +314,16 @@ class CartOverlay extends StatelessWidget {
                                               ),
                                             ),
                                             IconButton(
-                                              icon: Icon(Icons.remove, size: 18, color: iconColor),
-                                              onPressed: () => cartProvider.decreaseQuantity(index),
+                                              icon: Icon(
+                                                Icons.remove,
+                                                size: 18,
+                                                color: (item.isBebida ? item.quantidade > 1 : item.quantidade > 5)
+                                                    ? iconColor
+                                                    : iconColor.withOpacity(0.4), // Esmaece se mínimo
+                                              ),
+                                              onPressed: (item.isBebida ? item.quantidade > 1 : item.quantidade > 5)
+                                                  ? () => cartProvider.decreaseQuantity(index)
+                                                  : null, // Desabilita se mínimo
                                             ),
                                           ],
                                         ),
@@ -345,9 +354,11 @@ class CartOverlay extends StatelessWidget {
                         ),
                         // Botão de finalizar pedido
                         ElevatedButton(
-                          onPressed: () {
-                            // ação finalizar
-                          },
+                          onPressed: cartItems.isNotEmpty
+                              ? () {
+                                  Navigator.pushNamed(context, '/revisao_pedido');
+                                }
+                              : null,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.preto,
                             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -357,7 +368,12 @@ class CartOverlay extends StatelessWidget {
                           ),
                           child: Text(
                             "FINALIZAR PEDIDO",
-                            style: TextStyle(fontSize: 20, color: AppColors.laranja),
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: cartItems.isNotEmpty
+                                  ? AppColors.laranja
+                                  : AppColors.laranja.withOpacity(0.4), // Esmaece o texto se desabilitado
+                            ),
                           ),
                         ),
                       ],
