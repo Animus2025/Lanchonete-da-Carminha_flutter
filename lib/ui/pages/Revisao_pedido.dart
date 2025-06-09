@@ -18,6 +18,9 @@ class RevisaoPedido extends StatelessWidget {
     // Pegue os itens do carrinho do Provider
     final cartItems = context.watch<CartProvider>().items;
 
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 600;
+
     return Scaffold(
       appBar: CustomAppBar(toggleTheme: toggleTheme),
       drawer: CustomDrawer(),
@@ -93,7 +96,7 @@ class RevisaoPedido extends StatelessWidget {
           ),
           // Altere o Divider para também usar Padding:
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Divider(
               thickness: 1,
               height: 24,
@@ -130,8 +133,9 @@ class RevisaoPedido extends StatelessWidget {
                           ),
                         ),
                         Expanded(
-                          flex: 2,
-                          child: Center(
+                          flex: 5,
+                          child: Align(
+                            alignment: Alignment.centerRight, // Alinha o texto mais à direita
                             child: Text(
                               'QUANTIDADE',
                               style: TextStyle(
@@ -174,140 +178,158 @@ class RevisaoPedido extends StatelessWidget {
                             color: AppColors.preto,
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: IntrinsicHeight( // Adicione este widget para garantir altura mínima
+                          // Aumente o padding vertical aqui:
+                          padding: EdgeInsets.symmetric(vertical: isMobile ? 8 : 24, horizontal: 0),
+                          child: IntrinsicHeight(
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                // PRODUTO
-                                Expanded(
-                                  flex: 3,
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: SizedBox(
-                                          width: 80,
-                                          height: 80,
-                                          child: ClipRRect(
-                                            borderRadius: BorderRadius.circular(8),
-                                            child: Image.network(
+                                // Imagem
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: SizedBox(
+                                    width: isMobile ? screenWidth * 0.22 : 120,
+                                    height: isMobile ? screenWidth * 0.22 : 120,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(8),
+                                      child: item.nome.toLowerCase().contains('coca') && item.nome.contains('2')
+                                          ? Container(
+                                              width: isMobile ? screenWidth * 0.22 : 140,
+                                              height: isMobile ? screenWidth * 0.22 : 140,
+                                              color: Colors.black,
+                                              alignment: Alignment.center,
+                                              child: Image.asset(
+                                                item.imagem,
+                                                width: isMobile ? screenWidth * 0.11 : 70,
+                                                height: isMobile ? screenWidth * 0.22 : 140,
+                                                fit: BoxFit.contain,
+                                                errorBuilder: (context, error, stackTrace) => Container(
+                                                  width: isMobile ? screenWidth * 0.11 : 70,
+                                                  height: isMobile ? screenWidth * 0.22 : 140,
+                                                  color: AppColors.preto,
+                                                  child: const Icon(Icons.image_not_supported),
+                                                ),
+                                              ),
+                                            )
+                                          : Image.asset(
                                               item.imagem,
+                                              width: isMobile ? screenWidth * 0.22 : 140,
+                                              height: isMobile ? screenWidth * 0.22 : 140,
                                               fit: BoxFit.cover,
+                                              errorBuilder: (context, error, stackTrace) => Container(
+                                                width: isMobile ? screenWidth * 0.22 : 90,
+                                                height: isMobile ? screenWidth * 0.22 : 90,
+                                                color: AppColors.cinza,
+                                                child: const Icon(Icons.image_not_supported),
+                                              ),
                                             ),
-                                          ),
-                                        ),
-                                      ),
-                                      // O resto do conteúdo do produto
-                                      Expanded(
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                item.nome,
-                                                style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 14,
-                                                  overflow: TextOverflow.ellipsis, // Evita overflow
-                                                ),
-                                                maxLines: 2, // Limita linhas do nome
-                                              ),
-                                              const SizedBox(height: 4),
-                                              SingleChildScrollView(
-                                                scrollDirection: Axis.horizontal,
-                                                child: Row(
-                                                  children: item.tags.map<Widget>((tag) {
-                                                    Color tagColor;
-                                                    if (tag.toUpperCase() == 'FRITO') {
-                                                      tagColor = AppColors.laranja;
-                                                    } else if (tag.toUpperCase() == 'CONGELADO') {
-                                                      tagColor = Colors.blue[200]!;
-                                                    } else {
-                                                      tagColor = Colors.grey[300]!;
-                                                    }
-                                                    return Container(
-                                                      margin: const EdgeInsets.only(right: 6),
-                                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                                                      decoration: BoxDecoration(
-                                                        color: tagColor,
-                                                        borderRadius: BorderRadius.circular(8),
-                                                      ),
-                                                      child: Text(
-                                                        tag,
-                                                        style: const TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 11,
-                                                          fontWeight: FontWeight.bold,
-                                                          overflow: TextOverflow.ellipsis,
-                                                        ),
-                                                      ),
-                                                    );
-                                                  }).toList(),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                                    ),
                                   ),
                                 ),
-                                // QUANTIDADE
+                                // Nome e tags (flexível)
                                 Expanded(
-                                  flex: 2,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                  flex: 5,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          item.nome,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 14,
+                                          ),
+                                          maxLines: 5,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        const SizedBox(height: 4),
+                                        SingleChildScrollView(
+                                          scrollDirection: Axis.horizontal,
+                                          child: Row(
+                                            children: item.tags.map<Widget>((tag) {
+                                              Color tagColor;
+                                              if (tag.toUpperCase() == 'FRITO') {
+                                                tagColor = AppColors.laranja;
+                                              } else if (tag.toUpperCase() == 'CONGELADO') {
+                                                tagColor = Colors.blue[200]!;
+                                              } else {
+                                                tagColor = Colors.grey[300]!;
+                                              }
+                                              return Container(
+                                                margin: const EdgeInsets.only(right: 6),
+                                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                                decoration: BoxDecoration(
+                                                  color: tagColor,
+                                                  borderRadius: BorderRadius.circular(8),
+                                                ),
+                                                child: Text(
+                                                  tag,
+                                                  style: const TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 11,
+                                                    fontWeight: FontWeight.bold,
+                                                    overflow: TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                              );
+                                            }).toList(),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                // Botões de quantidade (logo após o nome, mais à esquerda)
+                                SizedBox(
+                                  width: isMobile ? 90 : 110,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
-                                      const SizedBox(height: 8),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          IconButton(
-                                            icon: Icon(
-                                              Icons.remove,
-                                              color: item.isBebida
-                                                  ? (item.quantidade > 1 ? AppColors.laranja : AppColors.laranja.withOpacity(0.4))
-                                                  : (item.quantidade > 5 ? AppColors.laranja : AppColors.laranja.withOpacity(0.4)),
-                                            ),
-                                            onPressed: item.isBebida
-                                                ? (item.quantidade > 1
-                                                    ? () => context.read<CartProvider>().decreaseQuantity(index)
-                                                    : null)
-                                                : (item.quantidade > 5
-                                                    ? () => context.read<CartProvider>().decreaseQuantity(index)
-                                                    : null),
-                                          ),
-                                          SizedBox(
-                                            width: 20, // Garante espaço para até 3 dígitos
-                                            child: Center(
-                                              child: Text(
-                                                '${item.quantidade}',
-                                                style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 16,
-                                                ),
-                                              ),
+                                      IconButton(
+                                        icon: Icon(
+                                          Icons.remove,
+                                          color: item.isBebida
+                                              ? (item.quantidade > 1 ? AppColors.laranja : AppColors.laranja.withOpacity(0.4))
+                                              : (item.quantidade > 5 ? AppColors.laranja : AppColors.laranja.withOpacity(0.4)),
+                                        ),
+                                        onPressed: item.isBebida
+                                            ? (item.quantidade > 1
+                                                ? () => context.read<CartProvider>().decreaseQuantity(index)
+                                                : null)
+                                            : (item.quantidade > 5
+                                                ? () => context.read<CartProvider>().decreaseQuantity(index)
+                                                : null),
+                                        constraints: const BoxConstraints(),
+                                        padding: EdgeInsets.zero,
+                                      ),
+                                      SizedBox(
+                                        width: isMobile ? 24 : 32,
+                                        child: Center(
+                                          child: Text(
+                                            '${item.quantidade}',
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
                                             ),
                                           ),
-                                          IconButton(
-                                            icon: const Icon(Icons.add, color: AppColors.laranja),
-                                            onPressed: () {
-                                              context.read<CartProvider>().increaseQuantity(index);
-                                            },
-                                          ),
-                                        ],
+                                        ),
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(Icons.add, color: AppColors.laranja),
+                                        onPressed: () => context.read<CartProvider>().increaseQuantity(index),
+                                        constraints: const BoxConstraints(),
+                                        padding: EdgeInsets.zero,
                                       ),
                                     ],
                                   ),
                                 ),
-                                // PREÇO
-                                Expanded(
+                                // Preço (sempre à direita, flexível)
+                                Flexible(
                                   flex: 2,
                                   child: Padding(
-                                    padding: const EdgeInsets.only(right: 16),
+                                    padding: const EdgeInsets.only(right: 8),
                                     child: Align(
                                       alignment: Alignment.centerRight,
                                       child: Text(
@@ -318,6 +340,7 @@ class RevisaoPedido extends StatelessWidget {
                                           fontSize: 15,
                                           overflow: TextOverflow.ellipsis,
                                         ),
+                                        softWrap: false,
                                       ),
                                     ),
                                   ),
@@ -332,12 +355,15 @@ class RevisaoPedido extends StatelessWidget {
                   const SizedBox(height: 16),
                   Container(
                     width: double.infinity,
-                    margin: const EdgeInsets.symmetric(horizontal: 8),
-                    padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+                    margin: EdgeInsets.symmetric(horizontal: isMobile ? 4 : 8),
+                    padding: EdgeInsets.symmetric(
+                      vertical: isMobile ? 12 : 16,
+                      horizontal: isMobile ? 8 : 12,
+                    ),
                     decoration: BoxDecoration(
                       color: isDark ? Colors.transparent : Colors.white,
                       border: Border.all(color: isDark ? AppColors.laranja : Colors.black, width: 1),
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(isMobile ? 6 : 8),
                     ),
                     child: Column(
                       children: [
@@ -345,29 +371,29 @@ class RevisaoPedido extends StatelessWidget {
                           'TOTAL DO PEDIDO',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 18,
+                            fontSize: isMobile ? 15 : 18,
                             color: isDark ? AppColors.laranja : Colors.black,
                           ),
                         ),
-                        const SizedBox(height: 8),
+                        SizedBox(height: isMobile ? 6 : 8),
                         Divider(
                           color: isDark ? AppColors.laranja : Colors.black,
                           thickness: 1,
-                          height: 8,
+                          height: isMobile ? 6 : 8,
                         ),
-                        const SizedBox(height: 8),
+                        SizedBox(height: isMobile ? 6 : 8),
                         Text(
                           'R\$ ${cartItems.fold<double>(0, (total, item) => total + item.preco * item.quantidade).toStringAsFixed(2)}',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 24,
-                            color: isDark ? Colors.white : Colors.black, // <-- branco no escuro, preto no claro
+                            fontSize: isMobile ? 20 : 24,
+                            color: isDark ? Colors.white : Colors.black,
                           ),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: isMobile ? 8 : 16),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -375,18 +401,18 @@ class RevisaoPedido extends StatelessWidget {
                         child: ElevatedButton.icon(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.preto,
-                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            padding: EdgeInsets.symmetric(vertical: isMobile ? 8 : 12),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(isMobile ? 6 : 8),
                             ),
                           ),
-                          icon: const Icon(Icons.arrow_back, color: AppColors.laranja),
-                          label: const Text(
+                          icon: Icon(Icons.arrow_back, color: AppColors.laranja, size: isMobile ? 18 : 24),
+                          label: Text(
                             'CONTINUAR COMPRANDO',
                             style: TextStyle(
                               color: AppColors.laranja,
                               fontWeight: FontWeight.bold,
-                              fontSize: 15,
+                              fontSize: isMobile ? 13 : 15,
                             ),
                           ),
                           onPressed: () {
@@ -394,22 +420,22 @@ class RevisaoPedido extends StatelessWidget {
                           },
                         ),
                       ),
-                      const SizedBox(width: 16),
+                      SizedBox(width: isMobile ? 8 : 16),
                       Expanded(
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.preto,
-                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            padding: EdgeInsets.symmetric(vertical: isMobile ? 8 : 12),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(isMobile ? 6 : 8),
                             ),
                           ),
-                          child: const Text(
+                          child: Text(
                             'FINALIZAR PEDIDO',
                             style: TextStyle(
                               color: AppColors.laranja,
                               fontWeight: FontWeight.bold,
-                              fontSize: 15,
+                              fontSize: isMobile ? 13 : 15,
                             ),
                           ),
                           onPressed: () {
