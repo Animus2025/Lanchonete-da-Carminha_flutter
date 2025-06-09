@@ -9,8 +9,8 @@ class Salgado extends Produto {
   /// Construtor da classe Salgado.
   /// Recebe nome, imagem e categoria, e repassa nome e imagem para a superclasse Produto.
   Salgado({
-    required String nome,
-    required String imagem,
+    required super.nome,
+    required super.imagem,
     required this.categoria,
-  }) : super(nome: nome, imagem: imagem);
+  });
 }

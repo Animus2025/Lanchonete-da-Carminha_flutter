@@ -12,9 +12,9 @@ class Bebida extends Produto {
   /// Construtor da classe Bebida.
   /// Recebe nome, imagem, volume e preço, e repassa nome e imagem para a superclasse Produto.
   Bebida({
-    required String nome,
-    required String imagem,
+    required super.nome,
+    required super.imagem,
     required this.volume,
     required this.preco,
-  }) : super(nome: nome, imagem: imagem);
+  });
 }

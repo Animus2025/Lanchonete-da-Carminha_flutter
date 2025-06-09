@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class PasswordRulesWidget extends StatelessWidget {
   final String senhaAtual;
 
-  const PasswordRulesWidget({Key? key, required this.senhaAtual}) : super(key: key);
+  const PasswordRulesWidget({super.key, required this.senhaAtual});
 
   @override
   Widget build(BuildContext context) {

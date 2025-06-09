@@ -5,6 +5,8 @@ import '/providers/cart_provider.dart';
 
 // Widget que exibe o overlay do carrinho
 class CartOverlay extends StatelessWidget {
+  const CartOverlay({super.key});
+
   @override
   Widget build(BuildContext context) {
     // Obtém o provider do carrinho e informações de tema

@@ -8,7 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 class Sobre extends StatelessWidget {
   /// Função para alternar o tema do app (claro/escuro).
   final VoidCallback? toggleTheme;
-  const Sobre({Key? key, this.toggleTheme}) : super(key: key);
+  const Sobre({super.key, this.toggleTheme});
 
   @override
   Widget build(BuildContext context) {
