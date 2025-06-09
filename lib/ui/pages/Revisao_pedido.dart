@@ -133,7 +133,7 @@ class RevisaoPedido extends StatelessWidget {
                           ),
                         ),
                         Expanded(
-                          flex: 5,
+                          flex: 3,
                           child: Align(
                             alignment: Alignment.centerRight, // Alinha o texto mais à direita
                             child: Text(
@@ -304,7 +304,7 @@ class RevisaoPedido extends StatelessWidget {
                                         padding: EdgeInsets.zero,
                                       ),
                                       SizedBox(
-                                        width: isMobile ? 24 : 32,
+                                        width: isMobile ? 20 : 20, // Diminua a largura
                                         child: Center(
                                           child: Text(
                                             '${item.quantidade}',
@@ -327,9 +327,9 @@ class RevisaoPedido extends StatelessWidget {
                                 ),
                                 // Preço (sempre à direita, flexível)
                                 Flexible(
-                                  flex: 2,
+                                  flex: 6,
                                   child: Padding(
-                                    padding: const EdgeInsets.only(right: 8),
+                                    padding: const EdgeInsets.only(right: 16),
                                     child: Align(
                                       alignment: Alignment.centerRight,
                                       child: Text(
