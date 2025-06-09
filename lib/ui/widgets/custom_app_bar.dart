@@ -28,9 +28,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           width: 418,
           height: 50,
           child: Center(
-            child: Image.asset(
-              'lib/assets/icons/logo.png', // Logo centralizada
-              fit: BoxFit.contain,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+              },
+              child: Image.asset(
+                'lib/assets/icons/logo.png', // Logo centralizada
+                fit: BoxFit.contain,
+              ),
             ),
           ),
         ),
