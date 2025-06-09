@@ -59,11 +59,11 @@ class RevisaoPedido extends StatelessWidget {
                   children: [
                     CircleAvatar(
                       radius: 16,
-                      backgroundColor: Colors.grey[200],
+                      backgroundColor: AppColors.laranja.withOpacity(0.5), // Laranja esmaecido
                       child: Text(
                         '2',
                         style: TextStyle(
-                          color: Colors.black87,
+                          color: AppColors.preto,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -329,6 +329,97 @@ class RevisaoPedido extends StatelessWidget {
                       },
                     ),
                   ),
+                  const SizedBox(height: 16),
+                  Container(
+                    width: double.infinity,
+                    margin: const EdgeInsets.symmetric(horizontal: 8),
+                    padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+                    decoration: BoxDecoration(
+                      color: isDark ? Colors.transparent : Colors.white,
+                      border: Border.all(color: isDark ? AppColors.laranja : Colors.black, width: 1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Column(
+                      children: [
+                        Text(
+                          'TOTAL DO PEDIDO',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            color: isDark ? AppColors.laranja : Colors.black,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Divider(
+                          color: isDark ? AppColors.laranja : Colors.black,
+                          thickness: 1,
+                          height: 8,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'R\$ ${cartItems.fold<double>(0, (total, item) => total + item.preco * item.quantidade).toStringAsFixed(2)}',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24,
+                            color: isDark ? Colors.white : Colors.black, // <-- branco no escuro, preto no claro
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.preto,
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          icon: const Icon(Icons.arrow_back, color: AppColors.laranja),
+                          label: const Text(
+                            'CONTINUAR COMPRANDO',
+                            style: TextStyle(
+                              color: AppColors.laranja,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.preto,
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: const Text(
+                            'FINALIZAR PEDIDO',
+                            style: TextStyle(
+                              color: AppColors.laranja,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                            ),
+                          ),
+                          onPressed: () {
+                            // Implementar ação de finalizar pedido futuramente
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
                 ],
               ),
             ),
