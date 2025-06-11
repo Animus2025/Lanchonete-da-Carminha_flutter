@@ -1,14 +1,67 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 // Classe responsável por exibir o diálogo de login/cadastro
 class LoginDialog {
   // Método estático para mostrar o pop-up de login
   static void show(BuildContext context) {
-    // Controlador para o campo de texto do email/telefone
     final TextEditingController emailController = TextEditingController();
     final TextEditingController senhaController = TextEditingController();
 
-    // Exibe o diálogo
+    Future<void> fazerLogin() async {
+      final emailOuTelefone = emailController.text.trim();
+      final senha = senhaController.text.trim();
+
+      print('🔍 Tentando logar com: $emailOuTelefone / $senha');
+
+      if (emailOuTelefone.isEmpty || senha.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Preencha todos os campos!')),
+        );
+        print('🚫 Campos vazios!');
+        return;
+      }
+
+      // Decide se é email ou telefone
+      final bool isEmail = emailOuTelefone.contains('@');
+      final url = Uri.parse('http://192.168.104.1:3000/usuario/login');
+      try {
+        final response = await http.post(
+          url,
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({
+            'email': isEmail ? emailOuTelefone : null,
+            'telefone': isEmail ? null : emailOuTelefone,
+            'senha': senha,
+          }),
+        );
+
+        print('📬 Resposta recebida: ${response.statusCode}');
+        print('📦 Body: ${response.body}');
+
+        if (response.statusCode == 200) {
+          Navigator.pop(context);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Login realizado com sucesso!')),
+          );
+          // Aqui você pode navegar para a tela principal, por exemplo:
+          // Navigator.pushReplacementNamed(context, '/home');
+        } else {
+          final msg =
+              jsonDecode(response.body)['error'] ?? 'Erro ao fazer login!';
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(msg)));
+        }
+      } catch (e) {
+        print('💥 Erro de conexão: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Erro de conexão com o servidor')),
+        );
+      }
+    }
+
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -29,7 +82,10 @@ class LoginDialog {
               children: [
                 TextField(
                   controller: emailController,
-                  style: const TextStyle(color: Colors.black),
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontFamily: 'Arial', // Fonte Arial para o campo de usuário
+                  ),
                   decoration: const InputDecoration(
                     labelText: "Email ou número de telefone",
                     labelStyle: TextStyle(color: Colors.black54),
@@ -45,7 +101,10 @@ class LoginDialog {
                 TextField(
                   controller: senhaController,
                   obscureText: true,
-                  style: const TextStyle(color: Colors.black),
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontFamily: 'Arial', // Fonte Arial para o campo de senha
+                  ),
                   decoration: const InputDecoration(
                     labelText: "Senha",
                     labelStyle: TextStyle(color: Colors.black54),
@@ -61,9 +120,7 @@ class LoginDialog {
                 SizedBox(
                   width: double.infinity,
                   child: TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
+                    onPressed: fazerLogin,
                     style: TextButton.styleFrom(
                       backgroundColor: const Color(0xffF6C484),
                       shape: RoundedRectangleBorder(
@@ -80,7 +137,6 @@ class LoginDialog {
                 TextButton(
                   onPressed: () {
                     Navigator.pop(context); // fecha o diálogo
-                    // Navega após fechar o diálogo com um delay zero pra garantir
                     Future.delayed(Duration.zero, () {
                       Navigator.pushNamed(context, '/cadastro_page');
                     });
