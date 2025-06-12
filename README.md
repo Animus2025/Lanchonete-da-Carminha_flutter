@@ -13,7 +13,6 @@
 - **Pacotes Flutter utilizados**:
   - `flutter_launcher_icons`
   - `google_fonts`
-  - 
 
 ---
 
