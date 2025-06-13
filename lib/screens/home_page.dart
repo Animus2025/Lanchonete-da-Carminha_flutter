@@ -321,37 +321,42 @@ class _HomePageState extends State<HomePage> {
           const SizedBox(height: 12),
           LayoutBuilder(
             builder: (context, constraints) {
-              int crossAxisCount = 2;
-              double width = constraints.maxWidth;
-
-              // Responsividade com base na largura da tela
-              if (width > 1200) {
-                crossAxisCount = 5;
-              } else if (width > 900) {
-                crossAxisCount = 4;
-              } else if (width > 600) {
-                crossAxisCount = 3;
+              if (constraints.maxWidth < 600) {
+                // Um card por linha, altura ajustável
+                return ListView.builder(
+                  itemCount: items.length,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    final item = items[index];
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: isSalgado
+                          ? SalgadoCard(salgado: item as Salgado)
+                          : BebidaCard(bebida: item as Bebida),
+                    );
+                  },
+                );
+              } else {
+                // Sempre 2 cards por linha em telas grandes
+                return GridView.builder(
+                  itemCount: items.length,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2, // Sempre 2 cards por linha
+                    mainAxisSpacing: 8,
+                    crossAxisSpacing: 8,
+                    childAspectRatio: 4 / 2, // Ajuste conforme o visual desejado
+                  ),
+                  itemBuilder: (context, index) {
+                    final item = items[index];
+                    return isSalgado
+                        ? SalgadoCard(salgado: item as Salgado)
+                        : BebidaCard(bebida: item as Bebida);
+                  },
+                );
               }
-
-              return GridView.builder(
-                itemCount: items.length,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: MediaQuery.of(context).size.width < 600
-                    ? 1 // celulares pequenos
-                    : 2, // tablets ou telas maiores
-                  mainAxisSpacing: 8,
-                  crossAxisSpacing: 8,
-                  childAspectRatio: 4 / 2,
-              ),
-                itemBuilder: (context, index) {
-                  final item = items[index];
-                  return isSalgado
-                      ? SalgadoCard(salgado: item as Salgado)
-                      : BebidaCard(bebida: item as Bebida);
-                },
-              );
             },
           ),
         ],

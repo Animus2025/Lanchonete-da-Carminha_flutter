@@ -100,36 +100,64 @@ class ProdutoCardBase extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           // Linha de valor e botão adicionar, abaixo de tudo
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                'R\$${precoTotal.toStringAsFixed(2)}',
-                style: TextStyle(
-                  color: AppColors.laranja,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 22,
-                ),
-              ),
-              ElevatedButton.icon(
-                onPressed: onAdicionar,
-                icon: const Icon(Icons.add_shopping_cart),
-                label: const Text('ADICIONAR'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.laranja,
-                  foregroundColor: AppColors.preto,
-                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              double minButtonWidth = 90;
+              double maxButtonWidth = 180;
+              double buttonWidth = (constraints.maxWidth * 0.48).clamp(minButtonWidth, maxButtonWidth);
+
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Flexible(
+                    child: Text(
+                      'R\$${precoTotal.toStringAsFixed(2)}',
+                      style: TextStyle(
+                        color: AppColors.laranja,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                  textStyle: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
+                  const SizedBox(width: 8),
+                  ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minWidth: minButtonWidth,
+                      maxWidth: buttonWidth,
+                    ),
+                    child: ElevatedButton.icon(
+                      onPressed: onAdicionar,
+                      icon: const Icon(Icons.add_shopping_cart),
+                      label: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          'ADICIONAR',
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.laranja,
+                        foregroundColor: AppColors.preto,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: constraints.maxWidth < 350 ? 4 : 12,
+                          vertical: 10,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        textStyle: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ],
+                ],
+              );
+            },
           ),
         ],
       ),
