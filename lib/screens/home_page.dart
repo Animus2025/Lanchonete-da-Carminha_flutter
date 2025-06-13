@@ -300,7 +300,7 @@ class _HomePageState extends State<HomePage> {
   Widget _buildSection({
     required GlobalKey key,
     required String title,
-    required List<dynamic> items, // Corrigido para aceitar qualquer tipo
+    required List<dynamic> items, 
     required bool isSalgado,
     Color? titleColor,
   }) {

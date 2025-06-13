@@ -35,102 +35,98 @@ class ProdutoCardBase extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    double imgMaxSize = screenWidth < 600 ? 120 : 180; // aumente aqui se quiser
+
     return Container(
-      margin: const EdgeInsets.symmetric(
-        vertical: 8,
-        horizontal: 16,
-      ), // Espaço externo
-      padding: const EdgeInsets.all(16), // Espaço interno
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.pretoClaro, // Fundo escuro com transparência
-        borderRadius: BorderRadius.circular(12), // Cantos arredondados
+        color: AppColors.pretoClaro,
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
-          // Sombra para dar um toque de profundidade
-          BoxShadow(color: Colors.black26, blurRadius: 6, offset: Offset(2, 2)),
+          BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 2)),
         ],
       ),
+      width: double.infinity,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            crossAxisAlignment:
-                CrossAxisAlignment.start, // Alinha os itens ao topo
-            children: [
-              // Coluna da esquerda: nome, extraWidget, quantidade
-              Expanded(
-                child: Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start, // Alinha tudo à esquerda
-                  children: [
-                    // Nome do produto com estilização especial
-                    Text(
-                      nome,
-                      style: const TextStyle(
-                        color: AppColors.branco, // Cor do texto
-                        fontSize: 19,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Bebas Neue',
+          IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Informações do produto (nome, chips, quantidade)
+                Expanded(
+                  flex: 3, // Diminua para 2 se quiser a imagem ainda maior
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        nome,
+                        style: TextStyle(
+                          color: AppColors.branco,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Bebas Neue',
+                        ),
                       ),
-                    ),
-                    // Se houver um widget extra (ex: descrição), exibe ele
-                    if (extraWidget != null) ...[
-                      const SizedBox(height: 8), // Espaço antes do extra
-                      extraWidget!,
+                      if (extraWidget != null) ...[
+                        const SizedBox(height: 8),
+                        extraWidget!,
+                      ],
+                      const SizedBox(height: 8),
+                      quantidadeWidget,
                     ],
-                    const SizedBox(
-                      height: 8,
-                    ), // Espaço antes do controle de quantidade
-                    quantidadeWidget, // Widget externo com + e - ou outro controle
-                  ],
+                  ),
                 ),
-              ),
-              const SizedBox(width: 16), // Espaço entre o texto e a imagem
-              // Imagem do produto à direita, agora flexível
-              Flexible(
-                flex: 0,
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    // Calcula o tamanho máximo possível para a imagem
-                    double maxImgSize = constraints.maxWidth;
-                    // Garante que nunca fique menor que 48 e nem maior que 150
-                    maxImgSize = maxImgSize.clamp(48.0, 140.0);
-
-                    return ClipRRect(
+                const SizedBox(width: 12),
+                // Imagem do produto, agora ocupando mais espaço horizontal
+                Flexible(
+                  flex: 2, // Aumente para 3 se quiser a imagem ainda maior
+                  child: AspectRatio(
+                    aspectRatio: 1,
+                    child: ClipRRect(
                       borderRadius: BorderRadius.circular(8),
                       child: Image.asset(
                         imagem,
-                        height: maxImgSize,
-                        width: maxImgSize,
-                        fit: BoxFit.contain,
+                        fit: BoxFit.cover,
                       ),
-                    );
-                  },
+                    ),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-          const SizedBox(height: 16), // Espaço antes da linha final
+          const SizedBox(height: 16),
+          // Linha de valor e botão adicionar, abaixo de tudo
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              // Preço do produto com formatação e cor especial
               Text(
                 'R\$${precoTotal.toStringAsFixed(2)}',
-                style: const TextStyle(
-                  color: AppColors.laranja, // Dourado claro
+                style: TextStyle(
+                  color: AppColors.laranja,
                   fontWeight: FontWeight.bold,
-                  fontSize: 25,
+                  fontSize: 22,
                 ),
               ),
-              // Botão para adicionar o produto ao carrinho
               ElevatedButton.icon(
-                onPressed: onAdicionar, // Chama a função passada
+                onPressed: onAdicionar,
                 icon: const Icon(Icons.add_shopping_cart),
-                label: const Text('ADICIONAR', style: TextStyle(fontSize: 25)),
-                // Estilo do botão
+                label: const Text('ADICIONAR'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.laranja, // Cor do botão
-                  foregroundColor: AppColors.preto, // Cor do texto e ícone
+                  backgroundColor: AppColors.laranja,
+                  foregroundColor: AppColors.preto,
+                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  textStyle: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
                 ),
               ),
             ],
