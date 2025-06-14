@@ -58,7 +58,7 @@ class ProdutoCardBase extends StatelessWidget {
               children: [
                 // Informações do produto (nome, chips, quantidade)
                 Expanded(
-                  flex: 3, // Diminua para 2 se quiser a imagem ainda maior
+                  flex: 4, // Diminua para 2 se quiser a imagem ainda maior
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
