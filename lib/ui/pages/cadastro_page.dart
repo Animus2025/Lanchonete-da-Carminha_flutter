@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lanchonetedacarminha/ui/widgets/password_rules_widget.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class CadastroPage extends StatefulWidget {
   const CadastroPage({super.key});
@@ -88,17 +90,49 @@ class _CadastroPageState extends State<CadastroPage> {
     return null;
   }
 
-  bool _verificarRegra(String senha, String regra, bool Function(String) condicao) {
+  bool _verificarRegra(
+    String senha,
+    String regra,
+    bool Function(String) condicao,
+  ) {
     return condicao(senha);
+  }
+
+  Future<void> cadastrarUsuario() async {
+    const url =
+        'http://192.168.104.1:3000/usuario'; // Use seu IP local se for testar no celular
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'nome_usuario': _nomeController.text, // Corrigido para nome_usuario
+        'email': _emailController.text,
+        'senha': _senhaController.text, // senha antes de telefone!
+        'telefone': _telefoneController.text,
+        'endereco': _enderecoController.text,
+        'cpf': _cpfController.text,
+      }),
+    );
+
+    print('Status: ${response.statusCode}');
+    print('Body: ${response.body}');
+
+    if (response.statusCode == 201) {
+      // Backend retorna 201
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Cadastro realizado com sucesso!')),
+      );
+      Navigator.pushNamed(context, '/verificacao_telefone');
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro ao cadastrar: ${response.body}')),
+      );
+    }
   }
 
   void _enviarFormulario() {
     if (_formKey.currentState!.validate()) {
-      // Se tudo OK, avisa e navega
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Cadastro validado!')));
-      Navigator.pushNamed(context, '/verificacao_telefone');
+      cadastrarUsuario();
     }
   }
 
@@ -109,9 +143,14 @@ class _CadastroPageState extends State<CadastroPage> {
         backgroundColor: Colors.black, // Fundo preto
         title: Text(
           'Cadastro',
-          style: Theme.of(context).appBarTheme.titleTextStyle, // Fonte padrão do tema
+          style:
+              Theme.of(
+                context,
+              ).appBarTheme.titleTextStyle, // Fonte padrão do tema
         ),
-        iconTheme: IconThemeData(color: _laranjaPadrao), // Ícones na cor laranja padrão
+        iconTheme: IconThemeData(
+          color: _laranjaPadrao,
+        ), // Ícones na cor laranja padrão
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -204,7 +243,8 @@ class _CadastroPageState extends State<CadastroPage> {
                 ),
                 child: Text(
                   'Continuar',
-                  style: Theme.of(context).elevatedButtonTheme.style?.textStyle?.resolve({}), // Fonte padrão do tema
+                  style: Theme.of(context).elevatedButtonTheme.style?.textStyle
+                      ?.resolve({}), // Fonte padrão do tema
                 ),
               ),
             ],
@@ -225,9 +265,7 @@ class _CadastroPageState extends State<CadastroPage> {
         const SizedBox(width: 8),
         Text(
           regra,
-          style: TextStyle(
-            color: atendida ? Colors.green : Colors.red,
-          ),
+          style: TextStyle(color: atendida ? Colors.green : Colors.red),
         ),
       ],
     );
