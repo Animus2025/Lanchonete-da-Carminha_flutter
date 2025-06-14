@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+String? ultimoLoginTentado;
+
 // Classe responsável por exibir o diálogo de login/cadastro
 class LoginDialog {
   // Método estático para mostrar o pop-up de login
@@ -16,12 +18,16 @@ class LoginDialog {
       print('🔍 Tentando logar com: $emailOuTelefone / $senha');
 
       if (emailOuTelefone.isEmpty || senha.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Preencha todos os campos!')),
+        await showFeedbackDialog(
+          context,
+          'Preencha todos os campos!',
+          positivo: null, // Usaremos emoji de interrogação
         );
         print('🚫 Campos vazios!');
         return;
       }
+
+      ultimoLoginTentado = emailOuTelefone;
 
       // Decide se é email ou telefone
       final bool isEmail = emailOuTelefone.contains('@');
@@ -42,22 +48,24 @@ class LoginDialog {
 
         if (response.statusCode == 200) {
           Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Login realizado com sucesso!')),
+          await showFeedbackDialog(
+            context,
+            'Login realizado com sucesso!',
+            positivo: true,
           );
           // Aqui você pode navegar para a tela principal, por exemplo:
           // Navigator.pushReplacementNamed(context, '/home');
         } else {
           final msg =
               jsonDecode(response.body)['error'] ?? 'Erro ao fazer login!';
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(msg)));
+          await showFeedbackDialog(context, msg, positivo: false);
         }
       } catch (e) {
         print('💥 Erro de conexão: $e');
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Erro de conexão com o servidor')),
+        await showFeedbackDialog(
+          context,
+          'Erro de conexão com o servidor',
+          positivo: false,
         );
       }
     }
@@ -116,7 +124,33 @@ class LoginDialog {
                     ),
                   ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 4), // Espaço pequeno entre senha e link
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero, // Remove padding extra
+                      minimumSize: Size(0, 0),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(
+                        context,
+                        '/redefinir_senha',
+                        arguments: ultimoLoginTentado,
+                      );
+                    },
+                    child: const Text(
+                      "Esqueci minha senha",
+                      style: TextStyle(
+                        color: Colors.black,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16), // Espaço antes do botão Continuar
                 SizedBox(
                   width: double.infinity,
                   child: TextButton(
@@ -136,7 +170,7 @@ class LoginDialog {
                 const SizedBox(height: 8),
                 TextButton(
                   onPressed: () {
-                    Navigator.pop(context); // fecha o diálogo
+                    Navigator.pop(context);
                     Future.delayed(Duration.zero, () {
                       Navigator.pushNamed(context, '/cadastro_page');
                     });
@@ -155,5 +189,48 @@ class LoginDialog {
         );
       },
     );
+  }
+
+  static Future<void> showFeedbackDialog(
+    BuildContext context,
+    String message, {
+    bool? positivo, // Agora pode ser true, false ou null
+  }) async {
+    String emoji;
+    if (positivo == true) {
+      emoji = "✅";
+    } else if (positivo == false) {
+      emoji = "❌";
+    } else {
+      emoji = "❓";
+    }
+
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder:
+          (context) => AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(emoji, style: const TextStyle(fontSize: 48)),
+                const SizedBox(height: 16),
+                Text(
+                  message,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 18, color: Colors.black),
+                ),
+              ],
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+          ),
+    );
+
+    await Future.delayed(const Duration(seconds: 2));
+    if (Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+    }
   }
 }

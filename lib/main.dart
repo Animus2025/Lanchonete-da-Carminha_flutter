@@ -9,6 +9,7 @@ import 'ui/themes/app_theme.dart';
 import 'providers/cart_provider.dart';
 import 'providers/auth_provider.dart';
 import 'screens/home_page.dart';
+import 'ui/pages/redefinir_senha.dart';
 
 void main() {
   runApp(
@@ -53,12 +54,11 @@ class _MyAppState extends State<MyApp> {
         '/termos_uso': (context) => TermosDeUsoPage(toggleTheme: toggleTheme),
         '/cadastro_page': (context) => const CadastroPage(),
         '/cardapio': (context) => HomePage(toggleTheme: toggleTheme),
-        '/politicas-de-privacidade': (context) => PoliticaPrivacidadePage(toggleTheme: toggleTheme),
+        '/politicas-de-privacidade':
+            (context) => PoliticaPrivacidadePage(toggleTheme: toggleTheme),
         '/sobre': (context) => Sobre(toggleTheme: toggleTheme),
         '/revisao_pedido': (context) => RevisaoPedido(toggleTheme: toggleTheme),
-        // você pode adicionar outras rotas aqui também:
-        // '/politicas-de-prisvacidade': (context) => const PoliticasPage(),
-        // '/sobre': (context) => const SobrePage(),
+        '/redefinir_senha': (context) => const RedefinirSenhaPage(),
       },
     );
   }
