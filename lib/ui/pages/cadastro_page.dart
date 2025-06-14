@@ -100,7 +100,7 @@ class _CadastroPageState extends State<CadastroPage> {
 
   Future<void> cadastrarUsuario() async {
     const url =
-        'http://192.168.104.1:3000/usuario'; // Use seu IP local se for testar no celular
+        'http://192.168.104.110:3000/usuario'; // Use seu IP local se for testar no celular
     final response = await http.post(
       Uri.parse(url),
       headers: {'Content-Type': 'application/json'},
