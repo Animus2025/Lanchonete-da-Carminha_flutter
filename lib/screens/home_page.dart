@@ -8,6 +8,7 @@ import '../ui/themes/app_theme.dart'; // Tema de cores do app
 import '../data/salgado_data.dart'; // Dados dos salgados
 import '../ui/widgets/salgado_card.dart'; // Card de salgado
 import '../models/salgado.dart'; // Modelo de salgado
+import '../models/bebida.dart'; // Modelo de bebida
 import '../data/bebida_data.dart'; // Dados das bebidas
 import '../ui/widgets/bebida_card.dart'; // Card de bebida
 import '../providers/cart_provider.dart'; // Provider do carrinho
@@ -299,33 +300,64 @@ class _HomePageState extends State<HomePage> {
   Widget _buildSection({
     required GlobalKey key,
     required String title,
-    required List<dynamic> items,
+    required List<dynamic> items, 
     required bool isSalgado,
     Color? titleColor,
   }) {
     return Container(
       key: key,
-      margin: const EdgeInsets.only(bottom: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Text(
-              title,
-              style: TextStyle(
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-                color: titleColor ?? Colors.black,
-              ),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: titleColor ?? Colors.white,
             ),
           ),
-          const SizedBox(height: 8),
-          ...items.map(
-            (item) =>
-                isSalgado
-                    ? SalgadoCard(salgado: item)
-                    : BebidaCard(bebida: item),
+          const SizedBox(height: 12),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              if (constraints.maxWidth < 600) {
+                // Um card por linha, altura ajustável
+                return ListView.builder(
+                  itemCount: items.length,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    final item = items[index];
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: isSalgado
+                          ? SalgadoCard(salgado: item as Salgado)
+                          : BebidaCard(bebida: item as Bebida),
+                    );
+                  },
+                );
+              } else {
+                // Sempre 2 cards por linha em telas grandes
+                return GridView.builder(
+                  itemCount: items.length,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2, // Sempre 2 cards por linha
+                    mainAxisSpacing: 8,
+                    crossAxisSpacing: 8,
+                    childAspectRatio: 4 / 2, // Ajuste conforme o visual desejado
+                  ),
+                  itemBuilder: (context, index) {
+                    final item = items[index];
+                    return isSalgado
+                        ? SalgadoCard(salgado: item as Salgado)
+                        : BebidaCard(bebida: item as Bebida);
+                  },
+                );
+              }
+            },
           ),
         ],
       ),

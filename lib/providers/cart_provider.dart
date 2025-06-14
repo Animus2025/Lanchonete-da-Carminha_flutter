@@ -4,7 +4,7 @@ import '../models/cart_item.dart';
 // Provider responsável por gerenciar o estado do carrinho
 class CartProvider with ChangeNotifier {
   // Lista de itens no carrinho
-  List<CartItem> _items = [];
+  final List<CartItem> _items = [];
 
   // Getter para acessar os itens do carrinho
   List<CartItem> get items => _items;

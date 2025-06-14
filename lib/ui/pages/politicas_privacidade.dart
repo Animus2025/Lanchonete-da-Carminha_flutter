@@ -8,7 +8,7 @@ class PoliticaPrivacidadePage extends StatelessWidget {
   final VoidCallback? toggleTheme;
 
   /// Construtor da página, recebe a função de alternância de tema.
-  const PoliticaPrivacidadePage({Key? key, this.toggleTheme}) : super(key: key);
+  const PoliticaPrivacidadePage({super.key, this.toggleTheme});
 
   @override
   Widget build(BuildContext context) {
