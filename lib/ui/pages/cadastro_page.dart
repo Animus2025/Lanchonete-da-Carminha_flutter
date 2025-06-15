@@ -100,7 +100,7 @@ class _CadastroPageState extends State<CadastroPage> {
 
   Future<void> cadastrarUsuario() async {
     const url =
-        'http://lanchonetedacarminha.duckdns.org:3000/usuario'; // Use seu IP local se for testar no celular
+        'https://8d3c-170-231-91-92.ngrok-free.app/usuario'; // Use seu IP local se for testar no celular
     final response = await http.post(
       Uri.parse(url),
       headers: {'Content-Type': 'application/json'},
