@@ -10,6 +10,7 @@ import 'providers/cart_provider.dart';
 import 'providers/auth_provider.dart';
 import 'screens/home_page.dart';
 import 'ui/pages/redefinir_senha.dart';
+import 'ui/pages/verificar_telefone.dart ';
 
 void main() {
   runApp(
@@ -59,6 +60,7 @@ class _MyAppState extends State<MyApp> {
         '/sobre': (context) => Sobre(toggleTheme: toggleTheme),
         '/revisao_pedido': (context) => RevisaoPedido(toggleTheme: toggleTheme),
         '/redefinir_senha': (context) => const RedefinirSenhaPage(),
+        '/verificar_telefone': (context) => const VerificarTelefonePage(),
       },
     );
   }

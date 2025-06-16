@@ -100,14 +100,14 @@ class _CadastroPageState extends State<CadastroPage> {
 
   Future<void> cadastrarUsuario() async {
     const url =
-        'https://8d3c-170-231-91-92.ngrok-free.app/usuario'; // Use seu IP local se for testar no celular
+        'http://localhost:3000/usuario/cadastrar'; // Use seu IP local se for testar no celular
     final response = await http.post(
       Uri.parse(url),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
-        'nome_usuario': _nomeController.text, // Corrigido para nome_usuario
+        'nome_usuario': _nomeController.text,
         'email': _emailController.text,
-        'senha': _senhaController.text, // senha antes de telefone!
+        'senha': _senhaController.text,
         'telefone': _telefoneController.text,
         'endereco': _enderecoController.text,
         'cpf': _cpfController.text,
@@ -118,11 +118,60 @@ class _CadastroPageState extends State<CadastroPage> {
     print('Body: ${response.body}');
 
     if (response.statusCode == 201) {
-      // Backend retorna 201
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Cadastro realizado com sucesso!')),
+      // Ao cadastrar com sucesso, abre o popup de confirmação do WhatsApp
+      await showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder:
+            (context) => AlertDialog(
+              backgroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              title: const Text(
+                "Confirme seu número",
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.black, fontSize: 20),
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    "Enviamos um código de confirmação para o WhatsApp:",
+                    style: TextStyle(color: Colors.black, fontSize: 16),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    _telefoneController.text,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 24),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      Navigator.pushReplacementNamed(
+                        context,
+                        '/verificar_telefone',
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: _laranjaPadrao,
+                    ),
+                    child: const Text(
+                      "OK",
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                ],
+              ),
+            ),
       );
-      Navigator.pushNamed(context, '/verificacao_telefone');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Erro ao cadastrar: ${response.body}')),

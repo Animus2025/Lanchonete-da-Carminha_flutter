@@ -71,7 +71,7 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
       context,
       metodo == 'email'
           ? 'Confirmação enviada para o email!'
-          : 'Confirmação enviada para o telefone informado!',
+          : 'Confirmação enviada para o WhatsApp!',
       positivo: true,
     );
 
@@ -143,7 +143,7 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
             ),
             const SizedBox(height: 16),
             RadioListTile<String>(
-              title: const Text('Por telefone (SMS)'),
+              title: const Text('Por telefone (WpphatsApp)'),
               value: 'telefone',
               groupValue: metodo,
               onChanged:
@@ -203,7 +203,7 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
                   onPressed: _enviarConfirmacao,
                   child: Text(
                     metodo == 'telefone'
-                        ? 'Enviar confirmação para o telefone (via SMS)'
+                        ? 'Enviar confirmação para o telefone (via WhatsApp)'
                         : 'Enviar confirmação para o email',
                   ),
                 ),
@@ -212,7 +212,7 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
             if (metodo == 'telefone' && codigoEnviado) ...[
               const SizedBox(height: 24),
               const Text(
-                'Digite o código recebido por SMS:',
+                'Digite o código recebido por WhatsApp:',
                 style: TextStyle(fontSize: 16),
               ),
               const SizedBox(height: 12),

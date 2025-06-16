@@ -31,9 +31,7 @@ class LoginDialog {
 
       // Decide se é email ou telefone
       final bool isEmail = emailOuTelefone.contains('@');
-      final url = Uri.parse(
-        'https://8d3c-170-231-91-92.ngrok-free.app/usuario/login',
-      );
+      final url = Uri.parse('http://localhost:3000/usuario/login');
       try {
         final response = await http.post(
           url,
