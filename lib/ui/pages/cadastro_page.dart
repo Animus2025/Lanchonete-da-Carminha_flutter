@@ -4,6 +4,7 @@ import 'package:lanchonetedacarminha/ui/widgets/password_rules_widget.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+// Tela de cadastro de usuário
 class CadastroPage extends StatefulWidget {
   const CadastroPage({super.key});
 
@@ -14,6 +15,7 @@ class CadastroPage extends StatefulWidget {
 class _CadastroPageState extends State<CadastroPage> {
   final _formKey = GlobalKey<FormState>();
 
+  // Controladores dos campos do formulário
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _nomeController = TextEditingController();
   final TextEditingController _telefoneController = TextEditingController();
@@ -21,13 +23,14 @@ class _CadastroPageState extends State<CadastroPage> {
   final TextEditingController _enderecoController = TextEditingController();
   final TextEditingController _senhaController = TextEditingController();
 
-  bool _obscureSenha = true;
-  String _senhaAtual = '';
+  bool _obscureSenha = true; // Controla visibilidade da senha
+  String _senhaAtual = ''; // Guarda a senha digitada para mostrar regras
 
-  final Color _laranjaPadrao = const Color(0xFFF6C484); // Laranja padrão
+  final Color _laranjaPadrao = const Color(0xFFF6C484); // Cor padrão do app
 
   @override
   void dispose() {
+    // Libera os controladores ao destruir a tela
     _emailController.dispose();
     _nomeController.dispose();
     _telefoneController.dispose();
@@ -37,6 +40,7 @@ class _CadastroPageState extends State<CadastroPage> {
     super.dispose();
   }
 
+  // Validação do campo e-mail (opcional)
   String? validarEmail(String? email) {
     if (email == null || email.isEmpty) return null; // opcional
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
@@ -46,11 +50,11 @@ class _CadastroPageState extends State<CadastroPage> {
     return null;
   }
 
+  // Validação do campo telefone (apenas números, 10 ou 11 dígitos)
   String? validarTelefone(String? telefone) {
     if (telefone == null || telefone.isEmpty) {
       return 'Telefone é obrigatório';
     }
-    // Validação simples: número com DDD - 10 ou 11 dígitos
     final telefoneRegex = RegExp(r'^\d{10,11}$');
     final digitsOnly = telefone.replaceAll(RegExp(r'\D'), '');
     if (!telefoneRegex.hasMatch(digitsOnly)) {
@@ -59,6 +63,7 @@ class _CadastroPageState extends State<CadastroPage> {
     return null;
   }
 
+  // Validação do campo CPF (apenas números, 11 dígitos)
   String? validarCPF(String? cpf) {
     if (cpf == null || cpf.isEmpty) {
       return 'CPF é obrigatório';
@@ -71,6 +76,7 @@ class _CadastroPageState extends State<CadastroPage> {
     return null;
   }
 
+  // Validação do campo senha (mínimo 8, maiúscula, especial, sem sequência)
   String? validarSenha(String? senha) {
     if (senha == null || senha.isEmpty) {
       return 'Senha obrigatória';
@@ -90,14 +96,7 @@ class _CadastroPageState extends State<CadastroPage> {
     return null;
   }
 
-  bool _verificarRegra(
-    String senha,
-    String regra,
-    bool Function(String) condicao,
-  ) {
-    return condicao(senha);
-  }
-
+  // Função para cadastrar o usuário via API
   Future<void> cadastrarUsuario() async {
     const url =
         'http://localhost:3000/usuario/cadastrar'; // Use seu IP local se for testar no celular
@@ -173,12 +172,14 @@ class _CadastroPageState extends State<CadastroPage> {
             ),
       );
     } else {
+      // Mostra erro caso o cadastro falhe
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Erro ao cadastrar: ${response.body}')),
       );
     }
   }
 
+  // Função chamada ao clicar em "Continuar"
   void _enviarFormulario() {
     if (_formKey.currentState!.validate()) {
       cadastrarUsuario();
@@ -207,6 +208,7 @@ class _CadastroPageState extends State<CadastroPage> {
           key: _formKey,
           child: ListView(
             children: [
+              // Campo nome
               TextFormField(
                 controller: _nomeController,
                 decoration: const InputDecoration(labelText: 'Nome completo *'),
@@ -216,6 +218,7 @@ class _CadastroPageState extends State<CadastroPage> {
                             ? 'Nome é obrigatório'
                             : null,
               ),
+              // Campo email
               TextFormField(
                 controller: _emailController,
                 decoration: const InputDecoration(
@@ -224,6 +227,7 @@ class _CadastroPageState extends State<CadastroPage> {
                 keyboardType: TextInputType.emailAddress,
                 validator: validarEmail,
               ),
+              // Campo telefone
               TextFormField(
                 controller: _telefoneController,
                 decoration: const InputDecoration(labelText: 'Telefone *'),
@@ -234,6 +238,7 @@ class _CadastroPageState extends State<CadastroPage> {
                 ],
                 validator: validarTelefone,
               ),
+              // Campo CPF
               TextFormField(
                 controller: _cpfController,
                 decoration: const InputDecoration(labelText: 'CPF *'),
@@ -244,6 +249,7 @@ class _CadastroPageState extends State<CadastroPage> {
                 ],
                 validator: validarCPF,
               ),
+              // Campo endereço
               TextFormField(
                 controller: _enderecoController,
                 decoration: const InputDecoration(labelText: 'Endereço *'),
@@ -253,6 +259,7 @@ class _CadastroPageState extends State<CadastroPage> {
                             ? 'Endereço é obrigatório'
                             : null,
               ),
+              // Campo senha
               TextFormField(
                 controller: _senhaController,
                 decoration: InputDecoration(
@@ -280,11 +287,13 @@ class _CadastroPageState extends State<CadastroPage> {
                 ),
                 validator: validarSenha,
               ),
+              // Regras de senha (widget customizado)
               if (_senhaAtual.isNotEmpty) ...[
                 const SizedBox(height: 10),
                 PasswordRulesWidget(senhaAtual: _senhaAtual),
               ],
               const SizedBox(height: 20),
+              // Botão de continuar/cadastrar
               ElevatedButton(
                 onPressed: _enviarFormulario,
                 style: ElevatedButton.styleFrom(
@@ -300,23 +309,6 @@ class _CadastroPageState extends State<CadastroPage> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildRegraItem(String regra, bool atendida) {
-    return Row(
-      children: [
-        Icon(
-          atendida ? Icons.check_circle : Icons.cancel,
-          color: atendida ? Colors.green : Colors.red,
-          size: 20,
-        ),
-        const SizedBox(width: 8),
-        Text(
-          regra,
-          style: TextStyle(color: atendida ? Colors.green : Colors.red),
-        ),
-      ],
     );
   }
 }
