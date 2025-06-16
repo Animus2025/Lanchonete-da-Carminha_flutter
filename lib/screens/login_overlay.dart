@@ -25,7 +25,7 @@ class LoginDialog {
 
       // Decide se é email ou telefone
       final bool isEmail = emailOuTelefone.contains('@');
-      final url = Uri.parse('http://192.168.104.1:3000/usuario/login');
+      final url = Uri.parse('http://localhost:3000/usuario/login');
       try {
         final response = await http.post(
           url,
