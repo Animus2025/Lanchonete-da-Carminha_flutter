@@ -54,13 +54,14 @@ class CustomDrawer extends StatelessWidget {
             onTap: () {
               final auth = Provider.of<AuthProvider>(context, listen: false);
               Navigator.pop(context);
+              Navigator.pushNamed(context, '/Meus_pedidos');
 
-              if (auth.isLoggedIn) {
-                Navigator.pushNamed(context, '/Meus-Pedidos');
-              } else {
+              //if (auth.isLoggedIn) {
+                Navigator.pushNamed(context, '/Meus_Pedidos');
+              //} else {
                 LoginDialog.show(context); // Abre o pop-up para login
               }
-            },
+            //},
           ),
           const SizedBox(height: 330), // Espaçamento vertical
 

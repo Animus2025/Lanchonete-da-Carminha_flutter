@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lanchonetedacarminha/ui/pages/Meus_pedidos.dart';
 import 'package:lanchonetedacarminha/ui/pages/Revisao_pedido.dart';
 import 'package:provider/provider.dart';
 import 'package:lanchonetedacarminha/ui/pages/cadastro_page.dart';
@@ -56,6 +57,7 @@ class _MyAppState extends State<MyApp> {
         '/politicas-de-privacidade': (context) => PoliticaPrivacidadePage(toggleTheme: toggleTheme),
         '/sobre': (context) => Sobre(toggleTheme: toggleTheme),
         '/revisao_pedido': (context) => RevisaoPedido(toggleTheme: toggleTheme),
+        '/Meus_pedidos': (context) => MeusPedidosPage(toggleTheme: toggleTheme,),
         // você pode adicionar outras rotas aqui também:
         // '/politicas-de-prisvacidade': (context) => const PoliticasPage(),
         // '/sobre': (context) => const SobrePage(),
