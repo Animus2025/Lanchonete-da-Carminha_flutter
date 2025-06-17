@@ -54,12 +54,11 @@ class CustomDrawer extends StatelessWidget {
                       onTap: () {
                         Navigator.pop(context);
 
-                        if (auth.isLoggedIn) {
+                        //if (auth.isLoggedIn) {
                           Navigator.pushNamed(context, '/Meus_pedidos');
-                        } else {
-                          LoginDialog.show(context);
+                        //} else {
+
                         }
-                      },
                     );
                   },
                 ),
