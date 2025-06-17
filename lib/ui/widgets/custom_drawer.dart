@@ -46,18 +46,21 @@ class CustomDrawer extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 16.0),
                   child: Divider(color: Color(0xff333333)),
                 ),
-                _buildMenuItem(
-                  icon: Icons.list_alt,
-                  text: "Meus Pedidos",
-                  onTap: () {
-                    final auth = Provider.of<AuthProvider>(context, listen: false);
-                    Navigator.pop(context);
-                    Navigator.pushNamed(context, '/Meus_pedidos');
+                Consumer<AuthProvider>(
+                  builder: (context, auth, _) {
+                    return _buildMenuItem(
+                      icon: Icons.list_alt,
+                      text: "Meus Pedidos",
+                      onTap: () {
+                        Navigator.pop(context);
 
-                    // if (auth.isLoggedIn) {
-                    Navigator.pushNamed(context, '/Meus_Pedidos');
-                    // } else {
-                    LoginDialog.show(context);
+                        if (auth.isLoggedIn) {
+                          Navigator.pushNamed(context, '/Meus_pedidos');
+                        } else {
+                          LoginDialog.show(context);
+                        }
+                      },
+                    );
                   },
                 ),
               ],
