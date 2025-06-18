@@ -17,18 +17,22 @@ class MeusPedidosPage extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         children: [
           buildPedidoSection(
+            context: context,
             title: 'Pedidos Pendentes',
             pedidos: [],
           ),
           buildPedidoSection(
+            context: context,
             title: 'Histórico de Pedidos',
             pedidos: [],
           ),
           buildPedidoSection(
+            context: context,
             title: '⭐ Pedidos Favoritos',
             pedidos: [],
           ),
           buildPedidoSection(
+            context: context,
             title: 'Pedidos Cancelados',
             pedidos: [],
           ),
@@ -37,11 +41,14 @@ class MeusPedidosPage extends StatelessWidget {
     );
   }
 
-  // Secção com ExpansionTile
+  // Seção com ExpansionTile
   Widget buildPedidoSection({
+    required BuildContext context,
     required String title,
     required List<Widget> pedidos,
   }) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       elevation: 4,
@@ -50,15 +57,29 @@ class MeusPedidosPage extends StatelessWidget {
         tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         title: Text(
           title,
-          style: const TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+            color: isDarkMode ? AppColors.laranja : AppColors.preto,
+            fontFamily: 'BebasNeue',
+          ),
         ),
         children: pedidos.isNotEmpty
             ? pedidos
             : [
-                const Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Text('Nenhum pedido.'),
-                )
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    'Nenhum pedido.',
+                    style: TextStyle(
+                      fontFamily: 'BebasNeue',
+                      fontSize: 16,
+                      color: isDarkMode
+                          ? AppColors.laranja
+                          : AppColors.textPrimary,
+                    ),
+                  ),
+                ),
               ],
       ),
     );
