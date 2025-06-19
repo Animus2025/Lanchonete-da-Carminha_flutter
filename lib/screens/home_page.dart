@@ -300,7 +300,7 @@ class _HomePageState extends State<HomePage> {
   Widget _buildSection({
     required GlobalKey key,
     required String title,
-    required List<dynamic> items, 
+    required List<dynamic> items,
     required bool isSalgado,
     Color? titleColor,
   }) {
@@ -331,9 +331,10 @@ class _HomePageState extends State<HomePage> {
                     final item = items[index];
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 8.0),
-                      child: isSalgado
-                          ? SalgadoCard(salgado: item as Salgado)
-                          : BebidaCard(bebida: item as Bebida),
+                      child:
+                          isSalgado
+                              ? SalgadoCard(salgado: item as Salgado)
+                              : BebidaCard(bebida: item as Bebida),
                     );
                   },
                 );
@@ -347,7 +348,8 @@ class _HomePageState extends State<HomePage> {
                     crossAxisCount: 2, // Sempre 2 cards por linha
                     mainAxisSpacing: 8,
                     crossAxisSpacing: 8,
-                    childAspectRatio: 4 / 2, // Ajuste conforme o visual desejado
+                    childAspectRatio:
+                        4 / 2, // Ajuste conforme o visual desejado
                   ),
                   itemBuilder: (context, index) {
                     final item = items[index];
