@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../themes/app_theme.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_drawer.dart';
+import '../widgets/AppBodyConteiner.dart';
 
 class MeusPedidosPage extends StatelessWidget {
   final VoidCallback toggleTheme;
@@ -10,38 +11,35 @@ class MeusPedidosPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-
-    // Definindo padding dinâmico
-    double horizontalPadding = screenWidth < 1000 ? 12 : 64;
-
     return Scaffold(
       appBar: CustomAppBar(toggleTheme: toggleTheme),
       drawer: const CustomDrawer(),
-      body: ListView(
-        padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 16),
-        children: [
-          buildPedidoSection(
-            context: context,
-            title: 'Pedidos Pendentes',
-            pedidos: [],
-          ),
-          buildPedidoSection(
-            context: context,
-            title: 'Histórico de Pedidos',
-            pedidos: [],
-          ),
-          buildPedidoSection(
-            context: context,
-            title: '⭐ Pedidos Favoritos',
-            pedidos: [],
-          ),
-          buildPedidoSection(
-            context: context,
-            title: 'Pedidos Cancelados',
-            pedidos: [],
-          ),
-        ],
+      body: AppBodyContainer(
+        child: ListView(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          children: [
+            buildPedidoSection(
+              context: context,
+              title: 'Pedidos Pendentes',
+              pedidos: [],
+            ),
+            buildPedidoSection(
+              context: context,
+              title: 'Histórico de Pedidos',
+              pedidos: [],
+            ),
+            buildPedidoSection(
+              context: context,
+              title: '⭐ Pedidos Favoritos',
+              pedidos: [],
+            ),
+            buildPedidoSection(
+              context: context,
+              title: 'Pedidos Cancelados',
+              pedidos: [],
+            ),
+          ],
+        ),
       ),
     );
   }
