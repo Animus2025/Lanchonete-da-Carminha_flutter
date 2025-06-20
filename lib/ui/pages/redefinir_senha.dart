@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lanchonetedacarminha/screens/login_overlay.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:lanchonetedacarminha/ui/widgets/password_rules_widget.dart';
 
 class RedefinirSenhaPage extends StatefulWidget {
   const RedefinirSenhaPage({Key? key}) : super(key: key);
@@ -12,14 +15,18 @@ class RedefinirSenhaPage extends StatefulWidget {
 class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
   final TextEditingController _inputController = TextEditingController();
   final TextEditingController _codigoController = TextEditingController();
+  bool codigoValidado = false;
+  final TextEditingController _novaSenhaController = TextEditingController();
   String? loginTentado;
   String? metodo; // 'email' ou 'telefone'
   bool codigoEnviado = false;
+  String _senhaAtual = '';
 
   @override
   void dispose() {
     _inputController.dispose();
     _codigoController.dispose();
+    _novaSenhaController.dispose();
     super.dispose();
   }
 
@@ -53,6 +60,29 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
         );
         return;
       }
+
+      // Chama o endpoint para enviar o código via WhatsApp
+      final response = await http.post(
+        Uri.parse('http://localhost:3000/whatsapp/alterar-senha'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'numero': digitsOnly}),
+      );
+
+      if (response.statusCode == 200) {
+        await LoginDialog.showFeedbackDialog(
+          context,
+          'Confirmação enviada para o WhatsApp!',
+          positivo: true,
+        );
+        setState(() {
+          codigoEnviado = true;
+        });
+      } else {
+        final msg =
+            jsonDecode(response.body)['error'] ?? 'Erro ao enviar código!';
+        await LoginDialog.showFeedbackDialog(context, msg, positivo: false);
+      }
+      return;
     }
 
     if (metodo == 'email') {
@@ -65,20 +95,11 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
         );
         return;
       }
-    }
-
-    await LoginDialog.showFeedbackDialog(
-      context,
-      metodo == 'email'
-          ? 'Confirmação enviada para o email!'
-          : 'Confirmação enviada para o WhatsApp!',
-      positivo: true,
-    );
-
-    if (metodo == 'telefone') {
-      setState(() {
-        codigoEnviado = true;
-      });
+      await LoginDialog.showFeedbackDialog(
+        context,
+        'Confirmação enviada para o email!',
+        positivo: true,
+      );
     }
   }
 
@@ -101,6 +122,8 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
 
   void _validarCodigo() async {
     final codigo = _codigoController.text.trim();
+    final numero = _inputController.text.trim();
+
     if (codigo.isEmpty) {
       await LoginDialog.showFeedbackDialog(
         context,
@@ -109,13 +132,71 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
       );
       return;
     }
-    // Aqui você pode validar o código digitado
-    await LoginDialog.showFeedbackDialog(
-      context,
-      'Código validado com sucesso!',
-      positivo: true,
+
+    // Chama o endpoint para confirmar o código
+    final response = await http.post(
+      Uri.parse('http://localhost:3000/whatsapp/confirmar-codigo'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'numero': numero, 'codigo': codigo}),
     );
-    // Continue o fluxo de redefinição de senha aqui
+
+    if (response.statusCode == 200) {
+      await LoginDialog.showFeedbackDialog(
+        context,
+        'Código validado com sucesso! Agora digite sua nova senha.',
+        positivo: true,
+      );
+      setState(() {
+        codigoValidado = true;
+      });
+    } else {
+      final msg =
+          jsonDecode(response.body)['error'] ?? 'Erro ao validar código!';
+      await LoginDialog.showFeedbackDialog(context, msg, positivo: false);
+    }
+  }
+
+  void _redefinirSenha() async {
+    final numero = _inputController.text.trim();
+    final novaSenha = _novaSenhaController.text.trim();
+
+    if (novaSenha.isEmpty) {
+      await LoginDialog.showFeedbackDialog(
+        context,
+        'Digite a nova senha!',
+        positivo: null,
+      );
+      return;
+    }
+
+    final response = await http.post(
+      Uri.parse('http://localhost:3000/usuario/redefinir-senha-wpp'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'numero': numero, 'novaSenha': novaSenha}),
+    );
+
+    if (response.statusCode == 200) {
+      await LoginDialog.showFeedbackDialog(
+        context,
+        'Senha redefinida com sucesso!',
+        positivo: true,
+      );
+      Navigator.pop(context); // Volta para o login
+    } else {
+      final msg =
+          jsonDecode(response.body)['error'] ?? 'Erro ao redefinir senha!';
+      await LoginDialog.showFeedbackDialog(context, msg, positivo: false);
+    }
+  }
+
+  String? validarSenha(String? senha) {
+    if (senha == null || senha.isEmpty) return 'A senha é obrigatória';
+    if (senha.length < 6) return 'A senha deve ter pelo menos 6 caracteres';
+    if (RegExp(r'012|123|234|345|456|567|678|789').hasMatch(senha)) {
+      return 'A senha não pode conter sequências numéricas (ex: 123)';
+    }
+    // Adicione outras regras se desejar
+    return null;
   }
 
   @override
@@ -143,7 +224,7 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
             ),
             const SizedBox(height: 16),
             RadioListTile<String>(
-              title: const Text('Por telefone (WpphatsApp)'),
+              title: const Text('Por telefone (WhatsApp)'),
               value: 'telefone',
               groupValue: metodo,
               onChanged:
@@ -228,12 +309,16 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
                   border: OutlineInputBorder(),
                 ),
                 style: const TextStyle(fontFamily: 'Arial'),
+                enabled: !codigoValidado, // Desabilita após validação
               ),
               const SizedBox(height: 16),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: _validarCodigo,
+                  onPressed:
+                      codigoValidado
+                          ? null
+                          : _validarCodigo, // Desabilita após validação
                   child: const Text('Validar código'),
                 ),
               ),
@@ -242,7 +327,7 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextButton(
-                    onPressed: _reenviarCodigo,
+                    onPressed: codigoValidado ? null : _reenviarCodigo,
                     child: const Text(
                       'Reenviar código',
                       style: TextStyle(
@@ -253,7 +338,7 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
                   ),
                   const SizedBox(width: 16),
                   TextButton(
-                    onPressed: _mudarTelefone,
+                    onPressed: codigoValidado ? null : _mudarTelefone,
                     child: const Text(
                       'Mudar telefone',
                       style: TextStyle(
@@ -266,20 +351,71 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
               ),
               const SizedBox(height: 8),
               TextButton(
-                onPressed: () {
-                  setState(() {
-                    metodo = null;
-                    codigoEnviado = false;
-                    _inputController.clear();
-                    _codigoController.clear();
-                  });
-                },
+                onPressed:
+                    codigoValidado
+                        ? null
+                        : () {
+                          setState(() {
+                            metodo = null;
+                            codigoEnviado = false;
+                            _inputController.clear();
+                            _codigoController.clear();
+                          });
+                        },
                 child: const Text(
                   'Alterar meio de confirmação',
                   style: TextStyle(
                     color: Colors.black,
                     decoration: TextDecoration.underline,
                   ),
+                ),
+              ),
+            ],
+
+            // Após código validado, mostra campo de nova senha e botão
+            if (codigoValidado) ...[
+              const SizedBox(height: 24),
+              const Text(
+                'Digite sua nova senha:',
+                style: TextStyle(fontSize: 16),
+              ),
+              const SizedBox(height: 12),
+              TextFormField(
+                controller: _novaSenhaController,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: 'Nova senha',
+                  border: OutlineInputBorder(),
+                ),
+                style: const TextStyle(fontFamily: 'Arial'),
+                onChanged: (value) {
+                  setState(() {
+                    _senhaAtual = value;
+                  });
+                },
+              ),
+              if (_senhaAtual.isNotEmpty) ...[
+                const SizedBox(height: 10),
+                PasswordRulesWidget(senhaAtual: _senhaAtual),
+              ],
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    // Valida a senha antes de enviar
+                    final erro = validarSenha(_novaSenhaController.text);
+                    if (erro != null) {
+                      LoginDialog.showFeedbackDialog(
+                        context,
+                        erro,
+                        positivo: false,
+                      );
+                    } else {
+                      _redefinirSenha();
+                    }
+                  },
+                  child: const Text('Redefinir senha'),
                 ),
               ),
             ],
