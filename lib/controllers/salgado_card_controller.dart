@@ -18,21 +18,12 @@ class SalgadoCardController {
   /// Construtor que exige um salgado.
   SalgadoCardController({required this.salgado});
 
-  /// Retorna o preço unitário do salgado de acordo com a categoria e tipo de preparo.
+  /// Retorna o preço unitário do salgado de acordo com o tipo de preparo e dados vindos do backend.
   double get precoUnitario {
-    switch (salgado.categoria) {
-      case 'festa':
-        // Preço diferente para frito e congelado na categoria festa
-        return tipoSelecionado == TipoPreparo.frito ? 0.90 : 0.78;
-      case 'assado':
-        // Preço fixo para assado
-        return 1.00;
-      case 'mini':
-        // Preço diferente para frito e congelado na categoria mini
-        return tipoSelecionado == TipoPreparo.frito ? 0.48 : 0.38;
-      default:
-        // Preço padrão para outros casos
-        return tipoSelecionado == TipoPreparo.frito ? 1.00 : 0.90;
+    if (tipoSelecionado == TipoPreparo.frito) {
+      return salgado.precoPronto ?? 0.0;
+    } else {
+      return salgado.precoCongelado ?? 0.0;
     }
   }
 
