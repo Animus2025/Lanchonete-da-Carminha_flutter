@@ -10,6 +10,8 @@ import 'ui/themes/app_theme.dart';
 import 'providers/cart_provider.dart';
 import 'providers/auth_provider.dart';
 import 'screens/home_page.dart';
+import 'ui/pages/redefinir_senha.dart';
+import 'ui/pages/verificar_telefone.dart ';
 
 void main() {
   runApp(
@@ -54,10 +56,13 @@ class _MyAppState extends State<MyApp> {
         '/termos_uso': (context) => TermosDeUsoPage(toggleTheme: toggleTheme),
         '/cadastro_page': (context) => const CadastroPage(),
         '/cardapio': (context) => HomePage(toggleTheme: toggleTheme),
-        '/politicas-de-privacidade': (context) => PoliticaPrivacidadePage(toggleTheme: toggleTheme),
+        '/politicas-de-privacidade':
+            (context) => PoliticaPrivacidadePage(toggleTheme: toggleTheme),
         '/sobre': (context) => Sobre(toggleTheme: toggleTheme),
         '/revisao_pedido': (context) => RevisaoPedido(toggleTheme: toggleTheme),
-        '/Meus_pedidos': (context) => MeusPedidosPage(toggleTheme: toggleTheme,),
+        '/redefinir_senha': (context) => const RedefinirSenhaPage(),
+        '/verificar_telefone': (context) => const VerificarTelefonePage(),
+        '/Meus_pedidos': (context) => MeusPedidosPage(toggleTheme: toggleTheme),
         // você pode adicionar outras rotas aqui também:
         // '/politicas-de-prisvacidade': (context) => const PoliticasPage(),
         // '/sobre': (context) => const SobrePage(),
