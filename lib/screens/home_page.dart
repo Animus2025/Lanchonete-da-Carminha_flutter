@@ -36,76 +36,24 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final ScrollController _scrollController = ScrollController();
 
-  // Mapeamento das seções para navegação e scroll automático
-  final Map<String, GlobalKey> sectionKeys = {};
+  // Chaves para cada seção
+  final Map<String, GlobalKey> sectionKeys = {
+    'festa': GlobalKey(),
+    'assado': GlobalKey(),
+    'mini': GlobalKey(),
+    'bebidas': GlobalKey(),
+  };
 
-  String _currentSection = 'festa'; // Seção atualmente destacada
-
-  /// Garante que cada categoria tenha uma chave única e estável
-  GlobalKey _getSectionKey(String categoria) {
-    return sectionKeys.putIfAbsent(categoria, () => GlobalKey());
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _scrollController.addListener(
-      _onScroll,
-    ); // Adiciona listener para detectar rolagem
-  }
-
-  @override
-  void dispose() {
-    _scrollController.removeListener(_onScroll);
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  /// Faz o scroll animado até a seção desejada ao clicar no menu horizontal
-  void _scrollTo(String section) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final context = sectionKeys[section]?.currentContext;
-      if (context != null) {
-        Scrollable.ensureVisible(
-          context,
-          duration: const Duration(milliseconds: 700),
-          curve: Curves.easeInOut,
-          alignment: 0,
-        );
-        if (mounted) {
-          setState(() {
-            _currentSection = section; // Atualiza o destaque do menu
-          });
-        }
-      }
-    });
-  }
-
-  /// Detecta qual seção está visível no momento para destacar no menu
-  void _onScroll() {
-    final sections = sectionKeys.keys.toList();
-    String? newSection;
-
-    for (final section in sections) {
-      final key = sectionKeys[section];
-      if (key == null) continue;
-      final context = key.currentContext;
-      if (context == null) continue;
-      final box = context.findRenderObject() as RenderBox?;
-      if (box == null) continue;
-      final position = box.localToGlobal(Offset.zero, ancestor: null).dy;
-
-      // Marca a seção ativa se o topo está acima ou alinhado ao topo da tela
-      if (position <= 300) {
-        newSection = section;
-      }
-    }
-
-    // Atualiza o menu apenas se mudou de seção
-    if (newSection != null && _currentSection != newSection) {
-      setState(() {
-        _currentSection = newSection!;
-      });
+  // Função para rolar até a seção desejada
+  void _scrollToSection(String section) {
+    final context = sectionKeys[section]?.currentContext;
+    if (context != null) {
+      Scrollable.ensureVisible(
+        context,
+        duration: const Duration(milliseconds: 600),
+        curve: Curves.easeInOut,
+        alignment: 0,
+      );
     }
   }
 
@@ -116,141 +64,208 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: CustomAppBar(toggleTheme: widget.toggleTheme),
       drawer: const CustomDrawer(),
-      body: FutureBuilder<List<Salgado>>(
-        future: fetchSalgados(),
-        builder: (context, salgadosSnapshot) {
-          if (salgadosSnapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (salgadosSnapshot.hasError) {
-            return Center(child: Text('Erro: ${salgadosSnapshot.error}'));
-          } else if (!salgadosSnapshot.hasData ||
-              salgadosSnapshot.data!.isEmpty) {
-            return const Center(child: Text('Nenhum salgado encontrado.'));
-          }
-          final salgados = salgadosSnapshot.data!;
-          final festa = salgados.where((s) => s.categoria == 'festa').toList();
-          final assado =
-              salgados.where((s) => s.categoria == 'assado').toList();
-          final mini = salgados.where((s) => s.categoria == 'mini').toList();
 
-          return FutureBuilder<List<Bebida>>(
-            future: fetchBebidas(),
-            builder: (context, bebidasSnapshot) {
-              if (bebidasSnapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (bebidasSnapshot.hasError) {
-                return Center(child: Text('Erro: ${bebidasSnapshot.error}'));
-              }
-              final bebidas = bebidasSnapshot.data ?? [];
-
-              // Apenas as seções, sem menu horizontal
-              return SingleChildScrollView(
-                controller: _scrollController,
-                child: Column(
-                  children: [
-                    if (festa.isNotEmpty)
-                      _buildSection(
-                        title: 'FESTA',
-                        items: festa,
-                        isSalgado: true,
-                        titleColor:
-                            isDarkMode
-                                ? AppColors.laranja
-                                : AppColors.pretoClaro,
-                      ),
-                    if (assado.isNotEmpty)
-                      _buildSection(
-                        title: 'ASSADO',
-                        items: assado,
-                        isSalgado: true,
-                        titleColor:
-                            isDarkMode
-                                ? AppColors.laranja
-                                : AppColors.pretoClaro,
-                      ),
-                    if (mini.isNotEmpty)
-                      _buildSection(
-                        title: 'MINI',
-                        items: mini,
-                        isSalgado: true,
-                        titleColor:
-                            isDarkMode
-                                ? AppColors.laranja
-                                : AppColors.pretoClaro,
-                      ),
-                    _buildSection(
-                      title: 'BEBIDAS',
-                      items: bebidas,
-                      isSalgado: false,
-                      titleColor:
-                          isDarkMode ? AppColors.laranja : AppColors.pretoClaro,
-                    ),
-                  ],
+      // BARRA HORIZONTAL DE LINKS
+      body: Column(
+        children: [
+          Container(
+            color: AppColors.pretoClaro,
+            height: 54,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _SectionLink(
+                  label: 'Festa',
+                  onTap: () => _scrollToSection('festa'),
                 ),
-              );
-            },
-          );
-        },
+                _SectionLink(
+                  label: 'Assado',
+                  onTap: () => _scrollToSection('assado'),
+                ),
+                _SectionLink(
+                  label: 'Mini',
+                  onTap: () => _scrollToSection('mini'),
+                ),
+                _SectionLink(
+                  label: 'Bebidas',
+                  onTap: () => _scrollToSection('bebidas'),
+                ),
+                const SizedBox(width: 8),
+                // Ícone do carrinho
+                Consumer<CartProvider>(
+                  builder:
+                      (context, cart, child) => Stack(
+                        children: [
+                          IconButton(
+                            icon: const Icon(
+                              Icons.shopping_cart,
+                              color: AppColors.laranja,
+                              size: 28,
+                            ),
+                            onPressed: () {
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                backgroundColor: Colors.transparent,
+                                isDismissible: true,
+                                enableDrag: true,
+                                builder: (_) => CartOverlay(),
+                              );
+                            },
+                            tooltip: 'Ver carrinho',
+                          ),
+                          if (cart.itemCount > 0)
+                            Positioned(
+                              right: 4,
+                              top: 4,
+                              child: Container(
+                                padding: const EdgeInsets.all(4),
+                                decoration: const BoxDecoration(
+                                  color: Colors.red,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Text(
+                                  '${cart.itemCount}',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                ),
+              ],
+            ),
+          ),
+          // CONTEÚDO PRINCIPAL
+          Expanded(
+            child: FutureBuilder<List<Salgado>>(
+              future: fetchSalgados(),
+              builder: (context, salgadosSnapshot) {
+                if (salgadosSnapshot.connectionState ==
+                    ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (salgadosSnapshot.hasError) {
+                  return Center(child: Text('Erro: ${salgadosSnapshot.error}'));
+                } else if (!salgadosSnapshot.hasData ||
+                    salgadosSnapshot.data!.isEmpty) {
+                  return const Center(
+                    child: Text('Nenhum salgado encontrado.'),
+                  );
+                }
+                final salgados = salgadosSnapshot.data!;
+                final festa =
+                    salgados.where((s) => s.categoria == 'festa').toList();
+                final assado =
+                    salgados.where((s) => s.categoria == 'assado').toList();
+                final mini =
+                    salgados.where((s) => s.categoria == 'mini').toList();
+
+                return FutureBuilder<List<Bebida>>(
+                  future: fetchBebidas(),
+                  builder: (context, bebidasSnapshot) {
+                    if (bebidasSnapshot.connectionState ==
+                        ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (bebidasSnapshot.hasError) {
+                      return Center(
+                        child: Text('Erro: ${bebidasSnapshot.error}'),
+                      );
+                    }
+                    final bebidas = bebidasSnapshot.data ?? [];
+
+                    return SingleChildScrollView(
+                      controller: _scrollController,
+                      child: Column(
+                        children: [
+                          if (festa.isNotEmpty)
+                            _buildSection(
+                              key: sectionKeys['festa'],
+                              title: 'FESTA',
+                              items: festa,
+                              isSalgado: true,
+                              titleColor:
+                                  isDarkMode
+                                      ? AppColors.laranja
+                                      : AppColors.pretoClaro,
+                            ),
+                          if (assado.isNotEmpty)
+                            _buildSection(
+                              key: sectionKeys['assado'],
+                              title: 'ASSADO',
+                              items: assado,
+                              isSalgado: true,
+                              titleColor:
+                                  isDarkMode
+                                      ? AppColors.laranja
+                                      : AppColors.pretoClaro,
+                            ),
+                          if (mini.isNotEmpty)
+                            _buildSection(
+                              key: sectionKeys['mini'],
+                              title: 'MINI',
+                              items: mini,
+                              isSalgado: true,
+                              titleColor:
+                                  isDarkMode
+                                      ? AppColors.laranja
+                                      : AppColors.pretoClaro,
+                            ),
+                          _buildSection(
+                            key: sectionKeys['bebidas'],
+                            title: 'BEBIDAS',
+                            items: bebidas,
+                            isSalgado: false,
+                            titleColor:
+                                isDarkMode
+                                    ? AppColors.laranja
+                                    : AppColors.pretoClaro,
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        ],
       ),
       bottomNavigationBar: const CustomFooter(),
     );
   }
 
-  /// Cria o botão do menu horizontal para cada seção.
-  /// Destaca o botão se a seção estiver ativa.
-  Widget _buildSectionButton(String label, String section) {
-    final bool isSelected = _currentSection == section;
+  // Widget para cada link da barra horizontal
+  Widget _SectionLink({required String label, required VoidCallback onTap}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      child: Container(
-        alignment: Alignment.center,
-        decoration:
-            isSelected
-                ? BoxDecoration(
-                  border: Border.all(color: AppColors.laranja, width: 2),
-                  borderRadius: BorderRadius.circular(8),
-                  color: AppColors.laranja,
-                )
-                : null,
-        child: SizedBox(
-          height: 36,
-          child: TextButton(
-            onPressed: () => _scrollTo(section),
-            style: TextButton.styleFrom(
-              foregroundColor:
-                  isSelected ? Colors.black : AppColors.textSecondary,
-              backgroundColor: Colors.transparent,
-              padding: EdgeInsets.zero,
-              minimumSize: const Size(60, 36),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-            child: Center(
-              child: Text(
-                label,
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: isSelected ? Colors.black : AppColors.textSecondary,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: GestureDetector(
+        onTap: onTap,
+        child: Text(
+          label,
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: AppColors.laranja,
           ),
         ),
       ),
     );
   }
 
-  /// Monta cada seção de produtos (salgados ou bebidas) com título e cards.
+  // Ajuste para aceitar key opcional
   Widget _buildSection({
+    Key? key,
     required String title,
     required List<dynamic> items,
     required bool isSalgado,
     Color? titleColor,
   }) {
     return SectionAnchor(
+      key: key,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
         child: Column(
@@ -268,7 +283,6 @@ class _HomePageState extends State<HomePage> {
             LayoutBuilder(
               builder: (context, constraints) {
                 if (constraints.maxWidth < 600) {
-                  // Um card por linha, altura ajustável
                   return ListView.builder(
                     itemCount: items.length,
                     shrinkWrap: true,
@@ -285,18 +299,16 @@ class _HomePageState extends State<HomePage> {
                     },
                   );
                 } else {
-                  // Sempre 2 cards por linha em telas grandes
                   return GridView.builder(
                     itemCount: items.length,
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2, // Sempre 2 cards por linha
+                          crossAxisCount: 2,
                           mainAxisSpacing: 8,
                           crossAxisSpacing: 8,
-                          childAspectRatio:
-                              4 / 2, // Ajuste conforme o visual desejado
+                          childAspectRatio: 4 / 2,
                         ),
                     itemBuilder: (context, index) {
                       final item = items[index];
