@@ -10,11 +10,16 @@ class MeusPedidosPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    // Definindo padding dinâmico
+    double horizontalPadding = screenWidth < 1000 ? 12 : 64;
+
     return Scaffold(
       appBar: CustomAppBar(toggleTheme: toggleTheme),
-      drawer: CustomDrawer(),
+      drawer: const CustomDrawer(),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 16),
         children: [
           buildPedidoSection(
             context: context,

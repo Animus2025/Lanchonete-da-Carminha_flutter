@@ -40,7 +40,7 @@ class ProdutoCardBase extends StatelessWidget {
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: AppColors.pretoClaro,
         borderRadius: BorderRadius.circular(16),
@@ -119,7 +119,7 @@ class ProdutoCardBase extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 32), // Espaço entre a imagem e o valor
           // Linha de valor e botão adicionar, abaixo de tudo
           LayoutBuilder(
             builder: (context, constraints) {
@@ -137,7 +137,7 @@ class ProdutoCardBase extends StatelessWidget {
                       style: TextStyle(
                         color: AppColors.laranja,
                         fontWeight: FontWeight.bold,
-                        fontSize: 22,
+                        fontSize: 30,
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
