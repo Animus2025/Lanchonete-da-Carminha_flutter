@@ -6,6 +6,7 @@ import 'package:lanchonetedacarminha/providers/cart_provider.dart';
 import 'package:lanchonetedacarminha/ui/widgets/AppBodyConteiner.dart';
 import 'package:provider/provider.dart';
 
+// Tela de revisão do pedido
 class RevisaoPedido extends StatelessWidget {
   final VoidCallback toggleTheme;
 
@@ -16,14 +17,16 @@ class RevisaoPedido extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final stepTextColor = isDark ? AppColors.laranja : Colors.black;
 
+    // Obtém os itens do carrinho do provider
     final cartItems = context.watch<CartProvider>().items;
     final screenWidth = MediaQuery.of(context).size.width;
     final isMobile = screenWidth < 600;
 
     return Scaffold(
-      appBar: CustomAppBar(toggleTheme: toggleTheme),
-      drawer: const CustomDrawer(),
+      appBar: CustomAppBar(toggleTheme: toggleTheme), // Barra superior customizada
+      drawer: const CustomDrawer(), // Menu lateral
       body: AppBodyContainer(
+        // Container centralizado e responsivo
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -224,7 +227,7 @@ class RevisaoPedido extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(
-        vertical: isMobile ? 12 : 16,
+        vertical: isMobile ? 8 : 12,
         horizontal: isMobile ? 8 : 12,
       ),
       decoration: BoxDecoration(
@@ -264,19 +267,19 @@ class RevisaoPedido extends StatelessWidget {
 
   Widget _buildCartItem(BuildContext context, dynamic item, int index, bool isMobile, double screenWidth) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: 6),
       decoration: BoxDecoration(
         color: AppColors.preto,
         borderRadius: BorderRadius.circular(10),
       ),
-      padding: EdgeInsets.symmetric(vertical: isMobile ? 8 : 24),
+      padding: EdgeInsets.symmetric(vertical: isMobile ? 2 : 4),
       child: IntrinsicHeight(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // Imagem
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(12.0),
               child: SizedBox(
                 width: isMobile ? screenWidth * 0.22 : 120,
                 height: isMobile ? screenWidth * 0.22 : 120,
@@ -295,7 +298,7 @@ class RevisaoPedido extends StatelessWidget {
             ),
             // Nome e tags
             Expanded(
-              flex: 5,
+              flex: 16,
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                 child: Column(
@@ -307,10 +310,10 @@ class RevisaoPedido extends StatelessWidget {
                         color: Colors.white,
                         fontSize: 14,
                       ),
-                      maxLines: 5,
+                      maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 20),
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Row(
@@ -349,10 +352,24 @@ class RevisaoPedido extends StatelessWidget {
             ),
             // Botões de quantidade
             SizedBox(
-              width: isMobile ? 90 : 110,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+              width: isMobile ? 20 : 110,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  IconButton(
+                    icon: const Icon(Icons.add, color: AppColors.laranja),
+                    onPressed: () => context.read<CartProvider>().increaseQuantity(index),
+                    constraints: const BoxConstraints(),
+                    padding: EdgeInsets.zero,
+                  ),
+                  Text(
+                    '${item.quantidade}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
                   IconButton(
                     icon: Icon(
                       Icons.remove,
@@ -370,31 +387,13 @@ class RevisaoPedido extends StatelessWidget {
                     constraints: const BoxConstraints(),
                     padding: EdgeInsets.zero,
                   ),
-                  SizedBox(
-                    width: 20,
-                    child: Center(
-                      child: Text(
-                        '${item.quantidade}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.add, color: AppColors.laranja),
-                    onPressed: () => context.read<CartProvider>().increaseQuantity(index),
-                    constraints: const BoxConstraints(),
-                    padding: EdgeInsets.zero,
-                  ),
+                  const SizedBox(height: 2),
                 ],
               ),
             ),
             // Preço
             Flexible(
-              flex: 6,
+              flex: 15,
               child: Padding(
                 padding: const EdgeInsets.only(right: 16),
                 child: Align(
