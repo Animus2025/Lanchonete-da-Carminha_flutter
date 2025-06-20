@@ -112,114 +112,162 @@ class _HomePageState extends State<HomePage> {
         width: double.infinity,
         child: const CustomFooter(),
       ),
-      child: SingleChildScrollView(
-        controller: _scrollController,
-        child: Column(
-          children: [
-            _buildSection(
-              key: sectionKeys['festa']!,
-              title: 'FESTA',
-              items: salgadosPorCategoria['festa'] ?? [],
-              isSalgado: true,
-              titleColor:
-                  isDarkMode ? AppColors.laranja : AppColors.pretoClaro,
+      child: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              controller: _scrollController,
+              child: Column(
+                children: [
+                  _buildSection(
+                    key: sectionKeys['festa']!,
+                    title: 'FESTA',
+                    items: salgadosPorCategoria['festa'] ?? [],
+                    isSalgado: true,
+                    titleColor: isDarkMode
+                        ? AppColors.laranja
+                        : AppColors.pretoClaro,
+                  ),
+                  _buildSection(
+                    key: sectionKeys['assado']!,
+                    title: 'ASSADO',
+                    items: salgadosPorCategoria['assado'] ?? [],
+                    isSalgado: true,
+                    titleColor: isDarkMode
+                        ? AppColors.laranja
+                        : AppColors.pretoClaro,
+                  ),
+                  _buildSection(
+                    key: sectionKeys['mini']!,
+                    title: 'MINI',
+                    items: salgadosPorCategoria['mini'] ?? [],
+                    isSalgado: true,
+                    titleColor: isDarkMode
+                        ? AppColors.laranja
+                        : AppColors.pretoClaro,
+                  ),
+                  _buildSection(
+                    key: sectionKeys['bebidas']!,
+                    title: 'BEBIDAS',
+                    items: bebidas,
+                    isSalgado: false,
+                    titleColor: isDarkMode
+                        ? AppColors.laranja
+                        : AppColors.pretoClaro,
+                  ),
+                ],
+              ),
             ),
-            _buildSection(
-              key: sectionKeys['assado']!,
-              title: 'ASSADO',
-              items: salgadosPorCategoria['assado'] ?? [],
-              isSalgado: true,
-              titleColor:
-                  isDarkMode ? AppColors.laranja : AppColors.pretoClaro,
-            ),
-            _buildSection(
-              key: sectionKeys['mini']!,
-              title: 'MINI',
-              items: salgadosPorCategoria['mini'] ?? [],
-              isSalgado: true,
-              titleColor:
-                  isDarkMode ? AppColors.laranja : AppColors.pretoClaro,
-            ),
-            _buildSection(
-              key: sectionKeys['bebidas']!,
-              title: 'BEBIDAS',
-              items: bebidas,
-              isSalgado: false,
-              titleColor:
-                  isDarkMode ? AppColors.laranja : AppColors.pretoClaro,
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildTopMenu() {
+  final isMobile = MediaQuery.of(context).size.width < 600;
+
   return Container(
     color: AppColors.pretoClaro,
     width: double.infinity,
-    padding: const EdgeInsets.symmetric(horizontal: 24),
+    padding: const EdgeInsets.symmetric(horizontal: 12),
     child: SizedBox(
       height: 50,
-      child: Center( // <-- Centraliza todo o conteúdo
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            mainAxisSize: MainAxisSize.min, // <-- Faz o Row se ajustar ao tamanho dos filhos
+      child: Row(
+        children: [
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildTopButton("Festa", 'festa', isMobile),
+                _buildTopButton("Assado", 'assado', isMobile),
+                _buildTopButton("Mini", 'mini', isMobile),
+                _buildTopButton("Bebidas", 'bebidas', isMobile),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          Stack(
             children: [
-              _buildSectionButton("Festa", 'festa'),
-              _buildSectionButton("Assado", 'assado'),
-              _buildSectionButton("Mini", 'mini'),
-              _buildSectionButton("Bebidas", 'bebidas'),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
-                child: Stack(
-                  children: [
-                    IconButton(
-                      icon: const Icon(
-                        Icons.shopping_cart,
-                        size: 30,
-                        color: AppColors.laranja,
-                      ),
-                      onPressed: () {
-                        showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          backgroundColor: Colors.transparent,
-                          builder: (_) => CartOverlay(),
-                        );
-                      },
-                      tooltip: 'Ver carrinho',
-                    ),
-                    Positioned(
-                      right: 6,
-                      top: 6,
-                      child: Consumer<CartProvider>(
-                        builder: (context, cart, child) {
-                          return cart.itemCount > 0
-                              ? Container(
-                                  padding: const EdgeInsets.all(4),
-                                  decoration: const BoxDecoration(
-                                    color: Colors.red,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Text(
-                                    '${cart.itemCount}',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                )
-                              : const SizedBox.shrink();
-                        },
-                      ),
-                    ),
-                  ],
+              IconButton(
+                icon: const Icon(
+                  Icons.shopping_cart,
+                  size: 26,
+                  color: AppColors.laranja,
+                ),
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                    builder: (_) => CartOverlay(),
+                  );
+                },
+                tooltip: 'Ver carrinho',
+              ),
+              Positioned(
+                right: 4,
+                top: 4,
+                child: Consumer<CartProvider>(
+                  builder: (context, cart, child) {
+                    return cart.itemCount > 0
+                        ? Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: const BoxDecoration(
+                              color: Colors.red,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Text(
+                              '${cart.itemCount}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          )
+                        : const SizedBox.shrink();
+                  },
                 ),
               ),
             ],
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+
+  Widget _buildTopButton(String label, String section, bool isMobile) {
+  final bool isSelected = _currentSection == section;
+
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 2),
+    child: SizedBox(
+      width: isMobile ? null : 80, // largura menor no PC
+      child: TextButton(
+        onPressed: () => _scrollTo(section),
+        style: TextButton.styleFrom(
+          backgroundColor:
+              isSelected ? AppColors.laranja : Colors.transparent,
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(6),
+            side: BorderSide(
+              color: isSelected ? AppColors.laranja : Colors.transparent,
+              width: 1,
+            ),
+          ),
+        ),
+        child: FittedBox(
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.bold,
+              color: isSelected ? Colors.black : AppColors.textSecondary,
+            ),
           ),
         ),
       ),
@@ -227,52 +275,6 @@ class _HomePageState extends State<HomePage> {
   );
 }
 
-
-
-  Widget _buildSectionButton(String label, String section) {
-    final bool isSelected = _currentSection == section;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      child: Container(
-        alignment: Alignment.center,
-        decoration: isSelected
-            ? BoxDecoration(
-                border: Border.all(color: AppColors.laranja, width: 2),
-                borderRadius: BorderRadius.circular(8),
-                color: AppColors.laranja,
-              )
-            : null,
-        child: SizedBox(
-          height: 36,
-          child: TextButton(
-            onPressed: () => _scrollTo(section),
-            style: TextButton.styleFrom(
-              foregroundColor:
-                  isSelected ? Colors.black : AppColors.textSecondary,
-              backgroundColor: Colors.transparent,
-              padding: EdgeInsets.zero,
-              minimumSize: const Size(60, 36),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-            child: Center(
-              child: Text(
-                label,
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color:
-                      isSelected ? Colors.black : AppColors.textSecondary,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 
   Widget _buildSection({
     required GlobalKey key,
