@@ -88,10 +88,31 @@ class ProdutoCardBase extends StatelessWidget {
                     aspectRatio: 1,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(8),
-                      child: Image.asset(
-                        imagem,
-                        fit: BoxFit.cover,
-                      ),
+                      child: nome.toLowerCase().contains('coca') && nome.contains('2')
+                          ? Image.asset(
+                              imagem,
+                              fit: BoxFit.contain, // Corrige o zoom só para Coca 2L
+                              width: 140,
+                              height: 140,
+                              errorBuilder: (context, error, stackTrace) => Container(
+                                width: 90,
+                                height: 90,
+                                color: Colors.black,
+                                child: const Icon(Icons.image_not_supported),
+                              ),
+                            )
+                          : Image.asset(
+                              imagem,
+                              fit: BoxFit.cover,
+                              width: 140,
+                              height: 140,
+                              errorBuilder: (context, error, stackTrace) => Container(
+                                width: 90,
+                                height: 90,
+                                color: Colors.black,
+                                child: const Icon(Icons.image_not_supported),
+                              ),
+                            ),
                     ),
                   ),
                 ),
