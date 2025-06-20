@@ -38,7 +38,7 @@ class LoginDialog {
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode({
             'email': isEmail ? emailOuTelefone : null,
-            'telefone': isEmail ? null : emailOuTelefone,
+            'numero': isEmail ? null : emailOuTelefone,
             'senha': senha,
           }),
         );

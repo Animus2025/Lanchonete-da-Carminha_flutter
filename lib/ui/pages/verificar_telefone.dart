@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lanchonetedacarminha/screens/login_overlay.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class VerificarTelefonePage extends StatefulWidget {
   const VerificarTelefonePage({Key? key}) : super(key: key);
@@ -32,7 +34,7 @@ class _VerificarTelefonePageState extends State<VerificarTelefonePage> {
     super.dispose();
   }
 
-  void _validarCodigo() async {
+  Future<void> _validarCodigo(String telefone) async {
     final codigo = _codigoController.text.trim();
     if (codigo.isEmpty) {
       await LoginDialog.showFeedbackDialog(
@@ -42,12 +44,40 @@ class _VerificarTelefonePageState extends State<VerificarTelefonePage> {
       );
       return;
     }
-    await LoginDialog.showFeedbackDialog(
-      context,
-      'Telefone verificado com sucesso!\nVocê já pode fazer login.',
-      positivo: true,
+
+    // Primeiro, verifica o código
+    final response = await http.post(
+      Uri.parse('http://localhost:3000/whatsapp/confirmar-codigo'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'numero': telefone, 'codigo': codigo}),
     );
-    Navigator.pushReplacementNamed(context, '/');
+
+    if (response.statusCode == 200) {
+      // Agora finaliza o cadastro
+      final finalizarResponse = await http.post(
+        Uri.parse('http://localhost:3000/usuario/finalizar-cadastro'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'numero': telefone, 'codigo': codigo}),
+      );
+
+      if (finalizarResponse.statusCode == 201) {
+        await LoginDialog.showFeedbackDialog(
+          context,
+          'Telefone verificado e cadastro finalizado com sucesso!\nVocê já pode fazer login.',
+          positivo: true,
+        );
+        Navigator.pushReplacementNamed(context, '/');
+      } else {
+        final msg =
+            jsonDecode(finalizarResponse.body)['error'] ??
+            'Erro ao finalizar cadastro!';
+        await LoginDialog.showFeedbackDialog(context, msg, positivo: false);
+      }
+    } else {
+      final msg =
+          jsonDecode(response.body)['error'] ?? 'Erro ao verificar código!';
+      await LoginDialog.showFeedbackDialog(context, msg, positivo: false);
+    }
   }
 
   void _reenviarCodigo() async {
@@ -56,10 +86,14 @@ class _VerificarTelefonePageState extends State<VerificarTelefonePage> {
       'Código reenviado!',
       positivo: true,
     );
+    // Aqui você pode chamar novamente o envio de SMS/WhatsApp
   }
 
   @override
   Widget build(BuildContext context) {
+    final String telefone =
+        ModalRoute.of(context)?.settings.arguments as String;
+
     return Scaffold(
       appBar: AppBar(title: const Text('Verificar Telefone')),
       body: Padding(
@@ -90,7 +124,8 @@ class _VerificarTelefonePageState extends State<VerificarTelefonePage> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: _codigoValido ? _validarCodigo : null,
+                onPressed:
+                    _codigoValido ? () => _validarCodigo(telefone) : null,
                 child: const Text('Validar código'),
               ),
             ),

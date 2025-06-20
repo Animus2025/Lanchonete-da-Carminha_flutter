@@ -22,6 +22,7 @@ class _CadastroPageState extends State<CadastroPage> {
   final TextEditingController _cpfController = TextEditingController();
   final TextEditingController _enderecoController = TextEditingController();
   final TextEditingController _senhaController = TextEditingController();
+  final TextEditingController _codigoController = TextEditingController();
 
   bool _obscureSenha = true; // Controla visibilidade da senha
   String _senhaAtual = ''; // Guarda a senha digitada para mostrar regras
@@ -37,6 +38,7 @@ class _CadastroPageState extends State<CadastroPage> {
     _cpfController.dispose();
     _enderecoController.dispose();
     _senhaController.dispose();
+    _codigoController.dispose();
     super.dispose();
   }
 
@@ -99,7 +101,7 @@ class _CadastroPageState extends State<CadastroPage> {
   // Função para cadastrar o usuário via API
   Future<void> cadastrarUsuario() async {
     const url =
-        'http://localhost:3000/usuario/cadastrar'; // Use seu IP local se for testar no celular
+        'http://localhost:3000/usuario/pre-cadastro'; // Use seu IP local se for testar no celular
     final response = await http.post(
       Uri.parse(url),
       headers: {'Content-Type': 'application/json'},
@@ -107,7 +109,7 @@ class _CadastroPageState extends State<CadastroPage> {
         'nome_usuario': _nomeController.text,
         'email': _emailController.text,
         'senha': _senhaController.text,
-        'telefone': _telefoneController.text,
+        'numero': _telefoneController.text,
         'endereco': _enderecoController.text,
         'cpf': _cpfController.text,
       }),
@@ -117,59 +119,18 @@ class _CadastroPageState extends State<CadastroPage> {
     print('Body: ${response.body}');
 
     if (response.statusCode == 201) {
-      // Ao cadastrar com sucesso, abre o popup de confirmação do WhatsApp
-      await showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder:
-            (context) => AlertDialog(
-              backgroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              title: const Text(
-                "Confirme seu número",
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.black, fontSize: 20),
-              ),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text(
-                    "Enviamos um código de confirmação para o WhatsApp:",
-                    style: TextStyle(color: Colors.black, fontSize: 16),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    _telefoneController.text,
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 24),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      Navigator.pushReplacementNamed(
-                        context,
-                        '/verificar_telefone',
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: _laranjaPadrao,
-                    ),
-                    child: const Text(
-                      "OK",
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+      // Envia a requisição para o backend para registrar o número e gerar o código
+      await http.post(
+        Uri.parse('http://localhost:3000/whatsapp/verificar-numero'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'numero': _telefoneController.text}),
+      );
+
+      // Navega direto para a tela de verificação do telefone
+      Navigator.pushReplacementNamed(
+        context,
+        '/verificar_telefone',
+        arguments: _telefoneController.text,
       );
     } else {
       // Mostra erro caso o cadastro falhe
