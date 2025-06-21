@@ -55,9 +55,15 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           /// 🔥 Se está logado, mostra submenu; senão, botão que abre login
           auth.isLoggedIn
               ? PopupMenuButton<String>(
-                  offset: const Offset(0, 48), // <-- faz o menu abrir para baixo
+                  offset: const Offset(0, 45),
                   icon: const Icon(Icons.person, color: AppColors.laranja),
-                  color: AppColors.preto, // Fundo preto
+                  color: AppColors.preto,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(10),
+                      bottomRight: Radius.circular(10),
+                    ),
+                  ),
                   onSelected: (value) {
                     if (value == 'minha_conta') {
                       Navigator.of(context).pushNamed('/minha_conta');
@@ -66,18 +72,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     }
                   },
                   itemBuilder: (context) => [
-                    PopupMenuItem(
+                    const PopupMenuItem(
                       value: 'minha_conta',
-                      child: const Text(
+                      child: Text(
                         'Minha Conta',
-                        style: TextStyle(color: AppColors.laranja), // Letras laranjas
+                        style: TextStyle(color: AppColors.laranja),
                       ),
                     ),
-                    PopupMenuItem(
+                    const PopupMenuItem(
                       value: 'sair',
-                      child: const Text(
+                      child: Text(
                         'Sair',
-                        style: TextStyle(color: AppColors.laranja), // Letras laranjas
+                        style: TextStyle(color: AppColors.laranja),
                       ),
                     ),
                   ],
