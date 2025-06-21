@@ -48,15 +48,18 @@ class LoginDialog {
 
         if (response.statusCode == 200) {
           final data = jsonDecode(response.body);
+          print('📦 Dados recebidos: $data');
 
-          Provider.of<AuthProvider>(context, listen: false).login({
-            'id': data['id'],
-            'nome': data['nome'],
-            'email': data['email'],
-            'telefone': data['numero'],
-            'cpf': data['cpf'],
-            'endereco': data['endereco'],
-          });
+          final usuario = data['usuario'];
+
+            Provider.of<AuthProvider>(context, listen: false).login({
+              'id': usuario['id'],
+              'nome_usuario': usuario['nome_usuario'],
+              'email': usuario['email'],
+              'telefone': usuario['numero'],
+              'cpf': usuario['cpf'],
+              'endereco': usuario['endereco'],
+            });
 
           Navigator.pop(context); // Fecha o diálogo de login
 

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_drawer.dart';
 import '../widgets/app_body_container.dart';
 import '../themes/app_theme.dart';
+import '../../../providers/auth_provider.dart';
 
 class MinhaContaPage extends StatelessWidget {
   final VoidCallback toggleTheme;
@@ -11,6 +13,9 @@ class MinhaContaPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<AuthProvider>(context);
+    final user = auth.userData ?? {};
+
     return Scaffold(
       appBar: CustomAppBar(toggleTheme: toggleTheme),
       drawer: const CustomDrawer(),
@@ -51,15 +56,30 @@ class MinhaContaPage extends StatelessWidget {
                     ),
                     child: Column(
                       children: [
-                        buildInfoRow(Icons.person, 'FULANO DA SILVA'),
+                        buildInfoRow(
+                          Icons.person,
+                          user['nome_usuario'] ?? 'Nome não informado',
+                        ),
                         const SizedBox(height: 12),
-                        buildInfoRow(Icons.email, 'EMAIL@EMAIL.COM'),
+                        buildInfoRow(
+                          Icons.email,
+                          user['email'] ?? 'Email não informado',
+                        ),
                         const SizedBox(height: 12),
-                        buildInfoRow(Icons.phone, 'Nº DE TELEFONE'),
+                        buildInfoRow(
+                          Icons.phone,
+                          user['telefone'] ?? 'Telefone não informado',
+                        ),
                         const SizedBox(height: 12),
-                        buildInfoRow(Icons.badge, 'CPF'),
+                        buildInfoRow(
+                          Icons.badge,
+                          user['cpf'] ?? 'CPF não informado',
+                        ),
                         const SizedBox(height: 12),
-                        buildInfoRow(Icons.location_on, 'RUA/N°'),
+                        buildInfoRow(
+                          Icons.location_on,
+                          user['endereco'] ?? 'Endereço não informado',
+                        ),
                         const SizedBox(height: 20),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -84,7 +104,7 @@ class MinhaContaPage extends StatelessWidget {
                             ),
                             TextButton(
                               onPressed: () {
-                                // Ação para editar dados
+                                // 🔥 Aqui você pode abrir uma tela ou pop-up de editar dados futuramente
                               },
                               child: const Text(
                                 'EDITAR',
