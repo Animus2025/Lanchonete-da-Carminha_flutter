@@ -91,13 +91,16 @@ class _EditarContaPageState extends State<EditarContaPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    const SizedBox(height: 24),
+                    Text(
                       'EDITAR DADOS:',
                       style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'BebasNeue',
-                        color: AppColors.laranja,
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? AppColors.laranja
+                            : Colors.black,
                       ),
                     ),
                     const SizedBox(height: 24),
