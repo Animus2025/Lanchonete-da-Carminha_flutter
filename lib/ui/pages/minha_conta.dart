@@ -5,6 +5,7 @@ import '../widgets/custom_drawer.dart';
 import '../widgets/app_body_container.dart';
 import '../themes/app_theme.dart';
 import '../../../providers/auth_provider.dart';
+import '../pages/editar_conta.dart';
 
 class MinhaContaPage extends StatelessWidget {
   final VoidCallback toggleTheme;
@@ -86,13 +87,11 @@ class MinhaContaPage extends StatelessWidget {
                           children: [
                             ElevatedButton(
                               onPressed: () {
-                                Navigator.pushNamed(
-                                    context, '/redefinir_senha');
+                                Navigator.pushNamed(context, '/redefinir_senha');
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.laranja,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 24, vertical: 12),
+                                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                               ),
                               child: const Text(
                                 'ALTERAR SENHA',
@@ -104,7 +103,10 @@ class MinhaContaPage extends StatelessWidget {
                             ),
                             TextButton(
                               onPressed: () {
-                                // 🔥 Aqui você pode abrir uma tela ou pop-up de editar dados futuramente
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const EditarContaPage()),
+                                );
                               },
                               child: const Text(
                                 'EDITAR',
