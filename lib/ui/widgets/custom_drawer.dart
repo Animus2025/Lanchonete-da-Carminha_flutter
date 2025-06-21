@@ -27,9 +27,10 @@ class CustomDrawer extends StatelessWidget {
                   imagePath: 'lib/assets/icons/cardapio.png',
                   text: "Cardápio",
                   onTap: () {
+                    Navigator.pop(context); // Fecha o Drawer primeiro
                     final currentRoute = ModalRoute.of(context)?.settings.name;
                     if (currentRoute == null || currentRoute == '/') {
-                      // Já está na home, não faz nada
+                      // Já está na home, não faz nada além de fechar o Drawer
                       return;
                     }
                     Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
