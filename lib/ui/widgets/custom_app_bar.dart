@@ -26,11 +26,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         title: Center(
           child: GestureDetector(
             onTap: () {
-              Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+              final currentRoute = ModalRoute.of(context)?.settings.name;
+              if (currentRoute != '/') {
+                Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+              }
             },
             child: Image.asset(
               'lib/assets/icons/logo.png',
-              height: 50,  // Ajuste proporcional
+              height: 50, // Ajuste proporcional
               fit: BoxFit.contain,
             ),
           ),

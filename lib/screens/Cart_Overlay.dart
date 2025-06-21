@@ -73,78 +73,81 @@ class CartOverlay extends StatelessWidget {
                                     context: context,
                                     builder: (context) => Dialog(
                                       backgroundColor: Colors.transparent,
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
-                                        decoration: BoxDecoration(
-                                          color: isDark ? AppColors.pretoClaro : AppColors.branco,
-                                          borderRadius: BorderRadius.circular(8),
-                                        ),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            const SizedBox(height: 16),
-                                            Text(
-                                              "DESEJA LIMPAR O CARRINHO ?",
-                                              style: TextStyle(
-                                                color: isDark ? AppColors.laranja : AppColors.preto,
-                                                fontSize: 20,
-                                                letterSpacing: 1,
+                                      child: Center(
+                                        child: Container(
+                                          width: 400, // Defina a largura máxima desejada (ajuste conforme necessário)
+                                          padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
+                                          decoration: BoxDecoration(
+                                            color: isDark ? AppColors.pretoClaro : AppColors.branco,
+                                            borderRadius: BorderRadius.circular(8),
+                                          ),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              const SizedBox(height: 16),
+                                              Text(
+                                                "DESEJA LIMPAR O CARRINHO ?",
+                                                style: TextStyle(
+                                                  color: isDark ? AppColors.laranja : AppColors.preto,
+                                                  fontSize: 20,
+                                                  letterSpacing: 1,
+                                                ),
+                                                textAlign: TextAlign.center,
                                               ),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            const SizedBox(height: 32),
-                                            Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                              children: [
-                                                // Botão cancelar
-                                                Expanded(
-                                                  child: ElevatedButton(
-                                                    style: ElevatedButton.styleFrom(
-                                                      backgroundColor: AppColors.preto,
-                                                      foregroundColor: AppColors.laranja,
-                                                      shape: RoundedRectangleBorder(
-                                                        borderRadius: BorderRadius.circular(8),
+                                              const SizedBox(height: 32),
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                children: [
+                                                  // Botão cancelar
+                                                  Expanded(
+                                                    child: ElevatedButton(
+                                                      style: ElevatedButton.styleFrom(
+                                                        backgroundColor: AppColors.preto,
+                                                        foregroundColor: AppColors.laranja,
+                                                        shape: RoundedRectangleBorder(
+                                                          borderRadius: BorderRadius.circular(8),
+                                                        ),
                                                       ),
-                                                    ),
-                                                    onPressed: () => Navigator.of(context).pop(),
-                                                    child: const Text(
-                                                      "CANCELAR",
-                                                      style: TextStyle(
-                                                        fontWeight: FontWeight.bold,
-                                                        fontSize: 18,
-                                                        letterSpacing: 1,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 16),
-                                                // Botão SIM limpa o carrinho
-                                                Expanded(
-                                                  child: ElevatedButton(
-                                                    style: ElevatedButton.styleFrom(
-                                                      backgroundColor: AppColors.preto,
-                                                      foregroundColor: AppColors.laranja,
-                                                      shape: RoundedRectangleBorder(
-                                                        borderRadius: BorderRadius.circular(8),
-                                                      ),
-                                                    ),
-                                                    onPressed: () {
-                                                      cartProvider.clearCart();
-                                                      Navigator.of(context).pop();
-                                                    },
-                                                    child: const Text(
-                                                      "SIM",
-                                                      style: TextStyle(
-                                                        fontWeight: FontWeight.bold,
-                                                        fontSize: 18,
-                                                        letterSpacing: 1,
+                                                      onPressed: () => Navigator.of(context).pop(),
+                                                      child: const Text(
+                                                        "CANCELAR",
+                                                        style: TextStyle(
+                                                          fontWeight: FontWeight.bold,
+                                                          fontSize: 18,
+                                                          letterSpacing: 1,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
+                                                  const SizedBox(width: 16),
+                                                  // Botão SIM limpa o carrinho
+                                                  Expanded(
+                                                    child: ElevatedButton(
+                                                      style: ElevatedButton.styleFrom(
+                                                        backgroundColor: AppColors.preto,
+                                                        foregroundColor: AppColors.laranja,
+                                                        shape: RoundedRectangleBorder(
+                                                          borderRadius: BorderRadius.circular(8),
+                                                        ),
+                                                      ),
+                                                      onPressed: () {
+                                                        cartProvider.clearCart();
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                      child: const Text(
+                                                        "SIM",
+                                                        style: TextStyle(
+                                                          fontWeight: FontWeight.bold,
+                                                          fontSize: 18,
+                                                          letterSpacing: 1,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),

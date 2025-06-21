@@ -1,4 +1,3 @@
-// Importação dos pacotes e widgets necessários para a tela principal (Home)
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../ui/widgets/custom_app_bar.dart';
@@ -13,8 +12,8 @@ import '../data/bebida_data.dart';
 import '../ui/widgets/bebida_card.dart';
 import '../providers/cart_provider.dart';
 import '../screens/cart_overlay.dart';
+import '../ui/widgets/AppBodyConteiner.dart';
 
-/// Widget âncora para permitir navegação por scroll entre seções
 class SectionAnchor extends StatelessWidget {
   final Widget child;
   const SectionAnchor({super.key, required this.child});
@@ -22,10 +21,8 @@ class SectionAnchor extends StatelessWidget {
   Widget build(BuildContext context) => child;
 }
 
-/// Tela principal do aplicativo, exibindo as categorias de produtos e bebidas.
-/// Possui navegação horizontal entre seções, AppBar customizada, Drawer e rodapé.
 class HomePage extends StatefulWidget {
-  final VoidCallback toggleTheme; // Função para alternar o tema do app
+  final VoidCallback toggleTheme;
 
   const HomePage({super.key, required this.toggleTheme});
 
@@ -36,7 +33,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final ScrollController _scrollController = ScrollController();
 
-  // Chaves para cada seção
   final Map<String, GlobalKey> sectionKeys = {
     'festa': GlobalKey(),
     'assado': GlobalKey(),
@@ -44,7 +40,6 @@ class _HomePageState extends State<HomePage> {
     'bebidas': GlobalKey(),
   };
 
-  // Função para rolar até a seção desejada
   void _scrollToSection(String section) {
     final context = sectionKeys[section]?.currentContext;
     if (context != null) {
@@ -64,10 +59,10 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: CustomAppBar(toggleTheme: widget.toggleTheme),
       drawer: const CustomDrawer(),
-
-      // BARRA HORIZONTAL DE LINKS
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          // BARRA HORIZONTAL DE NAVEGAÇÃO
           Container(
             color: AppColors.pretoClaro,
             height: 54,
@@ -91,145 +86,141 @@ class _HomePageState extends State<HomePage> {
                   onTap: () => _scrollToSection('bebidas'),
                 ),
                 const SizedBox(width: 8),
-                // Ícone do carrinho
                 Consumer<CartProvider>(
-                  builder:
-                      (context, cart, child) => Stack(
-                        children: [
-                          IconButton(
-                            icon: const Icon(
-                              Icons.shopping_cart,
-                              color: AppColors.laranja,
-                              size: 28,
+                  builder: (context, cart, child) => Stack(
+                    children: [
+                      IconButton(
+                        icon: const Icon(
+                          Icons.shopping_cart,
+                          color: AppColors.laranja,
+                          size: 28,
+                        ),
+                        onPressed: () {
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            isDismissible: true,
+                            enableDrag: true,
+                            builder: (_) => CartOverlay(),
+                          );
+                        },
+                        tooltip: 'Ver carrinho',
+                      ),
+                      if (cart.itemCount > 0)
+                        Positioned(
+                          right: 4,
+                          top: 4,
+                          child: Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: const BoxDecoration(
+                              color: Colors.red,
+                              shape: BoxShape.circle,
                             ),
-                            onPressed: () {
-                              showModalBottomSheet(
-                                context: context,
-                                isScrollControlled: true,
-                                backgroundColor: Colors.transparent,
-                                isDismissible: true,
-                                enableDrag: true,
-                                builder: (_) => CartOverlay(),
-                              );
-                            },
-                            tooltip: 'Ver carrinho',
-                          ),
-                          if (cart.itemCount > 0)
-                            Positioned(
-                              right: 4,
-                              top: 4,
-                              child: Container(
-                                padding: const EdgeInsets.all(4),
-                                decoration: const BoxDecoration(
-                                  color: Colors.red,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Text(
-                                  '${cart.itemCount}',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                            child: Text(
+                              '${cart.itemCount}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                        ],
-                      ),
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
-          // CONTEÚDO PRINCIPAL
+
+          // CONTEÚDO PRINCIPAL COM APP BODY CONTAINER
           Expanded(
-            child: FutureBuilder<List<Salgado>>(
-              future: fetchSalgados(),
-              builder: (context, salgadosSnapshot) {
-                if (salgadosSnapshot.connectionState ==
-                    ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (salgadosSnapshot.hasError) {
-                  return Center(child: Text('Erro: ${salgadosSnapshot.error}'));
-                } else if (!salgadosSnapshot.hasData ||
-                    salgadosSnapshot.data!.isEmpty) {
-                  return const Center(
-                    child: Text('Nenhum salgado encontrado.'),
-                  );
-                }
-                final salgados = salgadosSnapshot.data!;
-                final festa =
-                    salgados.where((s) => s.categoria == 'festa').toList();
-                final assado =
-                    salgados.where((s) => s.categoria == 'assado').toList();
-                final mini =
-                    salgados.where((s) => s.categoria == 'mini').toList();
+            child: AppBodyContainer(
+              child: FutureBuilder<List<Salgado>>(
+                future: fetchSalgados(),
+                builder: (context, salgadosSnapshot) {
+                  if (salgadosSnapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (salgadosSnapshot.hasError) {
+                    return Center(
+                        child: Text('Erro: ${salgadosSnapshot.error}'));
+                  } else if (!salgadosSnapshot.hasData ||
+                      salgadosSnapshot.data!.isEmpty) {
+                    return const Center(
+                        child: Text('Nenhum salgado encontrado.'));
+                  }
+                  final salgados = salgadosSnapshot.data!;
+                  final festa =
+                      salgados.where((s) => s.categoria == 'festa').toList();
+                  final assado =
+                      salgados.where((s) => s.categoria == 'assado').toList();
+                  final mini =
+                      salgados.where((s) => s.categoria == 'mini').toList();
 
-                return FutureBuilder<List<Bebida>>(
-                  future: fetchBebidas(),
-                  builder: (context, bebidasSnapshot) {
-                    if (bebidasSnapshot.connectionState ==
-                        ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else if (bebidasSnapshot.hasError) {
-                      return Center(
-                        child: Text('Erro: ${bebidasSnapshot.error}'),
-                      );
-                    }
-                    final bebidas = bebidasSnapshot.data ?? [];
+                  return FutureBuilder<List<Bebida>>(
+                    future: fetchBebidas(),
+                    builder: (context, bebidasSnapshot) {
+                      if (bebidasSnapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (bebidasSnapshot.hasError) {
+                        return Center(
+                            child: Text('Erro: ${bebidasSnapshot.error}'));
+                      }
+                      final bebidas = bebidasSnapshot.data ?? [];
 
-                    return SingleChildScrollView(
-                      controller: _scrollController,
-                      child: Column(
-                        children: [
-                          if (festa.isNotEmpty)
-                            _buildSection(
-                              key: sectionKeys['festa'],
-                              title: 'FESTA',
-                              items: festa,
-                              isSalgado: true,
-                              titleColor:
-                                  isDarkMode
-                                      ? AppColors.laranja
-                                      : AppColors.pretoClaro,
-                            ),
-                          if (assado.isNotEmpty)
-                            _buildSection(
-                              key: sectionKeys['assado'],
-                              title: 'ASSADO',
-                              items: assado,
-                              isSalgado: true,
-                              titleColor:
-                                  isDarkMode
-                                      ? AppColors.laranja
-                                      : AppColors.pretoClaro,
-                            ),
-                          if (mini.isNotEmpty)
-                            _buildSection(
-                              key: sectionKeys['mini'],
-                              title: 'MINI',
-                              items: mini,
-                              isSalgado: true,
-                              titleColor:
-                                  isDarkMode
-                                      ? AppColors.laranja
-                                      : AppColors.pretoClaro,
-                            ),
-                          _buildSection(
-                            key: sectionKeys['bebidas'],
-                            title: 'BEBIDAS',
-                            items: bebidas,
-                            isSalgado: false,
-                            titleColor:
-                                isDarkMode
+                      return SingleChildScrollView(
+                        controller: _scrollController,
+                        child: Column(
+                          children: [
+                            if (festa.isNotEmpty)
+                              _buildSection(
+                                key: sectionKeys['festa'],
+                                title: 'FESTA',
+                                items: festa,
+                                isSalgado: true,
+                                titleColor: isDarkMode
                                     ? AppColors.laranja
                                     : AppColors.pretoClaro,
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                );
-              },
+                              ),
+                            if (assado.isNotEmpty)
+                              _buildSection(
+                                key: sectionKeys['assado'],
+                                title: 'ASSADO',
+                                items: assado,
+                                isSalgado: true,
+                                titleColor: isDarkMode
+                                    ? AppColors.laranja
+                                    : AppColors.pretoClaro,
+                              ),
+                            if (mini.isNotEmpty)
+                              _buildSection(
+                                key: sectionKeys['mini'],
+                                title: 'MINI',
+                                items: mini,
+                                isSalgado: true,
+                                titleColor: isDarkMode
+                                    ? AppColors.laranja
+                                    : AppColors.pretoClaro,
+                              ),
+                            _buildSection(
+                              key: sectionKeys['bebidas'],
+                              title: 'BEBIDAS',
+                              items: bebidas,
+                              isSalgado: false,
+                              titleColor: isDarkMode
+                                  ? AppColors.laranja
+                                  : AppColors.pretoClaro,
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
             ),
           ),
         ],
@@ -238,7 +229,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // Widget para cada link da barra horizontal
   Widget _SectionLink({required String label, required VoidCallback onTap}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -256,7 +246,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // Ajuste para aceitar key opcional
   Widget _buildSection({
     Key? key,
     required String title,
@@ -291,10 +280,9 @@ class _HomePageState extends State<HomePage> {
                       final item = items[index];
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 8.0),
-                        child:
-                            isSalgado
-                                ? SalgadoCard(salgado: item as Salgado)
-                                : BebidaCard(bebida: item as Bebida),
+                        child: isSalgado
+                            ? SalgadoCard(salgado: item as Salgado)
+                            : BebidaCard(bebida: item as Bebida),
                       );
                     },
                   );
@@ -305,11 +293,11 @@ class _HomePageState extends State<HomePage> {
                     physics: const NeverScrollableScrollPhysics(),
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          mainAxisSpacing: 8,
-                          crossAxisSpacing: 8,
-                          childAspectRatio: 4 / 2,
-                        ),
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 8,
+                      crossAxisSpacing: 8,
+                      childAspectRatio: 4 / 2,
+                    ),
                     itemBuilder: (context, index) {
                       final item = items[index];
                       return isSalgado
