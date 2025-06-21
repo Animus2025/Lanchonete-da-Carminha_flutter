@@ -13,6 +13,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDarkTheme = theme.brightness == Brightness.dark;
+    final auth = Provider.of<AuthProvider>(context);
 
     return PreferredSize(
       preferredSize: const Size.fromHeight(56.0),
@@ -30,14 +31,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             onTap: () {
               final currentRoute = ModalRoute.of(context)?.settings.name;
               if (currentRoute == null || currentRoute == '/') {
-                // Já está na home, não faz nada
                 return;
               }
               Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
             },
             child: Image.asset(
               'lib/assets/icons/logo.png',
-              height: 50, // Ajuste proporcional
+              height: 50,
               fit: BoxFit.contain,
             ),
           ),
@@ -51,32 +51,65 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
             onPressed: toggleTheme,
           ),
-          IconButton(
-            icon: const Icon(
-              Icons.person,
-              size: 28,
-              color: AppColors.laranja,
-            ),
-            onPressed: () {
-              final auth = Provider.of<AuthProvider>(context, listen: false);
 
-              if (auth.isLoggedIn) {
-                print('Usuário logado: ${auth.userData}');
-                Navigator.of(context).pop(); // Fecha o pop-up de login (se estiver aberto)
-                Navigator.of(context).pushNamed('/minha_conta'); // Vai para Minha Conta
-              } else {
-                LoginDialog.show(
-                  context,
-                  onLoginSuccess: () {
-                    Navigator.of(context).pop(); // Fecha o diálogo de login
-                    Navigator.of(context).pushNamed('/minha_conta'); // Vai para Minha Conta
+          /// 🔥 Se está logado, mostra submenu; senão, botão que abre login
+          auth.isLoggedIn
+              ? PopupMenuButton<String>(
+                  icon: const Icon(
+                    Icons.person,
+                    size: 28,
+                    color: AppColors.laranja,
+                  ),
+                  color: Colors.white,
+                  offset: const Offset(0, 48), // <-- faz o menu abrir para baixo
+                  onSelected: (value) {
+                    if (value == 'minha_conta') {
+                      Navigator.of(context).pushNamed('/minha_conta');
+                    } else if (value == 'sair') {
+                      auth.logout();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Você saiu da conta!'),
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                    }
                   },
-                );
-              }
-            },
-          ),
+                  itemBuilder: (context) {
+                    return [
+                      const PopupMenuItem(
+                        value: 'minha_conta',
+                        child: Text(
+                          'Minha Conta',
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      ),
+                      const PopupMenuItem(
+                        value: 'sair',
+                        child: Text(
+                          'Sair',
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      ),
+                    ];
+                  },
+                )
+              : IconButton(
+                  icon: const Icon(
+                    Icons.person,
+                    size: 28,
+                    color: AppColors.laranja,
+                  ),
+                  onPressed: () {
+                    LoginDialog.show(
+                      context,
+                      onLoginSuccess: () {
+                      },
+                    );
+                  },
+                ),
         ],
-        centerTitle: true, // 🔥 Mantém centralizado independentemente da tela
+        centerTitle: true,
       ),
     );
   }
