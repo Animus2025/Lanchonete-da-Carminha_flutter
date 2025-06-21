@@ -55,9 +55,7 @@ class _MyAppState extends State<MyApp> {
         '/': (context) => HomePage(toggleTheme: toggleTheme),
         '/termos_uso': (context) => TermosDeUsoPage(toggleTheme: toggleTheme),
         '/cadastro_page': (context) => const CadastroPage(),
-        '/cardapio': (context) => HomePage(toggleTheme: toggleTheme),
-        '/politicas-de-privacidade':
-            (context) => PoliticaPrivacidadePage(toggleTheme: toggleTheme),
+        '/politicas-de-privacidade': (context) => PoliticaPrivacidadePage(toggleTheme: toggleTheme),
         '/sobre': (context) => Sobre(toggleTheme: toggleTheme),
         '/revisao_pedido': (context) => RevisaoPedido(toggleTheme: toggleTheme),
         '/redefinir_senha': (context) => const RedefinirSenhaPage(),

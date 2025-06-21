@@ -27,9 +27,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           child: GestureDetector(
             onTap: () {
               final currentRoute = ModalRoute.of(context)?.settings.name;
-              if (currentRoute != '/') {
-                Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+              if (currentRoute == null || currentRoute == '/') {
+                // Já está na home, não faz nada
+                return;
               }
+              Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
             },
             child: Image.asset(
               'lib/assets/icons/logo.png',

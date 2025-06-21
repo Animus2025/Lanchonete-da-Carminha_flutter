@@ -27,8 +27,12 @@ class CustomDrawer extends StatelessWidget {
                   imagePath: 'lib/assets/icons/cardapio.png',
                   text: "Cardápio",
                   onTap: () {
-                    Navigator.pop(context);
-                    Navigator.pushNamed(context, '/cardapio');
+                    final currentRoute = ModalRoute.of(context)?.settings.name;
+                    if (currentRoute == null || currentRoute == '/') {
+                      // Já está na home, não faz nada
+                      return;
+                    }
+                    Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
                   },
                 ),
                 const Padding(
