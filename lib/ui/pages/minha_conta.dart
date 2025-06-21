@@ -16,6 +16,7 @@ class MinhaContaPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context);
     final user = auth.userData ?? {};
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       appBar: CustomAppBar(toggleTheme: toggleTheme),
@@ -30,13 +31,13 @@ class MinhaContaPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'INFORMAÇÕES PESSOAIS:',
                     style: TextStyle(
                       fontFamily: 'BebasNeue',
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
-                      color: AppColors.laranja,
+                      color: isDarkMode ? AppColors.laranja : Colors.black,
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -57,30 +58,15 @@ class MinhaContaPage extends StatelessWidget {
                     ),
                     child: Column(
                       children: [
-                        buildInfoRow(
-                          Icons.person,
-                          user['nome_usuario'] ?? 'Nome não informado',
-                        ),
+                        buildInfoRow(context, Icons.person, user['nome_usuario'] ?? 'Nome não informado'),
                         const SizedBox(height: 12),
-                        buildInfoRow(
-                          Icons.email,
-                          user['email'] ?? 'Email não informado',
-                        ),
+                        buildInfoRow(context, Icons.email, user['email'] ?? 'Email não informado'),
                         const SizedBox(height: 12),
-                        buildInfoRow(
-                          Icons.phone,
-                          user['telefone'] ?? 'Telefone não informado',
-                        ),
+                        buildInfoRow(context, Icons.phone, user['telefone'] ?? 'Telefone não informado'),
                         const SizedBox(height: 12),
-                        buildInfoRow(
-                          Icons.badge,
-                          user['cpf'] ?? 'CPF não informado',
-                        ),
+                        buildInfoRow(context, Icons.badge, user['cpf'] ?? 'CPF não informado'),
                         const SizedBox(height: 12),
-                        buildInfoRow(
-                          Icons.location_on,
-                          user['endereco'] ?? 'Endereço não informado',
-                        ),
+                        buildInfoRow(context, Icons.location_on, user['endereco'] ?? 'Endereço não informado'),
                         const SizedBox(height: 20),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -105,16 +91,17 @@ class MinhaContaPage extends StatelessWidget {
                               onPressed: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => const EditarContaPage()),
+                                  MaterialPageRoute(
+                                    builder: (context) => EditarContaPage(),
+                                  ),
                                 );
                               },
                               child: const Text(
                                 'EDITAR',
                                 style: TextStyle(
                                   fontFamily: 'BebasNeue',
-                                  fontSize: 16,
+                                  fontSize: 24,
                                   color: AppColors.laranja,
-                                  decoration: TextDecoration.underline,
                                 ),
                               ),
                             )
@@ -132,18 +119,21 @@ class MinhaContaPage extends StatelessWidget {
     );
   }
 
-  Widget buildInfoRow(IconData icon, String text) {
+  Widget buildInfoRow(BuildContext context, IconData icon, String text) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final color = isDarkMode ? AppColors.laranja : Colors.black87;
+
     return Row(
       children: [
-        Icon(icon, size: 28, color: Colors.grey[800]),
+        Icon(icon, size: 28, color: color),
         const SizedBox(width: 12),
         Expanded(
           child: Text(
             text,
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'Oswald',
               fontSize: 16,
-              color: Colors.black87,
+              color: color,
             ),
           ),
         ),
