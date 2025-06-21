@@ -12,7 +12,7 @@ import '../data/bebida_data.dart';
 import '../ui/widgets/bebida_card.dart';
 import '../providers/cart_provider.dart';
 import '../screens/cart_overlay.dart';
-import '../ui/widgets/AppBodyConteiner.dart';
+import '../ui/widgets/app_body_container.dart';
 
 class SectionAnchor extends StatelessWidget {
   final Widget child;

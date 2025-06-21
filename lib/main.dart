@@ -12,6 +12,7 @@ import 'providers/auth_provider.dart';
 import 'screens/home_page.dart';
 import 'ui/pages/redefinir_senha.dart';
 import 'ui/pages/verificar_telefone.dart ';
+import 'ui/pages/minha_conta.dart';
 
 void main() {
   runApp(
@@ -61,6 +62,7 @@ class _MyAppState extends State<MyApp> {
         '/redefinir_senha': (context) => const RedefinirSenhaPage(),
         '/verificar_telefone': (context) => const VerificarTelefonePage(),
         '/Meus_pedidos': (context) => MeusPedidosPage(toggleTheme: toggleTheme),
+        '/minha_conta': (context) => MinhaContaPage(toggleTheme: toggleTheme),
         // você pode adicionar outras rotas aqui também:
         // '/politicas-de-prisvacidade': (context) => const PoliticasPage(),
         // '/sobre': (context) => const SobrePage(),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../themes/app_theme.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_drawer.dart';
-import '../widgets/AppBodyConteiner.dart';
+import '../widgets/app_body_container.dart';
 
 class MeusPedidosPage extends StatelessWidget {
   final VoidCallback toggleTheme;

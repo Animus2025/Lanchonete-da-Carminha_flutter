@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:lanchonetedacarminha/ui/widgets/password_rules_widget.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import '../widgets/AppBodyConteiner.dart';
+import '../widgets/app_body_container.dart';
 
 class CadastroPage extends StatefulWidget {
   const CadastroPage({super.key});

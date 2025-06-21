@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lanchonetedacarminha/ui/themes/app_theme.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:lanchonetedacarminha/ui/widgets/AppBodyConteiner.dart';
+import 'package:lanchonetedacarminha/ui/widgets/app_body_container.dart';
 
 class TermosDeUsoPage extends StatelessWidget {
   final VoidCallback toggleTheme;

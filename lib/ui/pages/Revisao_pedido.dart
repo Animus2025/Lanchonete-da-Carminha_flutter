@@ -3,7 +3,7 @@ import 'package:lanchonetedacarminha/ui/widgets/custom_app_bar.dart';
 import 'package:lanchonetedacarminha/ui/themes/app_theme.dart';
 import 'package:lanchonetedacarminha/ui/widgets/custom_drawer.dart';
 import 'package:lanchonetedacarminha/providers/cart_provider.dart';
-import 'package:lanchonetedacarminha/ui/widgets/AppBodyConteiner.dart';
+import 'package:lanchonetedacarminha/ui/widgets/app_body_container.dart';
 import 'package:provider/provider.dart';
 
 // Tela de revisão do pedido

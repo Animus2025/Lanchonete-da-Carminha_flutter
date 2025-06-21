@@ -44,7 +44,8 @@ class CustomDrawer extends StatelessWidget {
                   icon: Icons.person,
                   text: "Minha Conta",
                   onTap: () {
-                    LoginDialog.show(context);
+                    Navigator.pop(context); // Fecha o Drawer primeiro
+                    Navigator.pushNamed(context, '/minha_conta');
                   },
                 ),
                 const Padding(

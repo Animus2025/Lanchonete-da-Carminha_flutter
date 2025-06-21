@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../themes/app_theme.dart';
-import '../widgets/AppBodyConteiner.dart';
+import '../widgets/app_body_container.dart';
 
 /// Página que exibe as Políticas de Privacidade do aplicativo.
 class PoliticaPrivacidadePage extends StatelessWidget {
