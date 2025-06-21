@@ -41,13 +41,25 @@ class CustomDrawer extends StatelessWidget {
                   child: Divider(color: Color(0xff333333)),
                 ),
                 _buildMenuItem(
-                  icon: Icons.person,
-                  text: "Minha Conta",
-                  onTap: () {
-                    Navigator.pop(context); // Fecha o Drawer primeiro
-                    Navigator.pushNamed(context, '/minha_conta');
-                  },
-                ),
+                    icon: Icons.person,
+                    text: "Minha Conta",
+                    onTap: () {
+                      final auth = Provider.of<AuthProvider>(context, listen: false);
+
+                      if (auth.isLoggedIn) {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pushNamed('/minha_conta');
+                      } else {
+                        LoginDialog.show(
+                          context,
+                          onLoginSuccess: () {
+                            Navigator.of(context).pop(); // fecha o diálogo
+                            Navigator.of(context).pushNamed('/minha_conta');
+                          },
+                        );
+                      }
+                    },
+                  ),
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.0),
                   child: Divider(color: Color(0xff333333)),
@@ -58,13 +70,22 @@ class CustomDrawer extends StatelessWidget {
                       icon: Icons.list_alt,
                       text: "Meus Pedidos",
                       onTap: () {
-                        Navigator.pop(context);
+                        final auth = Provider.of<AuthProvider>(context, listen: false);
 
-                        //if (auth.isLoggedIn) {
-                          Navigator.pushNamed(context, '/Meus_pedidos');
-                        //} else {
-
+                        if (auth.isLoggedIn) {
+                          print('Usuário logado: ${auth.userData}');
+                          Navigator.of(context).pop(); // Fecha o pop-up de login (se estiver aberto)
+                          Navigator.of(context).pushNamed('/Meus_pedidos'); // Vai para Minha Conta
+                        } else {
+                          LoginDialog.show(
+                            context,
+                            onLoginSuccess: () {
+                              Navigator.of(context).pop(); // fecha o diálogo
+                              Navigator.of(context).pushNamed('/Meus_pedidos');
+                            },
+                          );
                         }
+                      },
                     );
                   },
                 ),

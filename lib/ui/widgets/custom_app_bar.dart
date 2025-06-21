@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../screens/login_overlay.dart';
 import '../themes/app_theme.dart';
+import 'package:provider/provider.dart';
+import '../../providers/auth_provider.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback toggleTheme;
@@ -56,7 +58,21 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               color: AppColors.laranja,
             ),
             onPressed: () {
-              LoginDialog.show(context);
+              final auth = Provider.of<AuthProvider>(context, listen: false);
+
+              if (auth.isLoggedIn) {
+                print('Usuário logado: ${auth.userData}');
+                Navigator.of(context).pop(); // Fecha o pop-up de login (se estiver aberto)
+                Navigator.of(context).pushNamed('/minha_conta'); // Vai para Minha Conta
+              } else {
+                LoginDialog.show(
+                  context,
+                  onLoginSuccess: () {
+                    Navigator.of(context).pop(); // Fecha o diálogo de login
+                    Navigator.of(context).pushNamed('/minha_conta'); // Vai para Minha Conta
+                  },
+                );
+              }
             },
           ),
         ],

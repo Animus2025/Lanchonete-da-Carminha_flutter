@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:provider/provider.dart';
+import '../providers/auth_provider.dart';
 
 String? ultimoLoginTentado;
 
-// Classe responsável por exibir o diálogo de login/cadastro
 class LoginDialog {
-  // Método estático para mostrar o pop-up de login
-  static void show(BuildContext context) {
+  /// Agora recebe uma callback opcional que será chamada após login OK
+  static void show(BuildContext context, {required VoidCallback onLoginSuccess}) {
     final TextEditingController emailController = TextEditingController();
     final TextEditingController senhaController = TextEditingController();
 
@@ -21,7 +22,7 @@ class LoginDialog {
         await showFeedbackDialog(
           context,
           'Preencha todos os campos!',
-          positivo: null, // Usaremos emoji de interrogação
+          positivo: null,
         );
         print('🚫 Campos vazios!');
         return;
@@ -29,7 +30,6 @@ class LoginDialog {
 
       ultimoLoginTentado = emailOuTelefone;
 
-      // Decide se é email ou telefone
       final bool isEmail = emailOuTelefone.contains('@');
       final url = Uri.parse('http://localhost:3000/usuario/login');
       try {
@@ -47,17 +47,30 @@ class LoginDialog {
         print('📦 Body: ${response.body}');
 
         if (response.statusCode == 200) {
-          Navigator.pop(context);
+          final data = jsonDecode(response.body);
+
+          Provider.of<AuthProvider>(context, listen: false).login({
+            'id': data['id'],
+            'nome': data['nome'],
+            'email': data['email'],
+            'telefone': data['numero'],
+            'cpf': data['cpf'],
+            'endereco': data['endereco'],
+          });
+
+          Navigator.pop(context); // Fecha o diálogo de login
+
           await showFeedbackDialog(
             context,
             'Login realizado com sucesso!',
             positivo: true,
           );
-          // Aqui você pode navegar para a tela principal, por exemplo:
-          // Navigator.pushReplacementNamed(context, '/home');
+
+          // Chama o callback para informar que o login foi concluído com sucesso
+          onLoginSuccess();
+
         } else {
-          final msg =
-              jsonDecode(response.body)['error'] ?? 'Erro ao fazer login!';
+          final msg = jsonDecode(response.body)['error'] ?? 'Erro ao fazer login!';
           await showFeedbackDialog(context, msg, positivo: false);
         }
       } catch (e) {
@@ -92,7 +105,7 @@ class LoginDialog {
                   controller: emailController,
                   style: const TextStyle(
                     color: Colors.black,
-                    fontFamily: 'Arial', // Fonte Arial para o campo de usuário
+                    fontFamily: 'Arial',
                   ),
                   decoration: const InputDecoration(
                     labelText: "Email ou número de telefone",
@@ -111,7 +124,7 @@ class LoginDialog {
                   obscureText: true,
                   style: const TextStyle(
                     color: Colors.black,
-                    fontFamily: 'Arial', // Fonte Arial para o campo de senha
+                    fontFamily: 'Arial',
                   ),
                   decoration: const InputDecoration(
                     labelText: "Senha",
@@ -124,12 +137,12 @@ class LoginDialog {
                     ),
                   ),
                 ),
-                const SizedBox(height: 4), // Espaço pequeno entre senha e link
+                const SizedBox(height: 4),
                 Align(
                   alignment: Alignment.centerLeft,
                   child: TextButton(
                     style: TextButton.styleFrom(
-                      padding: EdgeInsets.zero, // Remove padding extra
+                      padding: EdgeInsets.zero,
                       minimumSize: Size(0, 0),
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
@@ -150,7 +163,7 @@ class LoginDialog {
                     ),
                   ),
                 ),
-                const SizedBox(height: 16), // Espaço antes do botão Continuar
+                const SizedBox(height: 16),
                 SizedBox(
                   width: double.infinity,
                   child: TextButton(
@@ -194,7 +207,7 @@ class LoginDialog {
   static Future<void> showFeedbackDialog(
     BuildContext context,
     String message, {
-    bool? positivo, // Agora pode ser true, false ou null
+    bool? positivo,
   }) async {
     String emoji;
     if (positivo == true) {
@@ -208,24 +221,23 @@ class LoginDialog {
     showDialog(
       context: context,
       barrierDismissible: true,
-      builder:
-          (context) => AlertDialog(
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(emoji, style: const TextStyle(fontSize: 48)),
-                const SizedBox(height: 16),
-                Text(
-                  message,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 18, color: Colors.black),
-                ),
-              ],
+      builder: (context) => AlertDialog(
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(emoji, style: const TextStyle(fontSize: 48)),
+            const SizedBox(height: 16),
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 18, color: Colors.black),
             ),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-          ),
+          ],
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+      ),
     );
 
     await Future.delayed(const Duration(seconds: 2));
