@@ -4,6 +4,7 @@ import 'package:lanchonetedacarminha/ui/themes/app_theme.dart';
 import 'package:lanchonetedacarminha/ui/widgets/custom_drawer.dart';
 import 'package:provider/provider.dart';
 import 'package:lanchonetedacarminha/providers/cart_provider.dart';
+import 'package:lanchonetedacarminha/ui/pages/finalizar_pedido_page.dart';
 
 class RevisaoPedido extends StatelessWidget {
   final VoidCallback toggleTheme;
@@ -29,7 +30,12 @@ class RevisaoPedido extends StatelessWidget {
         children: [
           // Barra de progresso customizada
           Padding(
-            padding: const EdgeInsets.only(top: 16, left: 24, right: 24, bottom: 8),
+            padding: const EdgeInsets.only(
+              top: 16,
+              left: 24,
+              right: 24,
+              bottom: 8,
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -50,10 +56,7 @@ class RevisaoPedido extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       'REVER PEDIDO',
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: stepTextColor,
-                      ),
+                      style: TextStyle(fontSize: 13, color: stepTextColor),
                     ),
                   ],
                 ),
@@ -62,7 +65,9 @@ class RevisaoPedido extends StatelessWidget {
                   children: [
                     CircleAvatar(
                       radius: 16,
-                      backgroundColor: AppColors.laranja.withOpacity(0.5), // Laranja esmaecido
+                      backgroundColor: AppColors.laranja.withOpacity(
+                        0.5,
+                      ), // Laranja esmaecido
                       child: Text(
                         '2',
                         style: TextStyle(
@@ -74,10 +79,7 @@ class RevisaoPedido extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       'FINALIZAR PEDIDO',
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: stepTextColor,
-                      ),
+                      style: TextStyle(fontSize: 13, color: stepTextColor),
                     ),
                   ],
                 ),
@@ -135,7 +137,9 @@ class RevisaoPedido extends StatelessWidget {
                         Expanded(
                           flex: 3,
                           child: Align(
-                            alignment: Alignment.centerRight, // Alinha o texto mais à direita
+                            alignment:
+                                Alignment
+                                    .centerRight, // Alinha o texto mais à direita
                             child: Text(
                               'QUANTIDADE',
                               style: TextStyle(
@@ -166,7 +170,9 @@ class RevisaoPedido extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 12), // Adicione este espaçamento logo após o cabeçalho
+                  const SizedBox(
+                    height: 12,
+                  ), // Adicione este espaçamento logo após o cabeçalho
                   Expanded(
                     child: ListView.builder(
                       itemCount: cartItems.length,
@@ -179,7 +185,10 @@ class RevisaoPedido extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           // Aumente o padding vertical aqui:
-                          padding: EdgeInsets.symmetric(vertical: isMobile ? 8 : 24, horizontal: 0),
+                          padding: EdgeInsets.symmetric(
+                            vertical: isMobile ? 8 : 24,
+                            horizontal: 0,
+                          ),
                           child: IntrinsicHeight(
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -192,37 +201,91 @@ class RevisaoPedido extends StatelessWidget {
                                     height: isMobile ? screenWidth * 0.22 : 120,
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(8),
-                                      child: item.nome.toLowerCase().contains('coca') && item.nome.contains('2')
-                                          ? Container(
-                                              width: isMobile ? screenWidth * 0.22 : 140,
-                                              height: isMobile ? screenWidth * 0.22 : 140,
-                                              color: Colors.black,
-                                              alignment: Alignment.center,
-                                              child: Image.asset(
-                                                item.imagem,
-                                                width: isMobile ? screenWidth * 0.11 : 70,
-                                                height: isMobile ? screenWidth * 0.22 : 140,
-                                                fit: BoxFit.contain,
-                                                errorBuilder: (context, error, stackTrace) => Container(
-                                                  width: isMobile ? screenWidth * 0.11 : 70,
-                                                  height: isMobile ? screenWidth * 0.22 : 140,
-                                                  color: AppColors.preto,
-                                                  child: const Icon(Icons.image_not_supported),
+                                      child:
+                                          item.nome.toLowerCase().contains(
+                                                    'coca',
+                                                  ) &&
+                                                  item.nome.contains('2')
+                                              ? Container(
+                                                width:
+                                                    isMobile
+                                                        ? screenWidth * 0.22
+                                                        : 140,
+                                                height:
+                                                    isMobile
+                                                        ? screenWidth * 0.22
+                                                        : 140,
+                                                color: Colors.black,
+                                                alignment: Alignment.center,
+                                                child: Image.asset(
+                                                  item.imagem,
+                                                  width:
+                                                      isMobile
+                                                          ? screenWidth * 0.11
+                                                          : 70,
+                                                  height:
+                                                      isMobile
+                                                          ? screenWidth * 0.22
+                                                          : 140,
+                                                  fit: BoxFit.contain,
+                                                  errorBuilder:
+                                                      (
+                                                        context,
+                                                        error,
+                                                        stackTrace,
+                                                      ) => Container(
+                                                        width:
+                                                            isMobile
+                                                                ? screenWidth *
+                                                                    0.11
+                                                                : 70,
+                                                        height:
+                                                            isMobile
+                                                                ? screenWidth *
+                                                                    0.22
+                                                                : 140,
+                                                        color: AppColors.preto,
+                                                        child: const Icon(
+                                                          Icons
+                                                              .image_not_supported,
+                                                        ),
+                                                      ),
                                                 ),
+                                              )
+                                              : Image.asset(
+                                                item.imagem,
+                                                width:
+                                                    isMobile
+                                                        ? screenWidth * 0.22
+                                                        : 140,
+                                                height:
+                                                    isMobile
+                                                        ? screenWidth * 0.22
+                                                        : 140,
+                                                fit: BoxFit.cover,
+                                                errorBuilder:
+                                                    (
+                                                      context,
+                                                      error,
+                                                      stackTrace,
+                                                    ) => Container(
+                                                      width:
+                                                          isMobile
+                                                              ? screenWidth *
+                                                                  0.22
+                                                              : 90,
+                                                      height:
+                                                          isMobile
+                                                              ? screenWidth *
+                                                                  0.22
+                                                              : 90,
+                                                      color: AppColors.cinza,
+                                                      child: const Icon(
+                                                        Icons
+                                                            .image_not_supported,
+                                                      ),
+                                                    ),
                                               ),
-                                            )
-                                          : Image.asset(
-                                              item.imagem,
-                                              width: isMobile ? screenWidth * 0.22 : 140,
-                                              height: isMobile ? screenWidth * 0.22 : 140,
-                                              fit: BoxFit.cover,
-                                              errorBuilder: (context, error, stackTrace) => Container(
-                                                width: isMobile ? screenWidth * 0.22 : 90,
-                                                height: isMobile ? screenWidth * 0.22 : 90,
-                                                color: AppColors.cinza,
-                                                child: const Icon(Icons.image_not_supported),
-                                              ),
-                                            ),
                                     ),
                                   ),
                                 ),
@@ -230,9 +293,13 @@ class RevisaoPedido extends StatelessWidget {
                                 Expanded(
                                   flex: 5,
                                   child: Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 8,
+                                      horizontal: 8,
+                                    ),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           item.nome,
@@ -247,33 +314,53 @@ class RevisaoPedido extends StatelessWidget {
                                         SingleChildScrollView(
                                           scrollDirection: Axis.horizontal,
                                           child: Row(
-                                            children: item.tags.map<Widget>((tag) {
-                                              Color tagColor;
-                                              if (tag.toUpperCase() == 'FRITO') {
-                                                tagColor = AppColors.laranja;
-                                              } else if (tag.toUpperCase() == 'CONGELADO') {
-                                                tagColor = Colors.blue[200]!;
-                                              } else {
-                                                tagColor = Colors.grey[300]!;
-                                              }
-                                              return Container(
-                                                margin: const EdgeInsets.only(right: 6),
-                                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                                                decoration: BoxDecoration(
-                                                  color: tagColor,
-                                                  borderRadius: BorderRadius.circular(8),
-                                                ),
-                                                child: Text(
-                                                  tag,
-                                                  style: const TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 11,
-                                                    fontWeight: FontWeight.bold,
-                                                    overflow: TextOverflow.ellipsis,
-                                                  ),
-                                                ),
-                                              );
-                                            }).toList(),
+                                            children:
+                                                item.tags.map<Widget>((tag) {
+                                                  Color tagColor;
+                                                  if (tag.toUpperCase() ==
+                                                      'FRITO') {
+                                                    tagColor =
+                                                        AppColors.laranja;
+                                                  } else if (tag
+                                                          .toUpperCase() ==
+                                                      'CONGELADO') {
+                                                    tagColor =
+                                                        Colors.blue[200]!;
+                                                  } else {
+                                                    tagColor =
+                                                        Colors.grey[300]!;
+                                                  }
+                                                  return Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                          right: 6,
+                                                        ),
+                                                    padding:
+                                                        const EdgeInsets.symmetric(
+                                                          horizontal: 8,
+                                                          vertical: 2,
+                                                        ),
+                                                    decoration: BoxDecoration(
+                                                      color: tagColor,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            8,
+                                                          ),
+                                                    ),
+                                                    child: Text(
+                                                      tag,
+                                                      style: const TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 11,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        overflow:
+                                                            TextOverflow
+                                                                .ellipsis,
+                                                      ),
+                                                    ),
+                                                  );
+                                                }).toList(),
                                           ),
                                         ),
                                       ],
@@ -289,22 +376,37 @@ class RevisaoPedido extends StatelessWidget {
                                       IconButton(
                                         icon: Icon(
                                           Icons.remove,
-                                          color: item.isBebida
-                                              ? (item.quantidade > 1 ? AppColors.laranja : AppColors.laranja.withOpacity(0.4))
-                                              : (item.quantidade > 5 ? AppColors.laranja : AppColors.laranja.withOpacity(0.4)),
+                                          color:
+                                              item.isBebida
+                                                  ? (item.quantidade > 1
+                                                      ? AppColors.laranja
+                                                      : AppColors.laranja
+                                                          .withOpacity(0.4))
+                                                  : (item.quantidade > 5
+                                                      ? AppColors.laranja
+                                                      : AppColors.laranja
+                                                          .withOpacity(0.4)),
                                         ),
-                                        onPressed: item.isBebida
-                                            ? (item.quantidade > 1
-                                                ? () => context.read<CartProvider>().decreaseQuantity(index)
-                                                : null)
-                                            : (item.quantidade > 5
-                                                ? () => context.read<CartProvider>().decreaseQuantity(index)
-                                                : null),
+                                        onPressed:
+                                            item.isBebida
+                                                ? (item.quantidade > 1
+                                                    ? () => context
+                                                        .read<CartProvider>()
+                                                        .decreaseQuantity(index)
+                                                    : null)
+                                                : (item.quantidade > 5
+                                                    ? () => context
+                                                        .read<CartProvider>()
+                                                        .decreaseQuantity(index)
+                                                    : null),
                                         constraints: const BoxConstraints(),
                                         padding: EdgeInsets.zero,
                                       ),
                                       SizedBox(
-                                        width: isMobile ? 20 : 20, // Diminua a largura
+                                        width:
+                                            isMobile
+                                                ? 20
+                                                : 20, // Diminua a largura
                                         child: Center(
                                           child: Text(
                                             '${item.quantidade}',
@@ -317,8 +419,14 @@ class RevisaoPedido extends StatelessWidget {
                                         ),
                                       ),
                                       IconButton(
-                                        icon: const Icon(Icons.add, color: AppColors.laranja),
-                                        onPressed: () => context.read<CartProvider>().increaseQuantity(index),
+                                        icon: const Icon(
+                                          Icons.add,
+                                          color: AppColors.laranja,
+                                        ),
+                                        onPressed:
+                                            () => context
+                                                .read<CartProvider>()
+                                                .increaseQuantity(index),
                                         constraints: const BoxConstraints(),
                                         padding: EdgeInsets.zero,
                                       ),
@@ -362,7 +470,10 @@ class RevisaoPedido extends StatelessWidget {
                     ),
                     decoration: BoxDecoration(
                       color: isDark ? Colors.transparent : Colors.white,
-                      border: Border.all(color: isDark ? AppColors.laranja : Colors.black, width: 1),
+                      border: Border.all(
+                        color: isDark ? AppColors.laranja : Colors.black,
+                        width: 1,
+                      ),
                       borderRadius: BorderRadius.circular(isMobile ? 6 : 8),
                     ),
                     child: Column(
@@ -401,12 +512,20 @@ class RevisaoPedido extends StatelessWidget {
                         child: ElevatedButton.icon(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.preto,
-                            padding: EdgeInsets.symmetric(vertical: isMobile ? 8 : 12),
+                            padding: EdgeInsets.symmetric(
+                              vertical: isMobile ? 8 : 12,
+                            ),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(isMobile ? 6 : 8),
+                              borderRadius: BorderRadius.circular(
+                                isMobile ? 6 : 8,
+                              ),
                             ),
                           ),
-                          icon: Icon(Icons.arrow_back, color: AppColors.laranja, size: isMobile ? 18 : 24),
+                          icon: Icon(
+                            Icons.arrow_back,
+                            color: AppColors.laranja,
+                            size: isMobile ? 18 : 24,
+                          ),
                           label: Text(
                             'CONTINUAR COMPRANDO',
                             style: TextStyle(
@@ -416,7 +535,9 @@ class RevisaoPedido extends StatelessWidget {
                             ),
                           ),
                           onPressed: () {
-                            Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+                            Navigator.of(
+                              context,
+                            ).pushNamedAndRemoveUntil('/', (route) => false);
                           },
                         ),
                       ),
@@ -425,9 +546,13 @@ class RevisaoPedido extends StatelessWidget {
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.preto,
-                            padding: EdgeInsets.symmetric(vertical: isMobile ? 8 : 12),
+                            padding: EdgeInsets.symmetric(
+                              vertical: isMobile ? 8 : 12,
+                            ),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(isMobile ? 6 : 8),
+                              borderRadius: BorderRadius.circular(
+                                isMobile ? 6 : 8,
+                              ),
                             ),
                           ),
                           child: Text(
@@ -439,7 +564,12 @@ class RevisaoPedido extends StatelessWidget {
                             ),
                           ),
                           onPressed: () {
-                            // Implementar ação de finalizar pedido futuramente
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => FinalizarPedidoPage(),
+                              ),
+                            );
                           },
                         ),
                       ),

@@ -85,6 +85,7 @@ flutter:
     - lib/assets/icons/logo_facebook.png
     - lib/assets/icons/logo_insta.png
     - lib/assets/icons/band-pix.png
+    - lib/assets/icons/mapa_exemplo.png
     - lib/assets/produtos/bolinhadequeijo.jpg
     - lib/assets/produtos/bolinhadequeijomini.jpg
     - lib/assets/produtos/bolinhodemandioca.jpg

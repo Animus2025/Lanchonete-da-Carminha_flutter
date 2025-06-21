@@ -12,7 +12,7 @@ import '../models/bebida.dart'; // Modelo de bebida
 import '../data/bebida_data.dart'; // Dados das bebidas
 import '../ui/widgets/bebida_card.dart'; // Card de bebida
 import '../providers/cart_provider.dart'; // Provider do carrinho
-import '../screens/cart_overlay.dart'; // Overlay do carrinho
+import '../screens/Cart_Overlay.dart'; // Overlay do carrinho
 
 /// Tela principal do aplicativo, exibindo as categorias de produtos e bebidas.
 /// Possui navegação horizontal entre seções, AppBar customizada, Drawer e rodapé.
