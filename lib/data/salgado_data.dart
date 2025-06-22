@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 Future<List<Salgado>> fetchSalgados() async {
   final response = await http.get(
     Uri.parse(
-      'http://192.168.3.244:3000/produto/salgados',
+      'http://localhost:3000/produto/salgados',
     ), // ajuste a rota conforme seu backend
   );
 

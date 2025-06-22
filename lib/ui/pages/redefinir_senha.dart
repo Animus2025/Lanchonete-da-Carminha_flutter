@@ -56,7 +56,7 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
       }
 
       final response = await http.post(
-        Uri.parse('http://192.168.3.244/whatsapp/alterar-senha'),
+        Uri.parse('http://localhost/whatsapp/alterar-senha'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'numero': digitsOnly}),
       );
@@ -71,7 +71,8 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
           codigoEnviado = true;
         });
       } else {
-        final msg = jsonDecode(response.body)['error'] ?? 'Erro ao enviar código!';
+        final msg =
+            jsonDecode(response.body)['error'] ?? 'Erro ao enviar código!';
         await LoginDialog.showFeedbackDialog(context, msg, positivo: false);
       }
       return;
@@ -125,7 +126,7 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
     }
 
     final response = await http.post(
-      Uri.parse('http://192.168.3.244/whatsapp/confirmar-codigo'),
+      Uri.parse('http://localhost/whatsapp/confirmar-codigo'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'numero': numero, 'codigo': codigo}),
     );
@@ -140,7 +141,8 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
         codigoValidado = true;
       });
     } else {
-      final msg = jsonDecode(response.body)['error'] ?? 'Erro ao validar código!';
+      final msg =
+          jsonDecode(response.body)['error'] ?? 'Erro ao validar código!';
       await LoginDialog.showFeedbackDialog(context, msg, positivo: false);
     }
   }
@@ -159,7 +161,7 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
     }
 
     final response = await http.post(
-      Uri.parse('http://192.168.3.244:3000/usuario/redefinir-senha-wpp'),
+      Uri.parse('http://localhost:3000/usuario/redefinir-senha-wpp'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'numero': numero, 'novaSenha': novaSenha}),
     );
@@ -172,7 +174,8 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
       );
       Navigator.pop(context);
     } else {
-      final msg = jsonDecode(response.body)['error'] ?? 'Erro ao redefinir senha!';
+      final msg =
+          jsonDecode(response.body)['error'] ?? 'Erro ao redefinir senha!';
       await LoginDialog.showFeedbackDialog(context, msg, positivo: false);
     }
   }
@@ -193,7 +196,12 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
     final textColor = isDarkMode ? const Color(0xffF6C484) : Colors.black;
 
     return Scaffold(
-      appBar: AppBar(title: Text('Redefinir Senha', style: TextStyle(color:AppColors.laranja ))),
+      appBar: AppBar(
+        title: Text(
+          'Redefinir Senha',
+          style: TextStyle(color: AppColors.laranja),
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: SingleChildScrollView(
@@ -214,39 +222,61 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
               ),
               const SizedBox(height: 16),
               RadioListTile<String>(
-                title: Text('Por telefone (WhatsApp)', style: TextStyle(color: textColor)),
+                title: Text(
+                  'Por telefone (WhatsApp)',
+                  style: TextStyle(color: textColor),
+                ),
                 value: 'telefone',
                 groupValue: metodo,
-                onChanged: codigoEnviado ? null : (value) {
-                  setState(() {
-                    metodo = value;
-                    _inputController.clear();
-                    codigoEnviado = false;
-                  });
-                },
+                onChanged:
+                    codigoEnviado
+                        ? null
+                        : (value) {
+                          setState(() {
+                            metodo = value;
+                            _inputController.clear();
+                            codigoEnviado = false;
+                          });
+                        },
               ),
               RadioListTile<String>(
-                title: Text('Por email (apenas se estiver verificado)', style: TextStyle(color: textColor)),
+                title: Text(
+                  'Por email (apenas se estiver verificado)',
+                  style: TextStyle(color: textColor),
+                ),
                 value: 'email',
                 groupValue: metodo,
-                onChanged: codigoEnviado ? null : (value) {
-                  setState(() {
-                    metodo = value;
-                    _inputController.clear();
-                    codigoEnviado = false;
-                  });
-                },
+                onChanged:
+                    codigoEnviado
+                        ? null
+                        : (value) {
+                          setState(() {
+                            metodo = value;
+                            _inputController.clear();
+                            codigoEnviado = false;
+                          });
+                        },
               ),
               if (metodo != null && !codigoEnviado) ...[
                 const SizedBox(height: 16),
                 TextField(
                   controller: _inputController,
-                  keyboardType: metodo == 'telefone' ? TextInputType.phone : TextInputType.emailAddress,
-                  inputFormatters: metodo == 'telefone'
-                      ? [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(11)]
-                      : null,
+                  keyboardType:
+                      metodo == 'telefone'
+                          ? TextInputType.phone
+                          : TextInputType.emailAddress,
+                  inputFormatters:
+                      metodo == 'telefone'
+                          ? [
+                            FilteringTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(11),
+                          ]
+                          : null,
                   decoration: InputDecoration(
-                    labelText: metodo == 'telefone' ? 'Digite seu telefone' : 'Digite seu email',
+                    labelText:
+                        metodo == 'telefone'
+                            ? 'Digite seu telefone'
+                            : 'Digite seu email',
                     border: const OutlineInputBorder(),
                   ),
                   style: TextStyle(color: textColor),
@@ -266,12 +296,18 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
               ],
               if (metodo == 'telefone' && codigoEnviado) ...[
                 const SizedBox(height: 24),
-                Text('Digite o código recebido por WhatsApp:', style: TextStyle(fontSize: 16, color: textColor)),
+                Text(
+                  'Digite o código recebido por WhatsApp:',
+                  style: TextStyle(fontSize: 16, color: textColor),
+                ),
                 const SizedBox(height: 12),
                 TextField(
                   controller: _codigoController,
                   keyboardType: TextInputType.number,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(6)],
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(6),
+                  ],
                   decoration: const InputDecoration(
                     labelText: 'Código',
                     border: OutlineInputBorder(),
@@ -293,30 +329,54 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
                   children: [
                     TextButton(
                       onPressed: codigoValidado ? null : _reenviarCodigo,
-                      child: Text('Reenviar código', style: TextStyle(color: textColor, decoration: TextDecoration.underline)),
+                      child: Text(
+                        'Reenviar código',
+                        style: TextStyle(
+                          color: textColor,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
                     ),
                     const SizedBox(width: 16),
                     TextButton(
                       onPressed: codigoValidado ? null : _mudarTelefone,
-                      child: Text('Mudar telefone', style: TextStyle(color: textColor, decoration: TextDecoration.underline)),
+                      child: Text(
+                        'Mudar telefone',
+                        style: TextStyle(
+                          color: textColor,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
                     ),
                   ],
                 ),
                 TextButton(
-                  onPressed: codigoValidado ? null : () {
-                    setState(() {
-                      metodo = null;
-                      codigoEnviado = false;
-                      _inputController.clear();
-                      _codigoController.clear();
-                    });
-                  },
-                  child: Text('Alterar meio de confirmação', style: TextStyle(color: textColor, decoration: TextDecoration.underline)),
+                  onPressed:
+                      codigoValidado
+                          ? null
+                          : () {
+                            setState(() {
+                              metodo = null;
+                              codigoEnviado = false;
+                              _inputController.clear();
+                              _codigoController.clear();
+                            });
+                          },
+                  child: Text(
+                    'Alterar meio de confirmação',
+                    style: TextStyle(
+                      color: textColor,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
                 ),
               ],
               if (codigoValidado) ...[
                 const SizedBox(height: 24),
-                Text('Digite sua nova senha:', style: TextStyle(fontSize: 16, color: textColor)),
+                Text(
+                  'Digite sua nova senha:',
+                  style: TextStyle(fontSize: 16, color: textColor),
+                ),
                 const SizedBox(height: 12),
                 TextFormField(
                   controller: _novaSenhaController,
@@ -343,7 +403,11 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
                     onPressed: () {
                       final erro = validarSenha(_novaSenhaController.text);
                       if (erro != null) {
-                        LoginDialog.showFeedbackDialog(context, erro, positivo: false);
+                        LoginDialog.showFeedbackDialog(
+                          context,
+                          erro,
+                          positivo: false,
+                        );
                       } else {
                         _redefinirSenha();
                       }

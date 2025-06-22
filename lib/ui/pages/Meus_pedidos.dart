@@ -67,23 +67,25 @@ class MeusPedidosPage extends StatelessWidget {
             fontFamily: 'BebasNeue',
           ),
         ),
-        children: pedidos.isNotEmpty
-            ? pedidos
-            : [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    'Nenhum pedido.',
-                    style: TextStyle(
-                      fontFamily: 'BebasNeue',
-                      fontSize: 16,
-                      color: isDarkMode
-                          ? AppColors.laranja
-                          : AppColors.textPrimary,
+        children:
+            pedidos.isNotEmpty
+                ? pedidos
+                : [
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      'Nenhum pedido.',
+                      style: TextStyle(
+                        fontFamily: 'BebasNeue',
+                        fontSize: 16,
+                        color:
+                            isDarkMode
+                                ? AppColors.laranja
+                                : AppColors.textPrimary,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
       ),
     );
   }

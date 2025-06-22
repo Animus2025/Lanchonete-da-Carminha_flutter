@@ -92,7 +92,7 @@ class _CadastroPageState extends State<CadastroPage> {
   }
 
   Future<void> cadastrarUsuario() async {
-    const url = 'http://192.168.3.244:3000/usuario/pre-cadastro';
+    const url = 'http://localhost:3000/usuario/pre-cadastro';
     final response = await http.post(
       Uri.parse(url),
       headers: {'Content-Type': 'application/json'},
@@ -108,7 +108,7 @@ class _CadastroPageState extends State<CadastroPage> {
 
     if (response.statusCode == 201) {
       await http.post(
-        Uri.parse('http://192.168.3.244:3000/whatsapp/verificar-numero'),
+        Uri.parse('http://localhost:3000/whatsapp/verificar-numero'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'numero': _telefoneController.text}),
       );
@@ -151,10 +151,14 @@ class _CadastroPageState extends State<CadastroPage> {
               children: [
                 TextFormField(
                   controller: _nomeController,
-                  decoration:
-                      const InputDecoration(labelText: 'Nome completo *'),
-                  validator: (value) =>
-                      (value == null || value.isEmpty) ? 'Nome é obrigatório' : null,
+                  decoration: const InputDecoration(
+                    labelText: 'Nome completo *',
+                  ),
+                  validator:
+                      (value) =>
+                          (value == null || value.isEmpty)
+                              ? 'Nome é obrigatório'
+                              : null,
                 ),
                 TextFormField(
                   controller: _emailController,
@@ -187,9 +191,11 @@ class _CadastroPageState extends State<CadastroPage> {
                 TextFormField(
                   controller: _enderecoController,
                   decoration: const InputDecoration(labelText: 'Endereço *'),
-                  validator: (value) => (value == null || value.isEmpty)
-                      ? 'Endereço é obrigatório'
-                      : null,
+                  validator:
+                      (value) =>
+                          (value == null || value.isEmpty)
+                              ? 'Endereço é obrigatório'
+                              : null,
                 ),
                 TextFormField(
                   controller: _senhaController,
@@ -197,9 +203,7 @@ class _CadastroPageState extends State<CadastroPage> {
                     labelText: 'Senha *',
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _obscureSenha
-                            ? Icons.visibility
-                            : Icons.visibility_off,
+                        _obscureSenha ? Icons.visibility : Icons.visibility_off,
                       ),
                       onPressed: () {
                         setState(() {
@@ -214,10 +218,7 @@ class _CadastroPageState extends State<CadastroPage> {
                       _senhaAtual = value;
                     });
                   },
-                  style: const TextStyle(
-                    fontFamily: 'Oswald',
-                    fontSize: 16,
-                  ),
+                  style: const TextStyle(fontFamily: 'Oswald', fontSize: 16),
                   validator: validarSenha,
                 ),
                 if (_senhaAtual.isNotEmpty) ...[
@@ -232,11 +233,9 @@ class _CadastroPageState extends State<CadastroPage> {
                   ),
                   child: Text(
                     'Continuar',
-                    style: Theme.of(context)
-                        .elevatedButtonTheme
-                        .style
-                        ?.textStyle
-                        ?.resolve({}),
+                    style: Theme.of(
+                      context,
+                    ).elevatedButtonTheme.style?.textStyle?.resolve({}),
                   ),
                 ),
               ],

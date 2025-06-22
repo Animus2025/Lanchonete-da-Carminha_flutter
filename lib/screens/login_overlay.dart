@@ -8,7 +8,10 @@ String? ultimoLoginTentado;
 
 class LoginDialog {
   /// Agora recebe uma callback opcional que será chamada após login OK
-  static void show(BuildContext context, {required VoidCallback onLoginSuccess}) {
+  static void show(
+    BuildContext context, {
+    required VoidCallback onLoginSuccess,
+  }) {
     final TextEditingController emailController = TextEditingController();
     final TextEditingController senhaController = TextEditingController();
 
@@ -31,7 +34,7 @@ class LoginDialog {
       ultimoLoginTentado = emailOuTelefone;
 
       final bool isEmail = emailOuTelefone.contains('@');
-      final url = Uri.parse('http://192.168.3.244:3000/usuario/login');
+      final url = Uri.parse('http://localhost:3000/usuario/login');
       try {
         final response = await http.post(
           url,
@@ -52,14 +55,14 @@ class LoginDialog {
 
           final usuario = data['usuario'];
 
-            Provider.of<AuthProvider>(context, listen: false).login({
-              'id': usuario['id'],
-              'nome_usuario': usuario['nome_usuario'],
-              'email': usuario['email'],
-              'telefone': usuario['numero'],
-              'cpf': usuario['cpf'],
-              'endereco': usuario['endereco'],
-            });
+          Provider.of<AuthProvider>(context, listen: false).login({
+            'id': usuario['id'],
+            'nome_usuario': usuario['nome_usuario'],
+            'email': usuario['email'],
+            'telefone': usuario['numero'],
+            'cpf': usuario['cpf'],
+            'endereco': usuario['endereco'],
+          });
 
           Navigator.pop(context); // Fecha o diálogo de login
 
@@ -71,9 +74,9 @@ class LoginDialog {
 
           // Chama o callback para informar que o login foi concluído com sucesso
           onLoginSuccess();
-
         } else {
-          final msg = jsonDecode(response.body)['error'] ?? 'Erro ao fazer login!';
+          final msg =
+              jsonDecode(response.body)['error'] ?? 'Erro ao fazer login!';
           await showFeedbackDialog(context, msg, positivo: false);
         }
       } catch (e) {
@@ -224,23 +227,24 @@ class LoginDialog {
     showDialog(
       context: context,
       barrierDismissible: true,
-      builder: (context) => AlertDialog(
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(emoji, style: const TextStyle(fontSize: 48)),
-            const SizedBox(height: 16),
-            Text(
-              message,
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 18, color: Colors.black),
+      builder:
+          (context) => AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(emoji, style: const TextStyle(fontSize: 48)),
+                const SizedBox(height: 16),
+                Text(
+                  message,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 18, color: Colors.black),
+                ),
+              ],
             ),
-          ],
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-      ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+          ),
     );
 
     await Future.delayed(const Duration(seconds: 2));

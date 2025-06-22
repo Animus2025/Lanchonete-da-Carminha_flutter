@@ -35,8 +35,9 @@ class _EditarContaPageState extends State<EditarContaPage> {
   Future<void> salvarAlteracoes() async {
     if (!_formKey.currentState!.validate()) return;
 
-    final userId = Provider.of<AuthProvider>(context, listen: false).userData!['id'];
-    final url = Uri.parse('http://192.168.3.244:3000/usuario/$userId');
+    final userId =
+        Provider.of<AuthProvider>(context, listen: false).userData!['id'];
+    final url = Uri.parse('http://localhost:3000/usuario/$userId');
 
     try {
       final response = await http.put(
@@ -98,17 +99,24 @@ class _EditarContaPageState extends State<EditarContaPage> {
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'BebasNeue',
-                        color: Theme.of(context).brightness == Brightness.dark
-                            ? AppColors.laranja
-                            : Colors.black,
+                        color:
+                            Theme.of(context).brightness == Brightness.dark
+                                ? AppColors.laranja
+                                : Colors.black,
                       ),
                     ),
                     const SizedBox(height: 24),
                     buildTextField(label: 'Nome', controller: nomeController),
                     buildTextField(label: 'Email', controller: emailController),
-                    buildTextField(label: 'Telefone', controller: telefoneController),
+                    buildTextField(
+                      label: 'Telefone',
+                      controller: telefoneController,
+                    ),
                     buildTextField(label: 'CPF', controller: cpfController),
-                    buildTextField(label: 'Endereço', controller: enderecoController),
+                    buildTextField(
+                      label: 'Endereço',
+                      controller: enderecoController,
+                    ),
                     const SizedBox(height: 24),
                     SizedBox(
                       width: double.infinity,
@@ -129,7 +137,7 @@ class _EditarContaPageState extends State<EditarContaPage> {
                           ),
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -140,7 +148,10 @@ class _EditarContaPageState extends State<EditarContaPage> {
     );
   }
 
-  Widget buildTextField({required String label, required TextEditingController controller}) {
+  Widget buildTextField({
+    required String label,
+    required TextEditingController controller,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: TextFormField(
