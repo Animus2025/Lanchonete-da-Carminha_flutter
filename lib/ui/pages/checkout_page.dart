@@ -7,7 +7,6 @@ import 'package:lanchonetedacarminha/ui/widgets/app_body_container.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import '../themes/app_theme.dart';
 
 class RevisaoPedidoPage extends StatefulWidget {
   final VoidCallback toggleTheme;
