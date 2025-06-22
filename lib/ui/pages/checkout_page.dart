@@ -871,21 +871,33 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
   }
 
   void _showInfoDialog() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textColor = isDark ? Colors.white : Colors.black;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text("Pagamento Parcelado"),
-        content: const Text(
-          "Com esta opção, você paga metade do valor agora e a outra metade "
-          "no momento da retirada do pedido.\n O primeiro pagamento é necessário "
-          "para confirmar seu pedido.",
+        title: Text(
+          "Pagamento Parcelado",
+          style: TextStyle(
+            color: textColor,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        content: Text(
+          "Com esta opção, você paga metade do valor agora e a outra metade no momento da retirada do pedido.\n"
+          "O primeiro pagamento é necessário para confirmar seu pedido.",
+          style: TextStyle(color: textColor),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text("Entendi"),
+            child: Text(
+              "Entendi",
+              style: TextStyle(color: isDark ? Colors.white : Colors.black),
+            ),
           ),
         ],
+        backgroundColor: isDark ? Colors.black : Colors.white,
       ),
     );
   }
