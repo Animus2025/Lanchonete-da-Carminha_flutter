@@ -7,6 +7,7 @@ import 'package:lanchonetedacarminha/ui/widgets/app_body_container.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:lanchonetedacarminha/ui/widgets/pedido_regras.dart';
 
 class RevisaoPedidoPage extends StatefulWidget {
   final VoidCallback toggleTheme;
@@ -31,6 +32,22 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
   void dispose() {
     _pageController.dispose();
     super.dispose();
+  }
+
+  void _showDateErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Data/Horário Inválido"),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("OK"),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -93,6 +110,32 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
         ),
       ),
     );
+  }
+
+  bool _isDateValid(DateTime date) {
+    try {
+      final cartProvider = Provider.of<CartProvider>(context, listen: false);
+      final totalQuantidade = cartProvider.items.fold<int>(0, (sum, item) => sum + item.quantidade);
+      
+      for (var item in cartProvider.items) {
+        final prazoMinimo = PedidoRegras.calcularPrazoMinimo(
+          item.quantidade,
+          item.nome,
+          item.quantidade / totalQuantidade,
+        );
+        
+        // Considera o pior cenário (último horário do dia)
+        final deliveryDateTime = DateTime(date.year, date.month, date.day, 23, 59);
+        final diferenca = deliveryDateTime.difference(DateTime.now());
+        
+        if (diferenca < prazoMinimo) {
+          return false;
+        }
+      }
+      return true;
+    } catch (e) {
+      return false; // Em caso de erro, considera inválido
+    }
   }
 
   // Widget para o step 1 — Revisão do pedido
@@ -215,7 +258,7 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
     );
   }
 
-  // Widget para o step 2 — Finalizar pedido (adaptado do seu código, sem Scaffold)
+  // Widget para o step 2 — Finalizar pedido
   Widget _buildFinalizarPedidoStep2(bool isDark, List cartItems) {
     final bool habilitaFormasPagamento = selectedDate != null && selectedTime != null;
     final bool habilitarFinalizar = habilitaFormasPagamento && pagamentoTipo != null;
@@ -231,7 +274,7 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey.shade300),
               borderRadius: BorderRadius.circular(8),
-              color: isDark ? AppColors.preto : AppColors.branco, // <-- Agora preto no escuro, branco no claro
+              color: isDark ? AppColors.preto : AppColors.branco,
             ),
             padding: const EdgeInsets.all(8),
             child: Row(
@@ -262,7 +305,7 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey.shade300),
                   borderRadius: BorderRadius.circular(8),
-                  color: isDark ? AppColors.preto : AppColors.branco, // <-- ajuste aqui
+                  color: isDark ? AppColors.preto : AppColors.branco,
                 ),
                 padding: const EdgeInsets.all(8),
                 child: _formaPagamentoWidget(metodoLimitado: pagamentoTipo == '50%', isDark: isDark),
@@ -274,7 +317,7 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey.shade300),
               borderRadius: BorderRadius.circular(8),
-              color: isDark ? AppColors.preto : AppColors.branco, // <-- ajuste aqui
+              color: isDark ? AppColors.preto : AppColors.branco,
             ),
             padding: const EdgeInsets.all(12),
             child: Column(
@@ -423,7 +466,7 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 18,
-              color: isDark ? AppColors.laranja : Colors.black, // Laranja no escuro, preto no claro
+              color: isDark ? AppColors.laranja : Colors.black,
             ),
           ),
           const SizedBox(height: 6),
@@ -438,7 +481,7 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: isMobile ? 20 : 24,
-              color: isDark ? Colors.white : Colors.black, // Branco no escuro, preto no claro
+              color: isDark ? Colors.white : Colors.black,
             ),
           ),
         ],
@@ -632,14 +675,12 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
               children: const [
                 Icon(Icons.location_pin, color: Colors.white),
                 SizedBox(width: 8),
-                // Remova o Expanded e ajuste o AutoSizeText:
                 AutoSizeText(
                   "R. José Alexandre, Centro - Teixeiras/MG",
                   style: TextStyle(color: Colors.white, fontSize: 14),
                   maxLines: 1,
                   minFontSize: 10,
                   overflow: TextOverflow.ellipsis,
-                  // Remova textAlign: TextAlign.center,
                 ),
               ],
             ),
@@ -662,14 +703,54 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
         style: TextStyle(color: isDark ? AppColors.laranja : Colors.black),
       ),
       onTap: () async {
-        final DateTime? picked = await showDatePicker(
-          context: context,
-          locale: const Locale('pt', 'BR'),
-          initialDate: DateTime.now().add(const Duration(days: 1)),
-          firstDate: DateTime.now(),
-          lastDate: DateTime.now().add(const Duration(days: 30)),
-        );
-        if (picked != null) setState(() => selectedDate = picked);
+        try {
+          final DateTime? picked = await showDatePicker(
+            context: context,
+            locale: const Locale('pt', 'BR'),
+            initialDate: DateTime.now().add(const Duration(days: 1)),
+            firstDate: DateTime.now(),
+            lastDate: DateTime.now().add(const Duration(days: 30)),
+            selectableDayPredicate: (DateTime date) {
+              try {
+                if (!_isDateValid(date)) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    _showDateErrorDialog(
+                        "Esta data não atende aos prazos mínimos de preparo para alguns itens do seu pedido.");
+                  });
+                  return false;
+                }
+                
+                if (date.weekday == DateTime.sunday) {
+                  final now = DateTime.now();
+                  final hoje = DateTime(now.year, now.month, now.day);
+                  if (date.isAtSameMomentAs(hoje)) {
+                    return now.hour < 21;
+                  }
+                  return true;
+                }
+                return true;
+              } catch (e) {
+                return true;
+              }
+            },
+          );
+          if (picked != null) {
+            setState(() {
+              selectedDate = picked;
+              // Resetar o horário se a data mudar
+              selectedTime = null;
+            });
+          }
+        } catch (e) {
+          final DateTime? picked = await showDatePicker(
+            context: context,
+            locale: const Locale('pt', 'BR'),
+            initialDate: DateTime.now().add(const Duration(days: 1)),
+            firstDate: DateTime.now(),
+            lastDate: DateTime.now().add(const Duration(days: 30)),
+          );
+          if (picked != null) setState(() => selectedDate = picked);
+        }
       },
       trailing: Icon(Icons.calendar_today, color: isDark ? AppColors.laranja : Colors.black),
     );
@@ -686,10 +767,39 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
         style: TextStyle(color: isDark ? AppColors.laranja : Colors.black),
       ),
       onTap: () async {
-        final isDark = Theme.of(context).brightness == Brightness.dark;
+        if (selectedDate == null) {
+          _showDateErrorDialog("Por favor, selecione uma data primeiro.");
+          return;
+        }
+
+        final now = DateTime.now();
+        final isToday = selectedDate!.day == now.day && 
+                       selectedDate!.month == now.month && 
+                       selectedDate!.year == now.year;
+
+        TimeOfDay initialTime = const TimeOfDay(hour: 9, minute: 0);
+        TimeOfDay? firstTime;
+        TimeOfDay? lastTime;
+        
+        if (selectedDate!.weekday == DateTime.sunday) {
+          initialTime = const TimeOfDay(hour: 18, minute: 0);
+          firstTime = const TimeOfDay(hour: 18, minute: 0);
+          lastTime = const TimeOfDay(hour: 21, minute: 0);
+        }
+        
+        if (isToday) {
+          final currentTime = TimeOfDay.fromDateTime(now);
+          if (firstTime == null || currentTime.hour > firstTime.hour) {
+            initialTime = TimeOfDay(
+              hour: currentTime.hour + 1, 
+              minute: 0
+            );
+          }
+        }
+
         final TimeOfDay? picked = await showTimePicker(
           context: context,
-          initialTime: const TimeOfDay(hour: 9, minute: 0),
+          initialTime: initialTime,
           builder: (context, child) {
             final textColor = isDark ? Colors.white : Colors.black;
             return Theme(
@@ -711,11 +821,52 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
                   primary: textColor,
                 ),
               ),
-              child: child!,
+              child: MediaQuery(
+                data: MediaQuery.of(context).copyWith(
+                  alwaysUse24HourFormat: true,
+                ),
+                child: child!,
+              ),
             );
           },
         );
-        if (picked != null) setState(() => selectedTime = picked);
+        
+        if (picked != null) {
+          final deliveryDateTime = DateTime(
+            selectedDate!.year,
+            selectedDate!.month,
+            selectedDate!.day,
+            picked.hour,
+            picked.minute,
+          );
+
+          final cartProvider = Provider.of<CartProvider>(context, listen: false);
+          bool isValid = true;
+          String? errorMessage;
+
+          for (var item in cartProvider.items) {
+            final totalQuantidade = cartProvider.items.fold<int>(0, (sum, item) => sum + item.quantidade);
+            final prazoMinimo = PedidoRegras.calcularPrazoMinimo(
+              item.quantidade,
+              item.nome,
+              item.quantidade / totalQuantidade,
+            );
+            
+            final diferenca = deliveryDateTime.difference(DateTime.now());
+            
+            if (diferenca < prazoMinimo) {
+              isValid = false;
+              errorMessage = 'Prazo insuficiente para ${item.nome}. Necessário ${prazoMinimo.inHours} horas.';
+              break;
+            }
+          }
+
+          if (isValid) {
+            setState(() => selectedTime = picked);
+          } else {
+            _showDateErrorDialog(errorMessage!);
+          }
+        }
       },
       trailing: Icon(Icons.access_time, color: isDark ? AppColors.laranja : Colors.black),
     );
@@ -824,9 +975,9 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
                 TextField(
                   decoration: InputDecoration(
                     labelText: "Número do cartão",
-                    labelStyle: TextStyle(color: Colors.black), // Apenas a letra preta
+                    labelStyle: TextStyle(color: Colors.black),
                   ),
-                  style: TextStyle(color: Colors.black), // Texto digitado preto
+                  style: TextStyle(color: Colors.black),
                   cursorColor: Colors.black,
                 ),
                 TextField(
@@ -853,6 +1004,24 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
   }
 
   void _finalizarPedido() {
+    final cartProvider = context.read<CartProvider>();
+    final totalQuantidade = cartProvider.items.fold<int>(0, (sum, item) => sum + item.quantidade);
+    final porSabor = <String, int>{};
+    
+    for (var item in cartProvider.items) {
+      porSabor[item.nome] = item.quantidade;
+    }
+
+    if (!PedidoRegras.verificarLimites(totalQuantidade, porSabor)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Limite excedido: Máximo de 2000 itens no total e 500 por sabor'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
@@ -861,13 +1030,41 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
-              Navigator.pushNamed(context, '/meus-pedidos');
+              Navigator.of(context).pushNamedAndRemoveUntil('/meus-pedidos', (route) => false);
             },
             child: const Text("Meus Pedidos"),
           ),
         ],
       ),
     );
+
+    for (var item in cartProvider.items) {
+      final prazoMinimo = PedidoRegras.calcularPrazoMinimo(
+        item.quantidade,
+        item.nome,
+        item.quantidade / totalQuantidade,
+      );
+      
+      final dataEntrega = DateTime(
+        selectedDate!.year,
+        selectedDate!.month,
+        selectedDate!.day,
+        selectedTime!.hour,
+        selectedTime!.minute,
+      );
+      
+      final diferenca = dataEntrega.difference(DateTime.now());
+      
+      if (diferenca < prazoMinimo) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Prazo insuficiente para ${item.nome}. Necessário ${prazoMinimo.inHours} horas.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
+    }
   }
 
   void _showInfoDialog() {
