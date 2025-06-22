@@ -231,7 +231,7 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey.shade300),
               borderRadius: BorderRadius.circular(8),
-              color: isDark ? AppColors.preto : AppColors.branco, // <-- ajuste aqui
+              color: isDark ? AppColors.preto : AppColors.branco, // <-- Agora preto no escuro, branco no claro
             ),
             padding: const EdgeInsets.all(8),
             child: Row(
@@ -247,11 +247,12 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey.shade300),
               borderRadius: BorderRadius.circular(8),
-              color: AppColors.branco,
+              color: isDark ? AppColors.preto : AppColors.branco,
             ),
             padding: const EdgeInsets.all(8),
             child: _modoPagamento(isDark),
           ),
+
           const SizedBox(height: 10),
           Opacity(
             opacity: habilitaFormasPagamento ? 1.0 : 0.4,
