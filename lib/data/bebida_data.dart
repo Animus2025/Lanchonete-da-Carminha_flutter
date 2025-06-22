@@ -6,7 +6,7 @@ import '../models/bebida.dart';
 Future<List<Bebida>> fetchBebidas() async {
   final response = await http.get(
     Uri.parse(
-      'http://localhost:3000/produto/bebidas',
+      'http://192.168.3.244:3000/produto/bebidas',
     ), // ajuste a rota conforme seu backend
   );
 

@@ -36,7 +36,7 @@ class _EditarContaPageState extends State<EditarContaPage> {
     if (!_formKey.currentState!.validate()) return;
 
     final userId = Provider.of<AuthProvider>(context, listen: false).userData!['id'];
-    final url = Uri.parse('http://localhost:3000/usuario/$userId');
+    final url = Uri.parse('http://192.168.3.244:3000/usuario/$userId');
 
     try {
       final response = await http.put(

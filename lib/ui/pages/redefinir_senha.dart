@@ -56,7 +56,7 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
       }
 
       final response = await http.post(
-        Uri.parse('http://localhost:3000/whatsapp/alterar-senha'),
+        Uri.parse('http://192.168.3.244/whatsapp/alterar-senha'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'numero': digitsOnly}),
       );
@@ -125,7 +125,7 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
     }
 
     final response = await http.post(
-      Uri.parse('http://localhost:3000/whatsapp/confirmar-codigo'),
+      Uri.parse('http://192.168.3.244/whatsapp/confirmar-codigo'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'numero': numero, 'codigo': codigo}),
     );
@@ -159,7 +159,7 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
     }
 
     final response = await http.post(
-      Uri.parse('http://localhost:3000/usuario/redefinir-senha-wpp'),
+      Uri.parse('http://192.168.3.244:3000/usuario/redefinir-senha-wpp'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'numero': numero, 'novaSenha': novaSenha}),
     );

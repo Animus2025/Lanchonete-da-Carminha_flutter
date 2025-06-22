@@ -47,7 +47,7 @@ class _VerificarTelefonePageState extends State<VerificarTelefonePage> {
 
     // Primeiro, verifica o código
     final response = await http.post(
-      Uri.parse('http://localhost:3000/whatsapp/confirmar-codigo'),
+      Uri.parse('http://192.168.3.244:3000/whatsapp/confirmar-codigo'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'numero': telefone, 'codigo': codigo}),
     );
@@ -55,7 +55,7 @@ class _VerificarTelefonePageState extends State<VerificarTelefonePage> {
     if (response.statusCode == 200) {
       // Agora finaliza o cadastro
       final finalizarResponse = await http.post(
-        Uri.parse('http://localhost:3000/usuario/finalizar-cadastro'),
+        Uri.parse('http://192.168.3.244:3000/usuario/finalizar-cadastro'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'numero': telefone, 'codigo': codigo}),
       );

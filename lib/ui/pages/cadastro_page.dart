@@ -92,7 +92,7 @@ class _CadastroPageState extends State<CadastroPage> {
   }
 
   Future<void> cadastrarUsuario() async {
-    const url = 'http://localhost:3000/usuario/pre-cadastro';
+    const url = 'http://192.168.3.244:3000/usuario/pre-cadastro';
     final response = await http.post(
       Uri.parse(url),
       headers: {'Content-Type': 'application/json'},
@@ -108,7 +108,7 @@ class _CadastroPageState extends State<CadastroPage> {
 
     if (response.statusCode == 201) {
       await http.post(
-        Uri.parse('http://localhost:3000/whatsapp/verificar-numero'),
+        Uri.parse('http://192.168.3.244:3000/whatsapp/verificar-numero'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'numero': _telefoneController.text}),
       );
