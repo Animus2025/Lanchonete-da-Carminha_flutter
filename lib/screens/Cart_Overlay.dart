@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:lanchonetedacarminha/ui/themes/app_theme.dart';
 import 'package:provider/provider.dart';
 import '/providers/cart_provider.dart';
+import '/providers/auth_provider.dart';
+import '/screens/login_overlay.dart';
 
 
 // Widget que exibe o overlay do carrinho
@@ -361,7 +363,21 @@ class CartOverlay extends StatelessWidget {
                         ElevatedButton(
                           onPressed: cartItems.isNotEmpty
                               ? () {
-                                  Navigator.pushNamed(context, '/revisao_pedido');
+                                  final auth = Provider.of<AuthProvider>(context, listen: false);
+
+                                  if (auth.isLoggedIn) {
+                                    print('Usuário logado: ${auth.userData}');
+                                    Navigator.of(context).pop(); // Fecha o pop-up de login (se estiver aberto)
+                                    Navigator.of(context).pushNamed('/revisao_pedido'); // Vai para Revisão de Pedido
+                                  } else {
+                                    LoginDialog.show(
+                                      context,
+                                      onLoginSuccess: () {
+                                        Navigator.of(context).pop(); // fecha o diálogo
+                                        Navigator.of(context).pushNamed('/revisao_pedido'); // Vai para Revisão de Pedido
+                                      },
+                                    );
+                                  }
                                 }
                               : null,
                           style: ElevatedButton.styleFrom(
