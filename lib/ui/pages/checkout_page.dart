@@ -231,14 +231,14 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey.shade300),
               borderRadius: BorderRadius.circular(8),
-              color: AppColors.branco,
+              color: isDark ? AppColors.preto : AppColors.branco, // <-- ajuste aqui
             ),
             padding: const EdgeInsets.all(8),
             child: Row(
               children: [
-                Expanded(child: _itemData(context)),
+                Expanded(child: _itemData(context, isDark)),
                 const SizedBox(width: 8),
-                Expanded(child: _itemHorario(context)),
+                Expanded(child: _itemHorario(context, isDark)),
               ],
             ),
           ),
@@ -250,7 +250,7 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
               color: AppColors.branco,
             ),
             padding: const EdgeInsets.all(8),
-            child: _modoPagamento(),
+            child: _modoPagamento(isDark),
           ),
           const SizedBox(height: 10),
           Opacity(
@@ -261,10 +261,10 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey.shade300),
                   borderRadius: BorderRadius.circular(8),
-                  color: AppColors.branco,
+                  color: isDark ? AppColors.preto : AppColors.branco, // <-- ajuste aqui
                 ),
                 padding: const EdgeInsets.all(8),
-                child: _formaPagamentoWidget(metodoLimitado: pagamentoTipo == '50%'),
+                child: _formaPagamentoWidget(metodoLimitado: pagamentoTipo == '50%', isDark: isDark),
               ),
             ),
           ),
@@ -273,16 +273,16 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey.shade300),
               borderRadius: BorderRadius.circular(8),
-              color: AppColors.branco,
+              color: isDark ? AppColors.preto : AppColors.branco, // <-- ajuste aqui
             ),
             padding: const EdgeInsets.all(12),
             child: Column(
               children: [
-                const AutoSizeText(
+                AutoSizeText(
                   "TOTAL DO PEDIDO",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: Colors.black, // <-- cor preta fixa
+                    color: isDark ? AppColors.laranja : Colors.black,
                   ),
                   maxLines: 1,
                   minFontSize: 12,
@@ -292,9 +292,9 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
                 const SizedBox(height: 4),
                 AutoSizeText(
                   "R\$ ${_calcularTotal().toStringAsFixed(2)}",
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 20,
-                    color: Colors.black, // <-- cor preta fixa
+                    color: isDark ? Colors.white : Colors.black,
                   ),
                   maxLines: 1,
                   minFontSize: 16,
@@ -648,17 +648,17 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
     );
   }
 
-  Widget _itemData(BuildContext context) {
+  Widget _itemData(BuildContext context, bool isDark) {
     return ListTile(
-      title: const Text(
+      title: Text(
         "Data",
-        style: TextStyle(color: Colors.black),
+        style: TextStyle(color: isDark ? AppColors.laranja : Colors.black),
       ),
       subtitle: Text(
         selectedDate == null
             ? 'Selecione'
             : '${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}',
-        style: const TextStyle(color: Colors.black),
+        style: TextStyle(color: isDark ? AppColors.laranja : Colors.black),
       ),
       onTap: () async {
         final DateTime? picked = await showDatePicker(
@@ -670,19 +670,19 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
         );
         if (picked != null) setState(() => selectedDate = picked);
       },
-      trailing: const Icon(Icons.calendar_today, color: Colors.black), // <-- preto
+      trailing: Icon(Icons.calendar_today, color: isDark ? AppColors.laranja : Colors.black),
     );
   }
 
-  Widget _itemHorario(BuildContext context) {
+  Widget _itemHorario(BuildContext context, bool isDark) {
     return ListTile(
-      title: const Text(
+      title: Text(
         "Horário",
-        style: TextStyle(color: Colors.black),
+        style: TextStyle(color: isDark ? AppColors.laranja : Colors.black),
       ),
       subtitle: Text(
         selectedTime == null ? 'Selecione' : selectedTime!.format(context),
-        style: const TextStyle(color: Colors.black),
+        style: TextStyle(color: isDark ? AppColors.laranja : Colors.black),
       ),
       onTap: () async {
         final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -716,19 +716,19 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
         );
         if (picked != null) setState(() => selectedTime = picked);
       },
-      trailing: const Icon(Icons.access_time, color: Colors.black), // <-- preto
+      trailing: Icon(Icons.access_time, color: isDark ? AppColors.laranja : Colors.black),
     );
   }
 
-  Widget _modoPagamento() {
+  Widget _modoPagamento(bool isDark) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           "Modo de pagamento",
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: Colors.black,
+            color: isDark ? AppColors.laranja : Colors.black,
           ),
         ),
         const SizedBox(height: 8),
@@ -737,16 +737,16 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
             Expanded(
               child: ListTile(
                 contentPadding: EdgeInsets.zero,
-                title: const Text(
+                title: Text(
                   "Pagar integralmente",
-                  style: TextStyle(color: Colors.black),
+                  style: TextStyle(color: isDark ? AppColors.laranja : Colors.black),
                 ),
                 leading: Radio<String>(
                   value: 'integral',
                   groupValue: pagamentoTipo,
                   onChanged: (value) => setState(() => pagamentoTipo = value),
-                  activeColor: Colors.black, // <-- círculo preenchido preto
-                  fillColor: MaterialStatePropertyAll(Colors.black), // <-- círculo preto
+                  activeColor: isDark ? AppColors.laranja : Colors.black,
+                  fillColor: MaterialStatePropertyAll(isDark ? AppColors.laranja : Colors.black),
                 ),
               ),
             ),
@@ -754,19 +754,19 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
             Expanded(
               child: ListTile(
                 contentPadding: EdgeInsets.zero,
-                title: const Text(
+                title: Text(
                   "Pagar 50% agora\nE 50% depois",
-                  style: TextStyle(color: Colors.black),
+                  style: TextStyle(color: isDark ? AppColors.laranja : Colors.black),
                 ),
                 leading: Radio<String>(
                   value: '50%',
                   groupValue: pagamentoTipo,
                   onChanged: (value) => setState(() => pagamentoTipo = value),
-                  activeColor: Colors.black,
-                  fillColor: MaterialStatePropertyAll(Colors.black),
+                  activeColor: isDark ? AppColors.laranja : Colors.black,
+                  fillColor: MaterialStatePropertyAll(isDark ? AppColors.laranja : Colors.black),
                 ),
                 trailing: IconButton(
-                  icon: const Icon(Icons.info_outline, size: 20, color: Colors.black), // <-- preto
+                  icon: Icon(Icons.info_outline, size: 20, color: isDark ? AppColors.laranja : Colors.black),
                   onPressed: _showInfoDialog,
                 ),
               ),
@@ -777,15 +777,15 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
     );
   }
 
-  Widget _formaPagamentoWidget({required bool metodoLimitado}) {
+  Widget _formaPagamentoWidget({required bool metodoLimitado, required bool isDark}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           "Forma de pagamento",
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: Colors.black,
+            color: isDark ? AppColors.laranja : Colors.black,
           ),
         ),
         ListTile(
@@ -793,12 +793,12 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
             value: 'pix',
             groupValue: formaPagamento,
             onChanged: (value) => setState(() => formaPagamento = value),
-            activeColor: Colors.black,
-            fillColor: MaterialStatePropertyAll(Colors.black),
+            activeColor: isDark ? AppColors.laranja : Colors.black,
+            fillColor: MaterialStatePropertyAll(isDark ? AppColors.laranja : Colors.black),
           ),
-          title: const Text(
+          title: Text(
             "Pix",
-            style: TextStyle(color: Colors.black),
+            style: TextStyle(color: isDark ? AppColors.laranja : Colors.black),
           ),
         ),
         if (!metodoLimitado)
@@ -807,12 +807,12 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
               value: 'cartao',
               groupValue: formaPagamento,
               onChanged: (value) => setState(() => formaPagamento = value),
-              activeColor: Colors.black,
-              fillColor: MaterialStatePropertyAll(Colors.black),
+              activeColor: isDark ? AppColors.laranja : Colors.black,
+              fillColor: MaterialStatePropertyAll(isDark ? AppColors.laranja : Colors.black),
             ),
-            title: const Text(
+            title: Text(
               "Cartão",
-              style: TextStyle(color: Colors.black),
+              style: TextStyle(color: isDark ? AppColors.laranja : Colors.black),
             ),
           ),
         if (formaPagamento == 'cartao')
