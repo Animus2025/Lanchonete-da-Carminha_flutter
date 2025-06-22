@@ -686,14 +686,32 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
         style: const TextStyle(color: Colors.black),
       ),
       onTap: () async {
+        final isDark = Theme.of(context).brightness == Brightness.dark;
         final TimeOfDay? picked = await showTimePicker(
           context: context,
           initialTime: const TimeOfDay(hour: 9, minute: 0),
           builder: (context, child) {
-            return Localizations.override(
-              context: context,
-              locale: const Locale('pt', 'BR'),
-              child: child,
+            final textColor = isDark ? Colors.white : Colors.black;
+            return Theme(
+              data: Theme.of(context).copyWith(
+                timePickerTheme: TimePickerThemeData(
+                  hourMinuteTextColor: textColor,
+                  dayPeriodTextColor: textColor,
+                  dialTextColor: textColor,
+                  entryModeIconColor: textColor,
+                  helpTextStyle: TextStyle(color: textColor),
+                ),
+                textTheme: TextTheme(
+                  bodyLarge: TextStyle(color: textColor),
+                  bodyMedium: TextStyle(color: textColor),
+                  titleMedium: TextStyle(color: textColor),
+                ),
+                colorScheme: Theme.of(context).colorScheme.copyWith(
+                  onSurface: textColor,
+                  primary: textColor,
+                ),
+              ),
+              child: child!,
             );
           },
         );
