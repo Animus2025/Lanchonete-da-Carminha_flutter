@@ -7,6 +7,7 @@ import 'package:lanchonetedacarminha/ui/widgets/app_body_container.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import '../themes/app_theme.dart';
 
 class RevisaoPedidoPage extends StatefulWidget {
   final VoidCallback toggleTheme;
@@ -231,7 +232,7 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey.shade300),
               borderRadius: BorderRadius.circular(8),
-              color: Colors.grey.shade100,
+              color: AppColors.branco,
             ),
             padding: const EdgeInsets.all(8),
             child: Row(
@@ -247,7 +248,7 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey.shade300),
               borderRadius: BorderRadius.circular(8),
-              color: Colors.grey.shade100,
+              color: AppColors.branco,
             ),
             padding: const EdgeInsets.all(8),
             child: _modoPagamento(),
@@ -261,7 +262,7 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey.shade300),
                   borderRadius: BorderRadius.circular(8),
-                  color: Colors.grey.shade100,
+                  color: AppColors.branco,
                 ),
                 padding: const EdgeInsets.all(8),
                 child: _formaPagamentoWidget(metodoLimitado: pagamentoTipo == '50%'),
@@ -273,7 +274,7 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey.shade300),
               borderRadius: BorderRadius.circular(8),
-              color: Colors.grey.shade100,
+              color: AppColors.branco,
             ),
             padding: const EdgeInsets.all(12),
             child: Column(
@@ -308,8 +309,8 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
                     setState(() => _currentStep = 0);
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.cinza,
-                    foregroundColor: Colors.white,
+                    backgroundColor: AppColors.preto,
+                    foregroundColor: AppColors.laranja,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
                   child: const AutoSizeText(
@@ -327,7 +328,7 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
                   onPressed: habilitarFinalizar ? _finalizarPedido : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.verde,
-                    foregroundColor: Colors.white,
+                    foregroundColor: AppColors.branco,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
                   child: const AutoSizeText(
