@@ -417,12 +417,12 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
       ),
       child: Column(
         children: [
-          const Text(
+          Text(
             'TOTAL DO PEDIDO',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 18,
-              color: Colors.black, // <-- cor preta fixa
+              color: isDark ? AppColors.laranja : Colors.black, // Laranja no escuro, preto no claro
             ),
           ),
           const SizedBox(height: 6),
@@ -437,7 +437,7 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: isMobile ? 20 : 24,
-              color: Colors.black, // <-- cor preta fixa
+              color: isDark ? Colors.white : Colors.black, // Branco no escuro, preto no claro
             ),
           ),
         ],
@@ -631,15 +631,14 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
               children: const [
                 Icon(Icons.location_pin, color: Colors.white),
                 SizedBox(width: 8),
-                Expanded(
-                  child: AutoSizeText(
-                    "R. José Alexandre, Centro - Teixeiras/MG",
-                    style: TextStyle(color: Colors.white, fontSize: 14),
-                    maxLines: 1,
-                    minFontSize: 10,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.center,
-                  ),
+                // Remova o Expanded e ajuste o AutoSizeText:
+                AutoSizeText(
+                  "R. José Alexandre, Centro - Teixeiras/MG",
+                  style: TextStyle(color: Colors.white, fontSize: 14),
+                  maxLines: 1,
+                  minFontSize: 10,
+                  overflow: TextOverflow.ellipsis,
+                  // Remova textAlign: TextAlign.center,
                 ),
               ],
             ),
