@@ -9,6 +9,9 @@ import 'ui/themes/app_theme.dart';
 import 'providers/cart_provider.dart';
 import 'providers/auth_provider.dart';
 import 'screens/home_page.dart';
+import 'package:lanchonetedacarminha/ui/widgets/pedido_regras.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 void main() {
   runApp(
@@ -17,7 +20,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => CartProvider()),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
       ],
-      child: MyApp(),
+      child: const MyApp(),
     ),
   );
 }
@@ -47,6 +50,17 @@ class _MyAppState extends State<MyApp> {
       darkTheme: AppTheme.darkTheme,
       themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
 
+      // 🌎 Configurações de idioma para português
+      locale: const Locale('pt', 'BR'),
+      supportedLocales: const [
+        Locale('pt', 'BR'),
+      ],
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+
       // 🔧 ROTAS REGISTRADAS AQUI
       routes: {
         '/': (context) => HomePage(toggleTheme: toggleTheme),
@@ -56,9 +70,6 @@ class _MyAppState extends State<MyApp> {
         '/politicas-de-privacidade': (context) => PoliticaPrivacidadePage(toggleTheme: toggleTheme),
         '/sobre': (context) => Sobre(toggleTheme: toggleTheme),
         '/revisao_pedido': (context) => RevisaoPedido(toggleTheme: toggleTheme),
-        // você pode adicionar outras rotas aqui também:
-        // '/politicas-de-prisvacidade': (context) => const PoliticasPage(),
-        // '/sobre': (context) => const SobrePage(),
       },
     );
   }
