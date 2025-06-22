@@ -16,6 +16,7 @@ import 'ui/pages/minha_conta.dart';
 import 'package:lanchonetedacarminha/ui/widgets/pedido_regras.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'ui/pages/checkout_page.dart';
 
 void main() {
   runApp(
@@ -72,11 +73,11 @@ class _MyAppState extends State<MyApp> {
         '/cadastro_page': (context) => const CadastroPage(),
         '/politicas-de-privacidade': (context) => PoliticaPrivacidadePage(toggleTheme: toggleTheme),
         '/sobre': (context) => Sobre(toggleTheme: toggleTheme),
-        '/revisao_pedido': (context) => RevisaoPedido(toggleTheme: toggleTheme),
         '/redefinir_senha': (context) => const RedefinirSenhaPage(),
         '/verificar_telefone': (context) => const VerificarTelefonePage(),
         '/Meus_pedidos': (context) => MeusPedidosPage(toggleTheme: toggleTheme),
         '/minha_conta': (context) => MinhaContaPage(toggleTheme: toggleTheme),
+        '/checkout': (context) => RevisaoPedidoPage(toggleTheme: toggleTheme),
         // você pode adicionar outras rotas aqui também:
         // '/politicas-de-prisvacidade': (context) => const PoliticasPage(),
         // '/sobre': (context) => const SobrePage(),

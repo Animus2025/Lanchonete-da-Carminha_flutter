@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lanchonetedacarminha/ui/themes/app_theme.dart';
 import 'package:provider/provider.dart';
 import '/providers/cart_provider.dart';
+import '/ui/pages/checkout_page.dart';
 
 // Widget que exibe o overlay do carrinho
 class CartOverlay extends StatelessWidget {
@@ -451,10 +452,7 @@ class CartOverlay extends StatelessWidget {
                           onPressed:
                               cartItems.isNotEmpty
                                   ? () {
-                                    Navigator.pushNamed(
-                                      context,
-                                      '/revisao_pedido',
-                                    );
+                                    Navigator.pushNamed(context, '/checkout');
                                   }
                                   : null,
                           style: ElevatedButton.styleFrom(
