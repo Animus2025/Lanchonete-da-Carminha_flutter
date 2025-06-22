@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lanchonetedacarminha/ui/pages/Meus_pedidos.dart';
 import 'package:lanchonetedacarminha/ui/pages/Revisao_pedido.dart';
 import 'package:provider/provider.dart';
 import 'package:lanchonetedacarminha/ui/pages/cadastro_page.dart';
@@ -9,6 +10,9 @@ import 'ui/themes/app_theme.dart';
 import 'providers/cart_provider.dart';
 import 'providers/auth_provider.dart';
 import 'screens/home_page.dart';
+import 'ui/pages/redefinir_senha.dart';
+import 'ui/pages/verificar_telefone.dart ';
+import 'ui/pages/minha_conta.dart';
 import 'package:lanchonetedacarminha/ui/widgets/pedido_regras.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -17,8 +21,8 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => CartProvider()),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => CartProvider()),
       ],
       child: const MyApp(),
     ),
@@ -66,10 +70,16 @@ class _MyAppState extends State<MyApp> {
         '/': (context) => HomePage(toggleTheme: toggleTheme),
         '/termos_uso': (context) => TermosDeUsoPage(toggleTheme: toggleTheme),
         '/cadastro_page': (context) => const CadastroPage(),
-        '/cardapio': (context) => HomePage(toggleTheme: toggleTheme),
         '/politicas-de-privacidade': (context) => PoliticaPrivacidadePage(toggleTheme: toggleTheme),
         '/sobre': (context) => Sobre(toggleTheme: toggleTheme),
         '/revisao_pedido': (context) => RevisaoPedido(toggleTheme: toggleTheme),
+        '/redefinir_senha': (context) => const RedefinirSenhaPage(),
+        '/verificar_telefone': (context) => const VerificarTelefonePage(),
+        '/Meus_pedidos': (context) => MeusPedidosPage(toggleTheme: toggleTheme),
+        '/minha_conta': (context) => MinhaContaPage(toggleTheme: toggleTheme),
+        // você pode adicionar outras rotas aqui também:
+        // '/politicas-de-prisvacidade': (context) => const PoliticasPage(),
+        // '/sobre': (context) => const SobrePage(),
       },
     );
   }

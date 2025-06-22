@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:lanchonetedacarminha/ui/widgets/password_rules_widget.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../widgets/app_body_container.dart';
 
 class CadastroPage extends StatefulWidget {
   const CadastroPage({super.key});
@@ -20,11 +21,12 @@ class _CadastroPageState extends State<CadastroPage> {
   final TextEditingController _cpfController = TextEditingController();
   final TextEditingController _enderecoController = TextEditingController();
   final TextEditingController _senhaController = TextEditingController();
+  final TextEditingController _codigoController = TextEditingController();
 
   bool _obscureSenha = true;
   String _senhaAtual = '';
 
-  final Color _laranjaPadrao = const Color(0xFFF6C484); // Laranja padrão
+  final Color _laranjaPadrao = const Color(0xFFF6C484);
 
   @override
   void dispose() {
@@ -34,11 +36,12 @@ class _CadastroPageState extends State<CadastroPage> {
     _cpfController.dispose();
     _enderecoController.dispose();
     _senhaController.dispose();
+    _codigoController.dispose();
     super.dispose();
   }
 
   String? validarEmail(String? email) {
-    if (email == null || email.isEmpty) return null; // opcional
+    if (email == null || email.isEmpty) return null;
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
     if (!emailRegex.hasMatch(email)) {
       return 'E-mail inválido';
@@ -50,7 +53,6 @@ class _CadastroPageState extends State<CadastroPage> {
     if (telefone == null || telefone.isEmpty) {
       return 'Telefone é obrigatório';
     }
-    // Validação simples: número com DDD - 10 ou 11 dígitos
     final telefoneRegex = RegExp(r'^\d{10,11}$');
     final digitsOnly = telefone.replaceAll(RegExp(r'\D'), '');
     if (!telefoneRegex.hasMatch(digitsOnly)) {
@@ -67,7 +69,6 @@ class _CadastroPageState extends State<CadastroPage> {
     if (cpfDigits.length != 11) {
       return 'CPF deve ter 11 dígitos';
     }
-    // Pode colocar uma validação mais completa de CPF aqui, se quiser
     return null;
   }
 
@@ -90,39 +91,33 @@ class _CadastroPageState extends State<CadastroPage> {
     return null;
   }
 
-  bool _verificarRegra(
-    String senha,
-    String regra,
-    bool Function(String) condicao,
-  ) {
-    return condicao(senha);
-  }
-
   Future<void> cadastrarUsuario() async {
-    const url =
-        'http://192.168.104.110:3000/usuario'; // Use seu IP local se for testar no celular
+    const url = 'http://localhost:3000/usuario/pre-cadastro';
     final response = await http.post(
       Uri.parse(url),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
-        'nome_usuario': _nomeController.text, // Corrigido para nome_usuario
+        'nome_usuario': _nomeController.text,
         'email': _emailController.text,
-        'senha': _senhaController.text, // senha antes de telefone!
-        'telefone': _telefoneController.text,
+        'senha': _senhaController.text,
+        'numero': _telefoneController.text,
         'endereco': _enderecoController.text,
         'cpf': _cpfController.text,
       }),
     );
 
-    print('Status: ${response.statusCode}');
-    print('Body: ${response.body}');
-
     if (response.statusCode == 201) {
-      // Backend retorna 201
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Cadastro realizado com sucesso!')),
+      await http.post(
+        Uri.parse('http://localhost:3000/whatsapp/verificar-numero'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'numero': _telefoneController.text}),
       );
-      Navigator.pushNamed(context, '/verificacao_telefone');
+
+      Navigator.pushReplacementNamed(
+        context,
+        '/verificar_telefone',
+        arguments: _telefoneController.text,
+      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Erro ao cadastrar: ${response.body}')),
@@ -140,134 +135,115 @@ class _CadastroPageState extends State<CadastroPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black, // Fundo preto
+        backgroundColor: Colors.black,
         title: Text(
           'Cadastro',
-          style:
-              Theme.of(
-                context,
-              ).appBarTheme.titleTextStyle, // Fonte padrão do tema
+          style: Theme.of(context).appBarTheme.titleTextStyle,
         ),
-        iconTheme: IconThemeData(
-          color: _laranjaPadrao,
-        ), // Ícones na cor laranja padrão
+        iconTheme: IconThemeData(color: _laranjaPadrao),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: [
-              TextFormField(
-                controller: _nomeController,
-                decoration: const InputDecoration(labelText: 'Nome completo *'),
-                validator:
-                    (value) =>
-                        value == null || value.isEmpty
-                            ? 'Nome é obrigatório'
-                            : null,
-              ),
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(
-                  labelText: 'E-mail (opcional)',
+      body: AppBodyContainer(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          child: Form(
+            key: _formKey,
+            child: ListView(
+              children: [
+                TextFormField(
+                  controller: _nomeController,
+                  decoration:
+                      const InputDecoration(labelText: 'Nome completo *'),
+                  validator: (value) =>
+                      (value == null || value.isEmpty) ? 'Nome é obrigatório' : null,
                 ),
-                keyboardType: TextInputType.emailAddress,
-                validator: validarEmail,
-              ),
-              TextFormField(
-                controller: _telefoneController,
-                decoration: const InputDecoration(labelText: 'Telefone *'),
-                keyboardType: TextInputType.phone,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  LengthLimitingTextInputFormatter(11),
-                ],
-                validator: validarTelefone,
-              ),
-              TextFormField(
-                controller: _cpfController,
-                decoration: const InputDecoration(labelText: 'CPF *'),
-                keyboardType: TextInputType.number,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  LengthLimitingTextInputFormatter(11),
-                ],
-                validator: validarCPF,
-              ),
-              TextFormField(
-                controller: _enderecoController,
-                decoration: const InputDecoration(labelText: 'Endereço *'),
-                validator:
-                    (value) =>
-                        value == null || value.isEmpty
-                            ? 'Endereço é obrigatório'
-                            : null,
-              ),
-              TextFormField(
-                controller: _senhaController,
-                decoration: InputDecoration(
-                  labelText: 'Senha *',
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _obscureSenha ? Icons.visibility : Icons.visibility_off,
+                TextFormField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(
+                    labelText: 'E-mail (opcional)',
+                  ),
+                  keyboardType: TextInputType.emailAddress,
+                  validator: validarEmail,
+                ),
+                TextFormField(
+                  controller: _telefoneController,
+                  decoration: const InputDecoration(labelText: 'Telefone *'),
+                  keyboardType: TextInputType.phone,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(11),
+                  ],
+                  validator: validarTelefone,
+                ),
+                TextFormField(
+                  controller: _cpfController,
+                  decoration: const InputDecoration(labelText: 'CPF *'),
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(11),
+                  ],
+                  validator: validarCPF,
+                ),
+                TextFormField(
+                  controller: _enderecoController,
+                  decoration: const InputDecoration(labelText: 'Endereço *'),
+                  validator: (value) => (value == null || value.isEmpty)
+                      ? 'Endereço é obrigatório'
+                      : null,
+                ),
+                TextFormField(
+                  controller: _senhaController,
+                  decoration: InputDecoration(
+                    labelText: 'Senha *',
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscureSenha
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _obscureSenha = !_obscureSenha;
+                        });
+                      },
                     ),
-                    onPressed: () {
-                      setState(() {
-                        _obscureSenha = !_obscureSenha;
-                      });
-                    },
+                  ),
+                  obscureText: _obscureSenha,
+                  onChanged: (value) {
+                    setState(() {
+                      _senhaAtual = value;
+                    });
+                  },
+                  style: const TextStyle(
+                    fontFamily: 'Oswald',
+                    fontSize: 16,
+                  ),
+                  validator: validarSenha,
+                ),
+                if (_senhaAtual.isNotEmpty) ...[
+                  const SizedBox(height: 10),
+                  PasswordRulesWidget(senhaAtual: _senhaAtual),
+                ],
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: _enviarFormulario,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _laranjaPadrao,
+                  ),
+                  child: Text(
+                    'Continuar',
+                    style: Theme.of(context)
+                        .elevatedButtonTheme
+                        .style
+                        ?.textStyle
+                        ?.resolve({}),
                   ),
                 ),
-                obscureText: _obscureSenha,
-                onChanged: (value) {
-                  setState(() {
-                    _senhaAtual = value;
-                  });
-                },
-                style: const TextStyle(
-                  fontFamily: 'Oswald', // Fonte Oswald
-                  fontSize: 16,
-                ),
-                validator: validarSenha,
-              ),
-              if (_senhaAtual.isNotEmpty) ...[
-                const SizedBox(height: 10),
-                PasswordRulesWidget(senhaAtual: _senhaAtual),
               ],
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _enviarFormulario,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: _laranjaPadrao, // Fundo laranja padrão
-                ),
-                child: Text(
-                  'Continuar',
-                  style: Theme.of(context).elevatedButtonTheme.style?.textStyle
-                      ?.resolve({}), // Fonte padrão do tema
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildRegraItem(String regra, bool atendida) {
-    return Row(
-      children: [
-        Icon(
-          atendida ? Icons.check_circle : Icons.cancel,
-          color: atendida ? Colors.green : Colors.red,
-          size: 20,
-        ),
-        const SizedBox(width: 8),
-        Text(
-          regra,
-          style: TextStyle(color: atendida ? Colors.green : Colors.red),
-        ),
-      ],
     );
   }
 }
