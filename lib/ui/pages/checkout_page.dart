@@ -803,9 +803,30 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Column(
               children: const [
-                TextField(decoration: InputDecoration(labelText: "Número do cartão")),
-                TextField(decoration: InputDecoration(labelText: "Nome no cartão")),
-                TextField(decoration: InputDecoration(labelText: "CVV")),
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: "Número do cartão",
+                    labelStyle: TextStyle(color: Colors.black), // Apenas a letra preta
+                  ),
+                  style: TextStyle(color: Colors.black), // Texto digitado preto
+                  cursorColor: Colors.black,
+                ),
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: "Nome no cartão",
+                    labelStyle: TextStyle(color: Colors.black),
+                  ),
+                  style: TextStyle(color: Colors.black),
+                  cursorColor: Colors.black,
+                ),
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: "CVV",
+                    labelStyle: TextStyle(color: Colors.black),
+                  ),
+                  style: TextStyle(color: Colors.black),
+                  cursorColor: Colors.black,
+                ),
               ],
             ),
           ),
