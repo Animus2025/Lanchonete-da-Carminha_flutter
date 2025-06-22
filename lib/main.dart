@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:lanchonetedacarminha/ui/pages/Meus_pedidos.dart';
-import 'package:lanchonetedacarminha/ui/pages/Revisao_pedido.dart';
 import 'package:provider/provider.dart';
 import 'package:lanchonetedacarminha/ui/pages/cadastro_page.dart';
 import 'ui/pages/termos_uso.dart';
