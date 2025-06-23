@@ -6,6 +6,7 @@ import '/../providers/auth_provider.dart';
 import '../widgets/app_body_container.dart';
 import '../themes/app_theme.dart';
 
+// Página para o usuário editar suas informações pessoais
 class EditarContaPage extends StatefulWidget {
   const EditarContaPage({super.key});
 
@@ -14,7 +15,10 @@ class EditarContaPage extends StatefulWidget {
 }
 
 class _EditarContaPageState extends State<EditarContaPage> {
+  // Chave do formulário para validação
   final _formKey = GlobalKey<FormState>();
+
+  // Controllers para os campos do formulário
   late TextEditingController nomeController;
   late TextEditingController emailController;
   late TextEditingController telefoneController;
@@ -24,6 +28,7 @@ class _EditarContaPageState extends State<EditarContaPage> {
   @override
   void initState() {
     super.initState();
+    // Obtém os dados atuais do usuário do AuthProvider e inicializa os controllers
     final user = Provider.of<AuthProvider>(context, listen: false).userData!;
     nomeController = TextEditingController(text: user['nome_usuario']);
     emailController = TextEditingController(text: user['email']);
@@ -32,14 +37,22 @@ class _EditarContaPageState extends State<EditarContaPage> {
     enderecoController = TextEditingController(text: user['endereco']);
   }
 
+  // Função para salvar as alterações feitas pelo usuário
   Future<void> salvarAlteracoes() async {
+    // Valida o formulário antes de enviar
     if (!_formKey.currentState!.validate()) return;
 
+    // Obtém o ID do usuário logado
     final userId =
-        Provider.of<AuthProvider>(context, listen: false).userData!['id'];
+        Provider.of<AuthProvider>(
+          context,
+          listen: false,
+        ).userData!['id_usuario'];
+    // Monta a URL para atualizar o usuário
     final url = Uri.parse('http://localhost:3000/usuario/$userId');
 
     try {
+      // Faz a requisição PUT para atualizar os dados do usuário
       final response = await http.put(
         url,
         headers: {'Content-Type': 'application/json'},
@@ -53,19 +66,23 @@ class _EditarContaPageState extends State<EditarContaPage> {
       );
 
       if (response.statusCode == 200) {
+        // Se a atualização for bem-sucedida, atualiza o AuthProvider
         final updatedUser = jsonDecode(response.body);
         Provider.of<AuthProvider>(context, listen: false).login(updatedUser);
 
+        // Mostra mensagem de sucesso e volta para a tela anterior
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Informações atualizadas com sucesso!')),
         );
         Navigator.pop(context);
       } else {
+        // Mostra mensagem de erro se a atualização falhar
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Erro ao atualizar dados')),
         );
       }
     } catch (e) {
+      // Mostra mensagem de erro se houver problema de conexão
       print('Erro ao salvar alterações: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Erro de conexão com o servidor')),
@@ -93,6 +110,7 @@ class _EditarContaPageState extends State<EditarContaPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 24),
+                    // Título da seção
                     Text(
                       'EDITAR DADOS:',
                       style: TextStyle(
@@ -106,6 +124,7 @@ class _EditarContaPageState extends State<EditarContaPage> {
                       ),
                     ),
                     const SizedBox(height: 24),
+                    // Campos de edição
                     buildTextField(label: 'Nome', controller: nomeController),
                     buildTextField(label: 'Email', controller: emailController),
                     buildTextField(
@@ -118,6 +137,7 @@ class _EditarContaPageState extends State<EditarContaPage> {
                       controller: enderecoController,
                     ),
                     const SizedBox(height: 24),
+                    // Botão para salvar alterações
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
@@ -148,6 +168,7 @@ class _EditarContaPageState extends State<EditarContaPage> {
     );
   }
 
+  // Widget auxiliar para criar campos de texto padronizados
   Widget buildTextField({
     required String label,
     required TextEditingController controller,

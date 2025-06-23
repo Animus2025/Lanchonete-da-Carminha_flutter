@@ -6,6 +6,7 @@ import '../themes/app_theme.dart';
 import 'package:http/http.dart' as http;
 import 'package:lanchonetedacarminha/ui/widgets/password_rules_widget.dart';
 
+// Página de redefinição de senha
 class RedefinirSenhaPage extends StatefulWidget {
   const RedefinirSenhaPage({Key? key}) : super(key: key);
 
@@ -14,24 +15,28 @@ class RedefinirSenhaPage extends StatefulWidget {
 }
 
 class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
+  // Controllers para os campos de entrada
   final TextEditingController _inputController = TextEditingController();
   final TextEditingController _codigoController = TextEditingController();
   final TextEditingController _novaSenhaController = TextEditingController();
 
+  // Variáveis de controle de estado
   bool codigoValidado = false;
   bool codigoEnviado = false;
-  String? loginTentado;
+  String? loginTentado; // Email ou telefone usado na tentativa de login
   String? metodo; // 'email' ou 'telefone'
   String _senhaAtual = '';
 
   @override
   void dispose() {
+    // Libera os controllers ao destruir o widget
     _inputController.dispose();
     _codigoController.dispose();
     _novaSenhaController.dispose();
     super.dispose();
   }
 
+  // Envia confirmação para email ou telefone
   void _enviarConfirmacao() async {
     final input = _inputController.text.trim();
 
@@ -44,6 +49,7 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
       return;
     }
 
+    // Se for telefone, valida e envia código via WhatsApp
     if (metodo == 'telefone') {
       final digitsOnly = input.replaceAll(RegExp(r'\D'), '');
       if (digitsOnly.length != 11) {
@@ -56,7 +62,7 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
       }
 
       final response = await http.post(
-        Uri.parse('http://localhost/whatsapp/alterar-senha'),
+        Uri.parse('http://localhost:3000/whatsapp/alterar-senha'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'numero': digitsOnly}),
       );
@@ -78,6 +84,7 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
       return;
     }
 
+    // Se for email, valida formato e simula envio
     if (metodo == 'email') {
       final emailRegex = RegExp(r"^[\w\.\-]+@([\w\-]+\.)+[a-zA-Z]{2,4}\$");
       if (!emailRegex.hasMatch(input)) {
@@ -96,6 +103,7 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
     }
   }
 
+  // Reenvia o código de confirmação
   void _reenviarCodigo() async {
     await LoginDialog.showFeedbackDialog(
       context,
@@ -104,6 +112,7 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
     );
   }
 
+  // Permite mudar o telefone informado
   void _mudarTelefone() {
     setState(() {
       codigoEnviado = false;
@@ -112,6 +121,7 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
     });
   }
 
+  // Valida o código recebido por WhatsApp
   void _validarCodigo() async {
     final codigo = _codigoController.text.trim();
     final numero = _inputController.text.trim();
@@ -126,7 +136,7 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
     }
 
     final response = await http.post(
-      Uri.parse('http://localhost/whatsapp/confirmar-codigo'),
+      Uri.parse('http://localhost:3000/whatsapp/confirmar-codigo'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'numero': numero, 'codigo': codigo}),
     );
@@ -147,6 +157,7 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
     }
   }
 
+  // Envia a nova senha para o backend
   void _redefinirSenha() async {
     final numero = _inputController.text.trim();
     final novaSenha = _novaSenhaController.text.trim();
@@ -180,6 +191,7 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
     }
   }
 
+  // Valida regras da nova senha
   String? validarSenha(String? senha) {
     if (senha == null || senha.isEmpty) return 'A senha é obrigatória';
     if (senha.length < 6) return 'A senha deve ter pelo menos 6 caracteres';
@@ -191,6 +203,7 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Recupera o argumento passado pela rota (login tentado)
     loginTentado ??= ModalRoute.of(context)?.settings.arguments as String?;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final textColor = isDarkMode ? const Color(0xffF6C484) : Colors.black;
@@ -208,6 +221,7 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              // Mostra o login tentado, se houver
               if (loginTentado != null)
                 Text(
                   'Você tentou fazer login com: $loginTentado',
@@ -215,12 +229,14 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
                   textAlign: TextAlign.center,
                 ),
               const SizedBox(height: 24),
+              // Pergunta como deseja redefinir a senha
               Text(
                 'Como deseja redefinir sua senha?',
                 style: TextStyle(fontSize: 18, color: textColor),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
+              // Opção: telefone (WhatsApp)
               RadioListTile<String>(
                 title: Text(
                   'Por telefone (WhatsApp)',
@@ -239,6 +255,7 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
                           });
                         },
               ),
+              // Opção: email
               RadioListTile<String>(
                 title: Text(
                   'Por email (apenas se estiver verificado)',
@@ -257,6 +274,7 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
                           });
                         },
               ),
+              // Campo de entrada para telefone ou email
               if (metodo != null && !codigoEnviado) ...[
                 const SizedBox(height: 16),
                 TextField(
@@ -294,6 +312,7 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
                   ),
                 ),
               ],
+              // Se for telefone e código já foi enviado, mostra campo para código
               if (metodo == 'telefone' && codigoEnviado) ...[
                 const SizedBox(height: 24),
                 Text(
@@ -371,6 +390,7 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
                   ),
                 ),
               ],
+              // Se o código foi validado, mostra campo para nova senha
               if (codigoValidado) ...[
                 const SizedBox(height: 24),
                 Text(
@@ -392,6 +412,7 @@ class _RedefinirSenhaPageState extends State<RedefinirSenhaPage> {
                     });
                   },
                 ),
+                // Mostra regras de senha se o usuário começou a digitar
                 if (_senhaAtual.isNotEmpty) ...[
                   const SizedBox(height: 10),
                   PasswordRulesWidget(senhaAtual: _senhaAtual),

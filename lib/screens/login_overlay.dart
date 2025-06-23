@@ -4,23 +4,28 @@ import 'dart:convert';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 
+// Variável global para armazenar o último login tentado
 String? ultimoLoginTentado;
 
+// Classe utilitária para exibir o diálogo de login
 class LoginDialog {
-  /// Agora recebe uma callback opcional que será chamada após login OK
+  /// Exibe o diálogo de login. Recebe uma callback para ser chamada após login bem-sucedido.
   static void show(
     BuildContext context, {
     required VoidCallback onLoginSuccess,
   }) {
+    // Controllers para os campos de email/telefone e senha
     final TextEditingController emailController = TextEditingController();
     final TextEditingController senhaController = TextEditingController();
 
+    // Função interna para realizar o login
     Future<void> fazerLogin() async {
       final emailOuTelefone = emailController.text.trim();
       final senha = senhaController.text.trim();
 
       print('🔍 Tentando logar com: $emailOuTelefone / $senha');
 
+      // Validação dos campos
       if (emailOuTelefone.isEmpty || senha.isEmpty) {
         await showFeedbackDialog(
           context,
@@ -33,9 +38,11 @@ class LoginDialog {
 
       ultimoLoginTentado = emailOuTelefone;
 
+      // Decide se é email ou telefone
       final bool isEmail = emailOuTelefone.contains('@');
       final url = Uri.parse('http://localhost:3000/usuario/login');
       try {
+        // Faz a requisição POST para login
         final response = await http.post(
           url,
           headers: {'Content-Type': 'application/json'},
@@ -50,13 +57,15 @@ class LoginDialog {
         print('📦 Body: ${response.body}');
 
         if (response.statusCode == 200) {
+          // Login bem-sucedido
           final data = jsonDecode(response.body);
           print('📦 Dados recebidos: $data');
 
           final usuario = data['usuario'];
 
+          // Salva os dados do usuário no AuthProvider
           Provider.of<AuthProvider>(context, listen: false).login({
-            'id': usuario['id'],
+            'id_usuario': usuario['id_usuario'],
             'nome_usuario': usuario['nome_usuario'],
             'email': usuario['email'],
             'telefone': usuario['numero'],
@@ -64,22 +73,30 @@ class LoginDialog {
             'endereco': usuario['endereco'],
           });
 
+          // ADICIONE ESTA LINHA PARA PRINTAR O CONTEÚDO DO PROVIDER APÓS O LOGIN
+          final savedUser =
+              Provider.of<AuthProvider>(context, listen: false).userData;
+          print('🔒 Conteúdo salvo no provider após login: $savedUser');
+
           Navigator.pop(context); // Fecha o diálogo de login
 
+          // Mostra feedback de sucesso
           await showFeedbackDialog(
             context,
             'Login realizado com sucesso!',
             positivo: true,
           );
 
-          // Chama o callback para informar que o login foi concluído com sucesso
+          // Chama o callback de sucesso
           onLoginSuccess();
         } else {
+          // Erro de autenticação
           final msg =
               jsonDecode(response.body)['error'] ?? 'Erro ao fazer login!';
           await showFeedbackDialog(context, msg, positivo: false);
         }
       } catch (e) {
+        // Erro de conexão
         print('💥 Erro de conexão: $e');
         await showFeedbackDialog(
           context,
@@ -89,6 +106,7 @@ class LoginDialog {
       }
     }
 
+    // Exibe o AlertDialog de login
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -107,6 +125,7 @@ class LoginDialog {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                // Campo de email ou telefone
                 TextField(
                   controller: emailController,
                   style: const TextStyle(
@@ -125,6 +144,7 @@ class LoginDialog {
                   ),
                 ),
                 const SizedBox(height: 16),
+                // Campo de senha
                 TextField(
                   controller: senhaController,
                   obscureText: true,
@@ -144,6 +164,7 @@ class LoginDialog {
                   ),
                 ),
                 const SizedBox(height: 4),
+                // Link para redefinir senha
                 Align(
                   alignment: Alignment.centerLeft,
                   child: TextButton(
@@ -170,6 +191,7 @@ class LoginDialog {
                   ),
                 ),
                 const SizedBox(height: 16),
+                // Botão de login
                 SizedBox(
                   width: double.infinity,
                   child: TextButton(
@@ -187,6 +209,7 @@ class LoginDialog {
                   ),
                 ),
                 const SizedBox(height: 8),
+                // Botão para cadastro
                 TextButton(
                   onPressed: () {
                     Navigator.pop(context);
@@ -210,6 +233,7 @@ class LoginDialog {
     );
   }
 
+  /// Exibe um diálogo de feedback (sucesso, erro ou dúvida)
   static Future<void> showFeedbackDialog(
     BuildContext context,
     String message, {

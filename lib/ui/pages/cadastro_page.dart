@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../widgets/app_body_container.dart';
 
+// Tela de cadastro de usuário
 class CadastroPage extends StatefulWidget {
   const CadastroPage({super.key});
 
@@ -13,8 +14,10 @@ class CadastroPage extends StatefulWidget {
 }
 
 class _CadastroPageState extends State<CadastroPage> {
+  // Chave do formulário para validação
   final _formKey = GlobalKey<FormState>();
 
+  // Controllers para os campos do formulário
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _nomeController = TextEditingController();
   final TextEditingController _telefoneController = TextEditingController();
@@ -23,13 +26,17 @@ class _CadastroPageState extends State<CadastroPage> {
   final TextEditingController _senhaController = TextEditingController();
   final TextEditingController _codigoController = TextEditingController();
 
+  // Controle de visibilidade da senha
   bool _obscureSenha = true;
+  // Guarda a senha digitada para mostrar regras
   String _senhaAtual = '';
 
+  // Cor padrão laranja usada no app
   final Color _laranjaPadrao = const Color(0xFFF6C484);
 
   @override
   void dispose() {
+    // Libera os controllers ao destruir o widget
     _emailController.dispose();
     _nomeController.dispose();
     _telefoneController.dispose();
@@ -40,6 +47,7 @@ class _CadastroPageState extends State<CadastroPage> {
     super.dispose();
   }
 
+  // Validação do campo de e-mail (opcional)
   String? validarEmail(String? email) {
     if (email == null || email.isEmpty) return null;
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
@@ -49,6 +57,7 @@ class _CadastroPageState extends State<CadastroPage> {
     return null;
   }
 
+  // Validação do campo de telefone (obrigatório)
   String? validarTelefone(String? telefone) {
     if (telefone == null || telefone.isEmpty) {
       return 'Telefone é obrigatório';
@@ -61,6 +70,7 @@ class _CadastroPageState extends State<CadastroPage> {
     return null;
   }
 
+  // Validação do campo de CPF (obrigatório)
   String? validarCPF(String? cpf) {
     if (cpf == null || cpf.isEmpty) {
       return 'CPF é obrigatório';
@@ -72,6 +82,7 @@ class _CadastroPageState extends State<CadastroPage> {
     return null;
   }
 
+  // Validação do campo de senha (obrigatório)
   String? validarSenha(String? senha) {
     if (senha == null || senha.isEmpty) {
       return 'Senha obrigatória';
@@ -91,8 +102,10 @@ class _CadastroPageState extends State<CadastroPage> {
     return null;
   }
 
+  // Função para cadastrar o usuário na API
   Future<void> cadastrarUsuario() async {
-    const url = 'http://localhost:3000/usuario/pre-cadastro';
+    const url =
+        'http://localhost:3000/usuario/pre-cadastro'; // função q faz o pré-cadastro antes de colocar no banco de dados
     final response = await http.post(
       Uri.parse(url),
       headers: {'Content-Type': 'application/json'},
@@ -107,24 +120,30 @@ class _CadastroPageState extends State<CadastroPage> {
     );
 
     if (response.statusCode == 201) {
+      // Após cadastro, envia código de verificação para o telefone
       await http.post(
         Uri.parse('http://localhost:3000/whatsapp/verificar-numero'),
+        /* função que envia o código de verificação para o número de telefone, 
+        a continuação do cadastro é no arquivo verificar_telefone.dart */
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'numero': _telefoneController.text}),
       );
 
+      // Navega para a tela de verificação de telefone
       Navigator.pushReplacementNamed(
         context,
         '/verificar_telefone',
         arguments: _telefoneController.text,
       );
     } else {
+      // Mostra erro caso o cadastro falhe
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Erro ao cadastrar: ${response.body}')),
       );
     }
   }
 
+  // Função chamada ao enviar o formulário
   void _enviarFormulario() {
     if (_formKey.currentState!.validate()) {
       cadastrarUsuario();
@@ -149,6 +168,7 @@ class _CadastroPageState extends State<CadastroPage> {
             key: _formKey,
             child: ListView(
               children: [
+                // Campo nome completo
                 TextFormField(
                   controller: _nomeController,
                   decoration: const InputDecoration(
@@ -160,6 +180,7 @@ class _CadastroPageState extends State<CadastroPage> {
                               ? 'Nome é obrigatório'
                               : null,
                 ),
+                // Campo e-mail (opcional)
                 TextFormField(
                   controller: _emailController,
                   decoration: const InputDecoration(
@@ -168,6 +189,7 @@ class _CadastroPageState extends State<CadastroPage> {
                   keyboardType: TextInputType.emailAddress,
                   validator: validarEmail,
                 ),
+                // Campo telefone
                 TextFormField(
                   controller: _telefoneController,
                   decoration: const InputDecoration(labelText: 'Telefone *'),
@@ -178,6 +200,7 @@ class _CadastroPageState extends State<CadastroPage> {
                   ],
                   validator: validarTelefone,
                 ),
+                // Campo CPF
                 TextFormField(
                   controller: _cpfController,
                   decoration: const InputDecoration(labelText: 'CPF *'),
@@ -188,6 +211,7 @@ class _CadastroPageState extends State<CadastroPage> {
                   ],
                   validator: validarCPF,
                 ),
+                // Campo endereço
                 TextFormField(
                   controller: _enderecoController,
                   decoration: const InputDecoration(labelText: 'Endereço *'),
@@ -197,6 +221,7 @@ class _CadastroPageState extends State<CadastroPage> {
                               ? 'Endereço é obrigatório'
                               : null,
                 ),
+                // Campo senha
                 TextFormField(
                   controller: _senhaController,
                   decoration: InputDecoration(
@@ -221,11 +246,13 @@ class _CadastroPageState extends State<CadastroPage> {
                   style: const TextStyle(fontFamily: 'Oswald', fontSize: 16),
                   validator: validarSenha,
                 ),
+                // Mostra regras de senha se o usuário começou a digitar
                 if (_senhaAtual.isNotEmpty) ...[
                   const SizedBox(height: 10),
                   PasswordRulesWidget(senhaAtual: _senhaAtual),
                 ],
                 const SizedBox(height: 20),
+                // Botão de continuar/cadastrar
                 ElevatedButton(
                   onPressed: _enviarFormulario,
                   style: ElevatedButton.styleFrom(

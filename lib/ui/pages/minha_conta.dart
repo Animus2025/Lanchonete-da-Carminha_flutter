@@ -7,6 +7,7 @@ import '../themes/app_theme.dart';
 import '../../../providers/auth_provider.dart';
 import '../pages/editar_conta.dart';
 
+// Página de "Minha Conta" que exibe informações pessoais do usuário logado
 class MinhaContaPage extends StatelessWidget {
   final VoidCallback toggleTheme;
 
@@ -14,6 +15,7 @@ class MinhaContaPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Obtém o AuthProvider para acessar os dados do usuário
     final auth = Provider.of<AuthProvider>(context);
     final user = auth.userData ?? {};
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
@@ -31,6 +33,7 @@ class MinhaContaPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Título da seção
                   Text(
                     'INFORMAÇÕES PESSOAIS:',
                     style: TextStyle(
@@ -41,6 +44,7 @@ class MinhaContaPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 16),
+                  // Card com informações do usuário
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(16),
@@ -53,31 +57,64 @@ class MinhaContaPage extends StatelessWidget {
                           color: Colors.black.withOpacity(0.15),
                           blurRadius: 6,
                           offset: const Offset(2, 4),
-                        )
+                        ),
                       ],
                     ),
                     child: Column(
                       children: [
-                        buildInfoRow(context, Icons.person, user['nome_usuario'] ?? 'Nome não informado'),
+                        // Linha com nome do usuário
+                        buildInfoRow(
+                          context,
+                          Icons.person,
+                          user['nome_usuario'] ?? 'Nome não informado',
+                        ),
                         const SizedBox(height: 12),
-                        buildInfoRow(context, Icons.email, user['email'] ?? 'Email não informado'),
+                        // Linha com email
+                        buildInfoRow(
+                          context,
+                          Icons.email,
+                          user['email'] ?? 'Email não informado',
+                        ),
                         const SizedBox(height: 12),
-                        buildInfoRow(context, Icons.phone, user['telefone'] ?? 'Telefone não informado'),
+                        // Linha com telefone
+                        buildInfoRow(
+                          context,
+                          Icons.phone,
+                          user['telefone'] ?? 'Telefone não informado',
+                        ),
                         const SizedBox(height: 12),
-                        buildInfoRow(context, Icons.badge, user['cpf'] ?? 'CPF não informado'),
+                        // Linha com CPF
+                        buildInfoRow(
+                          context,
+                          Icons.badge,
+                          user['cpf'] ?? 'CPF não informado',
+                        ),
                         const SizedBox(height: 12),
-                        buildInfoRow(context, Icons.location_on, user['endereco'] ?? 'Endereço não informado'),
+                        // Linha com endereço
+                        buildInfoRow(
+                          context,
+                          Icons.location_on,
+                          user['endereco'] ?? 'Endereço não informado',
+                        ),
                         const SizedBox(height: 20),
+                        // Botões para alterar senha e editar conta
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
+                            // Botão para alterar senha
                             ElevatedButton(
                               onPressed: () {
-                                Navigator.pushNamed(context, '/redefinir_senha');
+                                Navigator.pushNamed(
+                                  context,
+                                  '/redefinir_senha',
+                                );
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.laranja,
-                                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 24,
+                                  vertical: 12,
+                                ),
                               ),
                               child: const Text(
                                 'ALTERAR SENHA',
@@ -87,6 +124,7 @@ class MinhaContaPage extends StatelessWidget {
                                 ),
                               ),
                             ),
+                            // Botão para editar informações da conta
                             TextButton(
                               onPressed: () {
                                 Navigator.push(
@@ -104,7 +142,7 @@ class MinhaContaPage extends StatelessWidget {
                                   color: AppColors.laranja,
                                 ),
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ],
@@ -119,6 +157,7 @@ class MinhaContaPage extends StatelessWidget {
     );
   }
 
+  // Widget auxiliar para exibir uma linha de informação com ícone e texto
   Widget buildInfoRow(BuildContext context, IconData icon, String text) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final color = isDarkMode ? AppColors.laranja : Colors.black87;
@@ -130,11 +169,7 @@ class MinhaContaPage extends StatelessWidget {
         Expanded(
           child: Text(
             text,
-            style: TextStyle(
-              fontFamily: 'Oswald',
-              fontSize: 16,
-              color: color,
-            ),
+            style: TextStyle(fontFamily: 'Oswald', fontSize: 16, color: color),
           ),
         ),
       ],
