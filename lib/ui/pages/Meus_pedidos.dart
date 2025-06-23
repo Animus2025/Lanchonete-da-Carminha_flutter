@@ -7,6 +7,7 @@ import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_drawer.dart';
 import '../widgets/app_body_container.dart';
 import '/../providers/auth_provider.dart';
+import 'package:intl/intl.dart';
 
 class MeusPedidosPage extends StatefulWidget {
   final VoidCallback toggleTheme;
@@ -47,7 +48,9 @@ class _MeusPedidosPageState extends State<MeusPedidosPage> {
       Uri.parse('http://localhost:3000/pedidos/cancelados/$idUsuario'),
     );
     if (response.statusCode == 200) {
-      return jsonDecode(response.body);
+      final pedidos = jsonDecode(response.body);
+      print('Pedidos cancelados recebidos: $pedidos'); // <-- Adicione aqui
+      return pedidos;
     } else {
       throw Exception('Erro ao buscar pedidos cancelados');
     }
@@ -70,6 +73,8 @@ class _MeusPedidosPageState extends State<MeusPedidosPage> {
                 isPendente: true,
                 onCancelado: () {
                   setState(() {
+                    // Atualiza o status do pedido antes de mover
+                    pedido['status'] = 'Cancelado';
                     pedidosPendentes.removeWhere((p) => p['id_pedido'] == pedido['id_pedido']);
                     pedidosCancelados.insert(0, pedido);
                   });
@@ -154,6 +159,16 @@ class _MeusPedidosPageState extends State<MeusPedidosPage> {
 
   // Card visual de cada pedido
   Widget buildPedidoCard(BuildContext context, dynamic pedido, {bool isPendente = false, VoidCallback? onCancelado}) {
+    // Formatação da data e hora (fora da lista de widgets!)
+    final dataRetirada = pedido['data_retirada'];
+    final horarioRetirada = pedido['horario_retirada'];
+    String dataFormatada = dataRetirada != null && dataRetirada.isNotEmpty
+        ? DateFormat('dd/MM/yyyy').format(DateTime.parse(dataRetirada))
+        : '';
+    String horaFormatada = horarioRetirada != null && horarioRetirada.isNotEmpty
+        ? '${horarioRetirada.substring(0,5)}h'
+        : '';
+
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -174,11 +189,11 @@ class _MeusPedidosPageState extends State<MeusPedidosPage> {
             ),
             const SizedBox(height: 8),
             Text(
-              'Data/Hora retirada: ${pedido['data_retirada']} às ${pedido['horario_retirada']}',
+              'Data/Hora retirada: $dataFormatada às $horaFormatada',
               style: const TextStyle(color: Colors.white70, fontSize: 14),
             ),
             Text(
-              'Status do pagamento: ${pedido['status_pagamento'] ?? "Pendente"}',
+              'Status do pedido: ${pedido['status'] ?? "Pendente"}',
               style: const TextStyle(color: Colors.white70, fontSize: 14),
             ),
             const SizedBox(height: 12),
@@ -285,20 +300,40 @@ class _MeusPedidosPageState extends State<MeusPedidosPage> {
                       final confirm = await showDialog<bool>(
                         context: context,
                         builder: (_) => AlertDialog(
-                          title: const Text("Cancelar pedido"),
-                          content: const Text("Deseja cancelar este pedido?"),
+                          backgroundColor: AppColors.preto,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          title: Row(
+                            children: [
+                              Icon(Icons.warning, color: AppColors.laranja),
+                              const SizedBox(width: 8),
+                              const Text("Cancelar pedido", style: TextStyle(fontFamily: 'BebasNeue')),
+                            ],
+                          ),
+                          content: const Text(
+                            "Deseja cancelar este pedido?",
+                            style: TextStyle(color: Colors.white70),
+                          ),
                           actions: [
                             TextButton(
+                              style: TextButton.styleFrom(
+                                foregroundColor: AppColors.laranja,
+                              ),
                               onPressed: () => Navigator.of(context).pop(false),
-                              child: const Text("Não"),
+                              child: const Text("Não", style: TextStyle(fontWeight: FontWeight.bold)),
                             ),
-                            TextButton(
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.laranja,
+                                foregroundColor: AppColors.preto,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                              ),
                               onPressed: () => Navigator.of(context).pop(true),
-                              child: const Text("Sim"),
+                              child: const Text("Sim", style: TextStyle(fontWeight: FontWeight.bold)),
                             ),
                           ],
                         ),
                       );
+
                       if (confirm == true) {
                         // Chame o backend para cancelar o pedido
                         final response = await http.post(
@@ -310,15 +345,29 @@ class _MeusPedidosPageState extends State<MeusPedidosPage> {
                           showDialog(
                             context: context,
                             builder: (_) => AlertDialog(
-                              title: const Text("Pedido cancelado"),
-                              content: const Text("Seu pedido foi cancelado com sucesso!"),
+                              backgroundColor: AppColors.preto,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                              title: Row(
+                                children: [
+                                  Icon(Icons.check_circle, color: AppColors.laranja),
+                                  const SizedBox(width: 8),
+                                  const Text("Pedido cancelado", style: TextStyle(fontFamily: 'BebasNeue')),
+                                ],
+                              ),
+                              content: const Text(
+                                "Seu pedido foi cancelado com sucesso!",
+                                style: TextStyle(color: Colors.white70),
+                              ),
                               actions: [
                                 TextButton(
+                                  style: TextButton.styleFrom(
+                                    foregroundColor: AppColors.laranja,
+                                  ),
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                     if (onCancelado != null) onCancelado();
                                   },
-                                  child: const Text("OK"),
+                                  child: const Text("OK", style: TextStyle(fontWeight: FontWeight.bold)),
                                 ),
                               ],
                             ),

@@ -1076,19 +1076,41 @@ class _RevisaoPedidoPageState extends State<RevisaoPedidoPage> {
       context: context,
       barrierDismissible: false,
       builder: (_) => AlertDialog(
+        backgroundColor: AppColors.preto,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Row(
           children: const [
-            Icon(Icons.check_circle, color: Colors.green, size: 32),
+            Icon(Icons.check_circle, color: AppColors.laranja, size: 32),
             SizedBox(width: 10),
-            Text("Pedido realizado com sucesso!"),
+            Text(
+              "Pedido realizado com sucesso!",
+              style: TextStyle(
+                fontFamily: 'BebasNeue',
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+            ),
           ],
         ),
         content: const Text(
           "Os detalhes do seu pedido foram enviados por WhatsApp.",
-          style: TextStyle(fontSize: 16),
+          style: TextStyle(
+            fontSize: 16,
+            color: Colors.white70,
+            fontFamily: 'BebasNeue',
+          ),
         ),
         actions: [
           TextButton(
+            style: TextButton.styleFrom(
+              foregroundColor: AppColors.laranja,
+              textStyle: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontFamily: 'BebasNeue',
+                fontSize: 16,
+              ),
+            ),
             onPressed: () {
               Navigator.of(context).pop();
               Navigator.pushNamed(context, '/Meus_pedidos');

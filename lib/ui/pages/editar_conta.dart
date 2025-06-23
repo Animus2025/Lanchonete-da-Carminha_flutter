@@ -70,15 +70,55 @@ class _EditarContaPageState extends State<EditarContaPage> {
         final updatedUser = jsonDecode(response.body);
         Provider.of<AuthProvider>(context, listen: false).login(updatedUser);
 
-        // Mostra mensagem de sucesso e volta para a tela anterior
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Informações atualizadas com sucesso!')),
+        // Mostra mensagem de sucesso e só volta para a tela anterior ao clicar em OK
+        showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            backgroundColor: AppColors.preto,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            title: Row(
+              children: [
+                Icon(Icons.check_circle, color: AppColors.laranja),
+                const SizedBox(width: 8),
+                const Text("Sucesso", style: TextStyle(fontFamily: 'BebasNeue', color: Colors.white)),
+              ],
+            ),
+            content: const Text(
+              "Informações atualizadas com sucesso!",
+              style: TextStyle(color: Colors.white70),
+            ),
+            actions: [
+              TextButton(
+                style: TextButton.styleFrom(
+                  foregroundColor: AppColors.laranja,
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop(); // Fecha o dialog
+                  Navigator.of(context).pop(); // Volta para a tela anterior
+                },
+                child: const Text("OK", style: TextStyle(fontWeight: FontWeight.bold)),
+              ),
+            ],
+          ),
         );
-        Navigator.pop(context);
       } else {
         // Mostra mensagem de erro se a atualização falhar
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Erro ao atualizar dados')),
+          SnackBar(
+            content: const Text(
+              'Erro ao atualizar dados',
+              style: TextStyle(
+                color: Colors.white,
+                fontFamily: 'BebasNeue',
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            backgroundColor: AppColors.preto,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            margin: const EdgeInsets.all(16),
+            duration: const Duration(seconds: 2),
+          ),
         );
       }
     } catch (e) {
