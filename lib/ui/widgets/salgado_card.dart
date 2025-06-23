@@ -210,6 +210,7 @@ class _SalgadoCardState extends State<SalgadoCard> {
           onAdicionar: () {
             Provider.of<CartProvider>(context, listen: false).addItem(
               CartItem(
+                id_produto: controller.salgado.id_produto, // <-- Adicione esta linha
                 nome: controller.salgado.nome,
                 preco: controller.precoUnitario,
                 imagem: controller.salgado.imagem,

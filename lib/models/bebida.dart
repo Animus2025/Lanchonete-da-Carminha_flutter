@@ -8,7 +8,7 @@ class Bebida extends Produto {
 
   /// Construtor da classe Bebida.
   /// Recebe nome, imagem, volume e preço, e repassa nome e imagem para a superclasse Produto.
-  Bebida({required super.nome, required super.imagem, required this.preco});
+  Bebida({required super.id_produto, required super.nome, required super.imagem, required this.preco});
 
   factory Bebida.fromJson(Map<String, dynamic> json) {
     double parsePreco(dynamic value) {
@@ -20,6 +20,7 @@ class Bebida extends Produto {
     }
 
     return Bebida(
+      id_produto: json['id_produto'] ?? json['id'] ?? '',
       nome: json['nome_produto'] ?? json['nome'] ?? '',
       preco: parsePreco(json['preco_pronto']),
       imagem: json['imagem'] ?? '',

@@ -13,6 +13,7 @@ class Salgado extends Produto {
   /// Construtor da classe Salgado.
   /// Recebe nome, imagem e categoria, e repassa nome e imagem para a superclasse Produto.
   Salgado({
+    required super.id_produto,
     required super.nome,
     required this.categoria,
     this.estado,
@@ -31,6 +32,7 @@ class Salgado extends Produto {
     }
 
     return Salgado(
+      id_produto: json['id_produto'] ?? json['id'] ?? '',
       nome: json['nome_produto'] ?? json['nome'] ?? '',
       imagem: json['imagem'] ?? '',
       categoria: json['categoria'] ?? '',

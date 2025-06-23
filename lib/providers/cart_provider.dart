@@ -14,6 +14,13 @@ class CartProvider with ChangeNotifier {
 
   // Adiciona um item ao carrinho
   void addItem(CartItem item) {
+    print('Adicionando ao carrinho: '
+      'id_produto=${item.id_produto}, '
+      'nome=${item.nome}, '
+      'preco=${item.preco}, '
+      'quantidade=${item.quantidade}, '
+      'tags=${item.tags}, '
+      'isBebida=${item.isBebida}');
     // Verifica se já existe um item igual (pode usar nome, id, ou outro identificador único)
     final index = _items.indexWhere((e) =>
       e.nome == item.nome &&

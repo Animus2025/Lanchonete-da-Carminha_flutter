@@ -107,6 +107,7 @@ class _BebidaCardState extends State<BebidaCard> {
           onAdicionar: () {
             Provider.of<CartProvider>(context, listen: false).addItem(
               CartItem(
+                id_produto: controller.bebida.id_produto, // <-- Adicione esta linha
                 nome: controller.bebida.nome,
                 preco: controller.bebida.preco,
                 imagem: controller.bebida.imagem,
